@@ -22,7 +22,10 @@ export const FriendsPage = () => {
       <Helmet>
         <meta charSet="utf-8" />
         <title>Список друзей</title>
-        <meta name="description" content="Страница со списком друзей и с информацией о пользователе"/>
+        <meta
+          name="description"
+          content="Страница со списком друзей и с информацией о пользователе"
+        />
       </Helmet>
       <Header />
       {user ? (
@@ -39,7 +42,7 @@ export const FriendsPage = () => {
         'Загрузка списка...'
       ) : (
         <ul>
-          {friends.map(friend => (
+          {friends.map((friend) => (
             <li key={friend.name}>
               {friend.name} {friend.secondName}
             </li>

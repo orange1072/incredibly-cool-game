@@ -3,7 +3,7 @@ pre-commit:
   commands:
     lint:
       glob: '*.{ts,tsx}'
-      run: yarn eslint {staged_files}
+      run: yarn eslint {staged_files} --config .eslintrc.cjs --ignore-pattern 'packages/client/src/slices/**/*' --ignore-pattern 'packages/client/src/pages/**/*' --ignore-pattern 'packages/client/src/components/**/*' --ignore-pattern 'packages/client/src/App.tsx' --ignore-pattern 'packages/client/src/App.test.tsx'
     prettier:
       glob: '*.{ts,tsx,css}'
       run: yarn prettier -w {staged_files}

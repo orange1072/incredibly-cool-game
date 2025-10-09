@@ -18,7 +18,7 @@
     "rootDir": "./src",
     "skipLibCheck": true
   },
-  "include": ["src", "src/types"],
+  "include": ["vite.config.ts","src", "src/types"],
   "exclude": [
     "node_modules",
     "dist",

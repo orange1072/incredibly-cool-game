@@ -21,7 +21,7 @@ export const fetchUserThunk = createAsyncThunk(
   'user/fetchUserThunk',
   async (_: void) => {
     const url = `${SERVER_HOST}/user`
-    return fetch(url).then(res => res.json())
+    return fetch(url).then((res) => res.json())
   }
 )
 
@@ -29,9 +29,9 @@ export const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {},
-  extraReducers: builder => {
+  extraReducers: (builder) => {
     builder
-      .addCase(fetchUserThunk.pending.type, state => {
+      .addCase(fetchUserThunk.pending.type, (state) => {
         state.data = null
         state.isLoading = true
       })
@@ -42,7 +42,7 @@ export const userSlice = createSlice({
           state.isLoading = false
         }
       )
-      .addCase(fetchUserThunk.rejected.type, state => {
+      .addCase(fetchUserThunk.rejected.type, (state) => {
         state.isLoading = false
       })
   },

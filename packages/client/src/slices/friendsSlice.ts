@@ -22,7 +22,7 @@ export const fetchFriendsThunk = createAsyncThunk(
   'user/fetchFriendsThunk',
   async (_: void) => {
     const url = `${SERVER_HOST}/friends`
-    return fetch(url).then(res => res.json())
+    return fetch(url).then((res) => res.json())
   }
 )
 
@@ -30,9 +30,9 @@ export const friendsSlice = createSlice({
   name: 'friends',
   initialState,
   reducers: {},
-  extraReducers: builder => {
+  extraReducers: (builder) => {
     builder
-      .addCase(fetchFriendsThunk.pending.type, state => {
+      .addCase(fetchFriendsThunk.pending.type, (state) => {
         state.data = []
         state.isLoading = true
       })
@@ -43,7 +43,7 @@ export const friendsSlice = createSlice({
           state.isLoading = false
         }
       )
-      .addCase(fetchFriendsThunk.rejected.type, state => {
+      .addCase(fetchFriendsThunk.rejected.type, (state) => {
         state.isLoading = false
       })
   },

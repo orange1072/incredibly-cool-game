@@ -1,22 +1,7 @@
-import { useSelector } from './store'
-
-import { fetchUserThunk, selectUser } from './slices/userSlice'
-
-const App = () => {
-  const user = useSelector(selectUser)
-
+export const App = () => {
   return (
-    <div>
-      {user ? (
-        <div>
-          <p>{user.name}</p>
-          <p>{user.secondName}</p>
-        </div>
-      ) : (
-        <p>Пользователь не найден!</p>
-      )}
-    </div>
+    <>
+      <h1>hello</h1>
+    </>
   )
 }
-
-export default App

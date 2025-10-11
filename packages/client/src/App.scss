@@ -1,0 +1,434 @@
+@use './styles/variables' as *;
+@use './styles/mixins' as *;
+
+// ============================================
+// Главный контейнер
+// ============================================
+.app {
+  min-height: 100vh;
+  background: $stalker-dark;
+  color: $stalker-text;
+}
+
+.demo-container {
+  max-width: 100%;
+  padding: 1rem;
+
+  @include respond-to('medium') {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  @include respond-to('large') {
+    padding: 3rem 2rem;
+  }
+}
+
+// ============================================
+// Заголовок страницы
+// ============================================
+.demo-header {
+  @include metal-panel;
+  text-align: center;
+  padding: 2rem 1rem;
+  margin-bottom: 2rem;
+
+  h1 {
+    font-size: $font-size-2xl;
+    margin-bottom: 0.5rem;
+  }
+
+  @include respond-to('medium') {
+    padding: 3rem 2rem;
+
+    h1 {
+      font-size: $font-size-3xl;
+    }
+  }
+
+  @include respond-to('large') {
+    padding: 4rem 2rem;
+
+    h1 {
+      font-size: $font-size-4xl;
+    }
+  }
+}
+
+.demo-subtitle {
+  font-size: $font-size-sm;
+  color: $stalker-text-dim;
+  margin: 0;
+
+  @include respond-to('medium') {
+    font-size: $font-size-md;
+  }
+}
+
+// ============================================
+// Секции
+// ============================================
+.demo-section {
+  margin-bottom: 3rem;
+
+  @include respond-to('medium') {
+    margin-bottom: 4rem;
+  }
+}
+
+.demo-section-title {
+  @include stalker-text;
+  color: $stalker-cyan;
+  font-size: $font-size-xl;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid $stalker-border;
+
+  @include respond-to('medium') {
+    font-size: $font-size-2xl;
+  }
+}
+
+// ============================================
+// Типография
+// ============================================
+.demo-typography {
+  @include metal-panel;
+  padding: 1.5rem;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  p,
+  code {
+    margin-bottom: 1rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  code {
+    background: $stalker-darker;
+    padding: 0.25rem 0.5rem;
+    color: $stalker-cyan;
+  }
+
+  @include respond-to('medium') {
+    padding: 2rem;
+  }
+}
+
+// ============================================
+// Цвета
+// ============================================
+.demo-colors {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+
+  @include respond-to('small') {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include respond-to('medium') {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+.color-card {
+  @include metal-panel;
+  @include transition;
+  padding: 1rem;
+  text-align: center;
+
+  &:hover {
+    transform: translateY(-4px);
+  }
+
+  .color-sample {
+    width: 100%;
+    height: 80px;
+    margin-bottom: 0.75rem;
+    border: 2px solid $stalker-border;
+  }
+
+  p {
+    font-weight: $font-weight-medium;
+    margin-bottom: 0.5rem;
+  }
+
+  code {
+    font-size: $font-size-xs;
+    color: $stalker-text-dim;
+  }
+
+  &.color-cyan .color-sample {
+    background: $stalker-cyan;
+  }
+
+  &.color-orange .color-sample {
+    background: $stalker-orange;
+  }
+
+  &.color-dark .color-sample {
+    background: $stalker-dark;
+    border-color: $stalker-cyan;
+  }
+
+  &.color-panel .color-sample {
+    background: $stalker-panel;
+  }
+}
+
+// ============================================
+// Эффекты
+// ============================================
+.demo-effects {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+
+  @include respond-to('small') {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include respond-to('large') {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+.effect-card {
+  padding: 2rem 1rem;
+  text-align: center;
+  background: $stalker-panel;
+  min-height: 150px;
+  @include flex-center;
+  flex-direction: column;
+
+  h3 {
+    font-size: $font-size-md;
+    margin-bottom: 0.5rem;
+    color: $stalker-text;
+  }
+
+  code {
+    font-size: $font-size-xs;
+    color: $stalker-text-dim;
+    background: $stalker-darker;
+    padding: 0.25rem 0.5rem;
+  }
+}
+
+// ============================================
+// Кнопки
+// ============================================
+.demo-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.stalker-button {
+  @include metal-panel;
+  @include transition;
+  @include stalker-text;
+
+  padding: 0.75rem 1.5rem;
+  font-size: $font-size-sm;
+  background: transparent;
+  cursor: pointer;
+  border: none;
+
+  @include respond-to('medium') {
+    padding: 0.875rem 2rem;
+    font-size: $font-size-md;
+  }
+
+  &.primary {
+    color: $stalker-cyan;
+
+    &:hover {
+      @include cyan-glow;
+      background: rgba($stalker-cyan, 0.1);
+    }
+  }
+
+  &.secondary {
+    color: $stalker-text;
+
+    &:hover {
+      background: rgba($stalker-text, 0.1);
+      border-color: $stalker-text;
+    }
+  }
+
+  &.danger {
+    color: $stalker-danger;
+
+    &:hover {
+      @include radiation-glow;
+      background: rgba($stalker-danger, 0.1);
+    }
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+// ============================================
+// Карточки артефактов
+// ============================================
+.demo-cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+
+  @include respond-to('medium') {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+  }
+
+  @include respond-to('large') {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.artifact-card {
+  @include metal-panel;
+  @include grunge-texture;
+  @include transition;
+
+  padding: 1.5rem;
+  text-align: center;
+
+  &:hover {
+    transform: translateY(-8px);
+  }
+
+  @include respond-to('medium') {
+    padding: 2rem;
+  }
+
+  &__icon {
+    font-size: 3rem;
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1rem;
+    @include flex-center;
+    border-radius: 50%;
+    background: $stalker-darker;
+  }
+
+  &__title {
+    @include stalker-text;
+    font-size: $font-size-lg;
+    margin-bottom: 0.75rem;
+    color: $stalker-cyan;
+  }
+
+  &__description {
+    font-size: $font-size-sm;
+    color: $stalker-text-dim;
+    line-height: $line-height-relaxed;
+    margin: 0;
+  }
+}
+
+// ============================================
+// Адаптивная секция
+// ============================================
+.demo-responsive {
+  padding: 1rem;
+
+  @include respond-to('small') {
+    padding: 1.5rem;
+  }
+
+  @include respond-to('medium') {
+    padding: 2rem;
+  }
+
+  @include respond-to('large') {
+    padding: 2.5rem;
+  }
+
+  @include respond-to('xlarge') {
+    padding: 3rem;
+  }
+
+  p {
+    margin-bottom: 1rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  strong {
+    color: $stalker-cyan;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0 0;
+
+    li {
+      padding: 0.5rem 0;
+      border-bottom: 1px solid rgba($stalker-border, 0.3);
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+  }
+
+  code {
+    background: $stalker-darker;
+    padding: 0.25rem 0.5rem;
+    color: $stalker-cyan;
+  }
+}
+
+.responsive-text {
+  color: $stalker-text-dim;
+  font-size: $font-size-sm;
+}
+
+// ============================================
+// Футер
+// ============================================
+.demo-footer {
+  @include metal-panel;
+  @include scanline;
+  text-align: center;
+  padding: 2rem 1rem;
+  margin-top: 3rem;
+
+  p {
+    margin-bottom: 0.5rem;
+
+    &:last-child {
+      margin-bottom: 0;
+      font-size: $font-size-sm;
+      color: $stalker-text-dim;
+    }
+  }
+
+  code {
+    background: $stalker-darker;
+    padding: 0.25rem 0.5rem;
+    color: $stalker-cyan;
+  }
+
+  @include respond-to('medium') {
+    padding: 3rem 2rem;
+  }
+}

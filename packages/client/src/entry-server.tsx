@@ -19,7 +19,7 @@ import {
 } from './entry-server.utils'
 import { reducer } from './store'
 import { routes } from './routes'
-import './index.css'
+import './index.scss'
 import { setPageHasBeenInitializedOnServer } from './slices/ssrSlice'
 
 export const render = async (req: ExpressRequest) => {

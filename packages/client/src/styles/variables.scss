@@ -1,0 +1,91 @@
+// STALKER Theme Colors
+$stalker-cyan: #2fb8cc;
+$stalker-cyan-bright: #4dd4e8;
+$stalker-orange: #f5a623;
+$stalker-orange-bright: #ff8c00;
+$stalker-dark: #0d1210;
+$stalker-darker: #080a09;
+$stalker-panel: #1a1e1c;
+$stalker-border: #2d3a2e;
+$stalker-text: #a8b5a8;
+$stalker-text-dim: #6a7a6a;
+$stalker-danger: #c43a31;
+
+// Glow colors
+$stalker-glow-cyan: rgba(77, 212, 232, 0.6);
+$stalker-glow-orange: rgba(245, 166, 35, 0.6);
+
+// Base theme colors
+$background: #0d1210;
+$foreground: #a8b5a8;
+$card: #1a1e1c;
+$card-foreground: #a8b5a8;
+$popover: #1a1e1c;
+$popover-foreground: #a8b5a8;
+$primary: #2fb8cc;
+$primary-foreground: #0d1210;
+$secondary: #2d3a2e;
+$secondary-foreground: #a8b5a8;
+$muted: #1f2421;
+$muted-foreground: #6a7a6a;
+$accent: #f5a623;
+$accent-foreground: #0d1210;
+$destructive: #c43a31;
+$destructive-foreground: #ffffff;
+$border: rgba(47, 184, 204, 0.2);
+$input: rgba(47, 184, 204, 0.1);
+$input-background: rgba(26, 30, 28, 0.8);
+$switch-background: #2d3a2e;
+$ring: #2fb8cc;
+
+// Typography - Fonts
+// Основной для текста: Consolas
+// Для заголовков: Courier New
+// Запасные: Monaco, Lucida Console
+$font-family-base: 'Consolas', 'Monaco', 'Lucida Console', monospace; // Основной текст
+$font-family-headings: 'Courier New', 'Monaco', 'Lucida Console', monospace; // Заголовки
+$font-family-mono: 'Consolas', 'Monaco', 'Lucida Console', monospace; // Code, kbd, pre
+
+// Typography - Sizes
+$font-size-base: 16px;
+$font-size-xs: 0.75rem; // 12px
+$font-size-sm: 0.875rem; // 14px
+$font-size-md: 1rem; // 16px
+$font-size-lg: 1.125rem; // 18px
+$font-size-xl: 1.25rem; // 20px
+$font-size-2xl: 1.5rem; // 24px
+$font-size-3xl: 1.875rem; // 30px
+$font-size-4xl: 2.25rem; // 36px
+
+// Typography - Weights
+$font-weight-normal: 400;
+$font-weight-medium: 500;
+$font-weight-bold: 700;
+
+// Typography - Line Heights
+$line-height-tight: 1.25;
+$line-height-normal: 1.5;
+$line-height-relaxed: 1.75;
+
+// Typography - Letter Spacing
+$letter-spacing-tight: -0.025em;
+$letter-spacing-normal: 0;
+$letter-spacing-wide: 0.05em;
+$letter-spacing-wider: 0.1em;
+
+// Radius
+$radius: 0rem;
+$radius-sm: calc($radius - 4px);
+$radius-md: calc($radius - 2px);
+$radius-lg: $radius;
+$radius-xl: calc($radius + 4px);
+
+// Sidebar
+$sidebar: #1a1e1c;
+$sidebar-foreground: #a8b5a8;
+$sidebar-primary: #2fb8cc;
+$sidebar-primary-foreground: #0d1210;
+$sidebar-accent: #2d3a2e;
+$sidebar-accent-foreground: #a8b5a8;
+$sidebar-border: rgba(47, 184, 204, 0.2);
+$sidebar-ring: #2fb8cc;

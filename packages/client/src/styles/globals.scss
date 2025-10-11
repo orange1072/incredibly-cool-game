@@ -1,0 +1,356 @@
+@use './variables' as *;
+@use './mixins' as *;
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --font-size: #{$font-size-base};
+  --background: #{$background};
+  --foreground: #{$foreground};
+  --card: #{$card};
+  --card-foreground: #{$card-foreground};
+  --popover: #{$popover};
+  --popover-foreground: #{$popover-foreground};
+  --primary: #{$primary};
+  --primary-foreground: #{$primary-foreground};
+  --secondary: #{$secondary};
+  --secondary-foreground: #{$secondary-foreground};
+  --muted: #{$muted};
+  --muted-foreground: #{$muted-foreground};
+  --accent: #{$accent};
+  --accent-foreground: #{$accent-foreground};
+  --destructive: #{$destructive};
+  --destructive-foreground: #{$destructive-foreground};
+  --border: #{$border};
+  --input: #{$input};
+  --input-background: #{$input-background};
+  --switch-background: #{$switch-background};
+  --font-weight-medium: #{$font-weight-medium};
+  --font-weight-normal: #{$font-weight-normal};
+  --ring: #{$ring};
+  --chart-1: #{$stalker-cyan};
+  --chart-2: #{$stalker-orange};
+  --chart-3: #{$stalker-danger};
+  --chart-4: #{$stalker-cyan-bright};
+  --chart-5: #{$stalker-orange-bright};
+  --radius: #{$radius};
+  --sidebar: #{$sidebar};
+  --sidebar-foreground: #{$sidebar-foreground};
+  --sidebar-primary: #{$sidebar-primary};
+  --sidebar-primary-foreground: #{$sidebar-primary-foreground};
+  --sidebar-accent: #{$sidebar-accent};
+  --sidebar-accent-foreground: #{$sidebar-accent-foreground};
+  --sidebar-border: #{$sidebar-border};
+  --sidebar-ring: #{$sidebar-ring};
+
+  /* STALKER theme colors */
+  --stalker-cyan: #{$stalker-cyan};
+  --stalker-cyan-bright: #{$stalker-cyan-bright};
+  --stalker-orange: #{$stalker-orange};
+  --stalker-orange-bright: #{$stalker-orange-bright};
+  --stalker-dark: #{$stalker-dark};
+  --stalker-darker: #{$stalker-darker};
+  --stalker-panel: #{$stalker-panel};
+  --stalker-border: #{$stalker-border};
+  --stalker-text: #{$stalker-text};
+  --stalker-text-dim: #{$stalker-text-dim};
+  --stalker-danger: #{$stalker-danger};
+  --stalker-glow-cyan: #{$stalker-glow-cyan};
+  --stalker-glow-orange: #{$stalker-glow-orange};
+}
+
+.dark {
+  --background: #{$background};
+  --foreground: #{$foreground};
+  --card: #{$card};
+  --card-foreground: #{$card-foreground};
+  --popover: #{$popover};
+  --popover-foreground: #{$popover-foreground};
+  --primary: #{$primary};
+  --primary-foreground: #{$primary-foreground};
+  --secondary: #{$secondary};
+  --secondary-foreground: #{$secondary-foreground};
+  --muted: #{$muted};
+  --muted-foreground: #{$muted-foreground};
+  --accent: #{$accent};
+  --accent-foreground: #{$accent-foreground};
+  --destructive: #{$destructive};
+  --destructive-foreground: #{$destructive-foreground};
+  --border: #{$border};
+  --input: #{$input};
+  --ring: #{$ring};
+  --sidebar: #{$sidebar};
+  --sidebar-foreground: #{$sidebar-foreground};
+  --sidebar-primary: #{$sidebar-primary};
+  --sidebar-primary-foreground: #{$sidebar-primary-foreground};
+  --sidebar-accent: #{$sidebar-accent};
+  --sidebar-accent-foreground: #{$sidebar-accent-foreground};
+  --sidebar-border: #{$sidebar-border};
+  --sidebar-ring: #{$sidebar-ring};
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-input-background: var(--input-background);
+  --color-switch-background: var(--switch-background);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+    outline-color: rgba(var(--ring), 0.5);
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+}
+
+/**
+ * Base typography. This is not applied to elements which have an ancestor with a Tailwind text class.
+ */
+@layer base {
+  :where(:not(:has([class*=' text-']), :not(:has([class^='text-'])))) {
+    h1,
+    h2,
+    h3,
+    h4 {
+      font-family: $font-family-headings;
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+    h1 {
+      font-size: 2rem;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+    }
+
+    h3 {
+      font-size: 1.25rem;
+    }
+
+    h4 {
+      font-size: 1rem;
+    }
+
+    p {
+      font-size: 1rem;
+      font-weight: var(--font-weight-normal);
+      line-height: 1.5;
+    }
+
+    label {
+      font-size: 1rem;
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+    button {
+      font-size: 1rem;
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+    input {
+      font-size: 1rem;
+      font-weight: var(--font-weight-normal);
+      line-height: 1.5;
+    }
+  }
+}
+
+html {
+  font-size: var(--font-size);
+}
+
+/* STALKER Specific Styles */
+@layer base {
+  body {
+    font-family: $font-family-base;
+    font-size: $font-size-base;
+    line-height: $line-height-normal;
+    letter-spacing: $letter-spacing-wide;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+  }
+
+  // Моноширинные элементы
+  code,
+  kbd,
+  pre,
+  samp {
+    font-family: $font-family-mono;
+  }
+}
+
+@layer utilities {
+  /* Scanline CRT Effect */
+  .scanline {
+    @include scanline;
+  }
+
+  /* Cyan Glow (Gas Mask, Artifacts) */
+  .cyan-glow {
+    @include cyan-glow;
+  }
+
+  @keyframes cyan-pulse {
+    0%,
+    100% {
+      box-shadow: 0 0 10px var(--stalker-glow-cyan),
+        0 0 20px var(--stalker-glow-cyan),
+        inset 0 0 10px var(--stalker-glow-cyan);
+    }
+    50% {
+      box-shadow: 0 0 15px var(--stalker-glow-cyan),
+        0 0 30px var(--stalker-glow-cyan),
+        inset 0 0 15px var(--stalker-glow-cyan);
+    }
+  }
+
+  /* Orange Radiation Glow */
+  .radiation-glow {
+    @include radiation-glow;
+  }
+
+  @keyframes radiation-pulse {
+    0%,
+    100% {
+      box-shadow: 0 0 15px var(--stalker-glow-orange),
+        0 0 25px var(--stalker-glow-orange),
+        inset 0 0 10px rgba(245, 166, 35, 0.3);
+    }
+    50% {
+      box-shadow: 0 0 20px var(--stalker-glow-orange),
+        0 0 35px var(--stalker-glow-orange),
+        inset 0 0 15px rgba(245, 166, 35, 0.4);
+    }
+  }
+
+  /* Stalker Text Effect */
+  .stalker-text {
+    @include stalker-text;
+  }
+
+  /* Grunge Texture */
+  .grunge-texture {
+    @include grunge-texture;
+  }
+
+  /* Fog Overlay */
+  .fog-overlay {
+    @include fog-overlay;
+  }
+
+  /* Anomaly Shimmer */
+  .anomaly-shimmer {
+    animation: shimmer 4s ease-in-out infinite;
+  }
+
+  @keyframes shimmer {
+    0%,
+    100% {
+      opacity: 0.8;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.05);
+    }
+  }
+
+  /* Glitch Effect */
+  .glitch {
+    animation: glitch 5s infinite;
+  }
+
+  @keyframes glitch {
+    0%,
+    95%,
+    100% {
+      transform: translate(0);
+      filter: hue-rotate(0deg);
+    }
+    96% {
+      transform: translate(-2px, 2px);
+      filter: hue-rotate(10deg);
+    }
+    97% {
+      transform: translate(2px, -2px);
+      filter: hue-rotate(-10deg);
+    }
+    98% {
+      transform: translate(-2px, -2px);
+      filter: hue-rotate(10deg);
+    }
+    99% {
+      transform: translate(2px, 2px);
+      filter: hue-rotate(-10deg);
+    }
+  }
+
+  /* Metal Panel Border */
+  .metal-panel {
+    @include metal-panel;
+  }
+
+  /* Zombie Pulse */
+  .zombie-pulse {
+    animation: zombie-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes zombie-pulse {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.6;
+    }
+  }
+
+  /* Vignette Effect */
+  .vignette {
+    @include vignette;
+  }
+}

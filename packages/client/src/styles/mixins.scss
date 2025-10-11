@@ -1,0 +1,165 @@
+@use './variables' as *;
+
+// Scanline CRT Effect Mixin
+@mixin scanline {
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.1) 0px,
+      transparent 1px,
+      transparent 2px,
+      rgba(0, 0, 0, 0.1) 3px
+    );
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.3;
+  }
+}
+
+// Cyan Glow Mixin
+@mixin cyan-glow {
+  box-shadow: 0 0 10px var(--stalker-glow-cyan),
+    0 0 20px var(--stalker-glow-cyan), inset 0 0 10px var(--stalker-glow-cyan);
+  animation: cyan-pulse 3s ease-in-out infinite;
+}
+
+// Orange Radiation Glow Mixin
+@mixin radiation-glow {
+  box-shadow: 0 0 15px var(--stalker-glow-orange),
+    0 0 25px var(--stalker-glow-orange), inset 0 0 10px rgba(245, 166, 35, 0.3);
+  animation: radiation-pulse 2s ease-in-out infinite;
+}
+
+// STALKER Text Effect Mixin
+@mixin stalker-text {
+  font-family: $font-family-headings;
+  text-shadow: 0 0 5px var(--stalker-glow-cyan), 1px 1px 0 rgba(0, 0, 0, 0.8);
+  letter-spacing: $letter-spacing-wider;
+  text-transform: uppercase;
+  font-weight: $font-weight-medium;
+}
+
+// Grunge Texture Mixin
+@mixin grunge-texture {
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 0, 0, 0.05) 2px,
+        rgba(0, 0, 0, 0.05) 4px
+      ),
+      repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 0, 0, 0.05) 2px,
+        rgba(0, 0, 0, 0.05) 4px
+      );
+    pointer-events: none;
+    opacity: 0.5;
+  }
+}
+
+// Fog Overlay Mixin
+@mixin fog-overlay {
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(
+      ellipse at center,
+      transparent 0%,
+      rgba(13, 18, 16, 0.6) 100%
+    );
+    pointer-events: none;
+  }
+}
+
+// Metal Panel Mixin
+@mixin metal-panel {
+  border: 2px solid var(--stalker-border);
+  background: linear-gradient(
+    135deg,
+    var(--stalker-panel) 0%,
+    rgba(26, 30, 28, 0.8) 100%
+  );
+  box-shadow: inset 0 1px 0 rgba(47, 184, 204, 0.1),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.5);
+}
+
+// Vignette Effect Mixin
+@mixin vignette {
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(
+      ellipse at center,
+      transparent 0%,
+      rgba(0, 0, 0, 0.7) 100%
+    );
+    pointer-events: none;
+    z-index: 10;
+  }
+}
+
+// Responsive breakpoints mixin
+@mixin respond-to($breakpoint) {
+  @if $breakpoint == 'small' {
+    @media (min-width: 640px) {
+      @content;
+    }
+  } @else if $breakpoint == 'medium' {
+    @media (min-width: 768px) {
+      @content;
+    }
+  } @else if $breakpoint == 'large' {
+    @media (min-width: 1024px) {
+      @content;
+    }
+  } @else if $breakpoint == 'xlarge' {
+    @media (min-width: 1280px) {
+      @content;
+    }
+  }
+}
+
+// Flex center mixin
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+// Transition mixin
+@mixin transition($properties: all, $duration: 0.3s, $easing: ease-in-out) {
+  transition: $properties $duration $easing;
+}

@@ -1,0 +1,6 @@
+// STALKER Theme - Main Entry Point
+// Import order matters: variables -> mixins -> globals
+
+@use './variables';
+@use './mixins';
+@use './globals';

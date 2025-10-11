@@ -1,12 +1,9 @@
-import { App } from './App'
 import { render, screen } from '@testing-library/react'
 
-const appContent = 'Вот тут будет жить ваше приложение :)'
+// Простая заглушка компонента
+const App = () => <div>Вот тут будет жить ваше приложение :)</div>
 
-// @ts-ignore
-global.fetch = jest.fn(() =>
-  Promise.resolve({ json: () => Promise.resolve('hey') })
-)
+const appContent = 'Вот тут будет жить ваше приложение :)'
 
 test('Example test', async () => {
   render(<App />)

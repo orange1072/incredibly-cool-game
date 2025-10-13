@@ -18,7 +18,7 @@
     "rootDir": "./src",
     "skipLibCheck": true
   },
-  "include": ["vite.config.ts","src", "src/types"],
+  "include": ["src", "src/types"],
   "exclude": [
     "node_modules",
     "dist",
@@ -27,7 +27,9 @@
     "**/*.test.ts",
     "**/*.spec.ts",
     "**/__tests__/**",
-    "**/__mocks__/**"
+    "**/__mocks__/**",
+    "src/entry-server.tsx",
+    "src/entry-server.utils.ts"
   ],
   "references": [
     { "path": "./tsconfig.node.json" },

@@ -1,7 +1,5 @@
+import { AppRouter } from './components/AppRouter/AppRouter'
+
 export const App = () => {
-  return (
-    <>
-      <h1>hello</h1>
-    </>
-  )
+  return <AppRouter />
 }

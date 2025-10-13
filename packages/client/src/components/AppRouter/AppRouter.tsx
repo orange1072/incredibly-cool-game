@@ -1,13 +1,14 @@
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
-import { MainPage } from '../../pages/Main'
-import { SigninPage } from '../../pages/Login'
-import { SignupPage } from '../../pages/SignupPage'
-import { ForumPage } from '../../pages/ForumPage'
-import { ProfilePage } from '../../pages/ProflePage'
-import { LeaderboardPage } from '../../pages/LeaderboardPage'
-import { Error404Page } from '../../pages/Error404Page'
-import { Error500Page } from '../../pages/Error500Page'
+import { SigninPage } from '@/pages/Login'
+import { SignupPage } from '@/pages/SignupPage'
+import { ForumPage } from '@/pages/ForumPage'
+import { ProfilePage } from '@/pages/ProflePage'
+import { LeaderboardPage } from '@/pages/LeaderboardPage'
+import { Error404Page } from '@/pages/Error404Page'
+import { Error500Page } from '@/pages/Error500Page'
 import { PrivateRoute } from '../PrivateRoute'
+import { DemoPage } from '@/pages/DemoPage'
+import { MainPage } from '@/pages/MainPage'
 
 export const AppRouter = () => {
   return (
@@ -25,6 +26,7 @@ export const AppRouter = () => {
       <Routes>
         //Публичные роуты
         <Route path="/" Component={MainPage} />
+        <Route path="/demo" Component={DemoPage} />
         <Route path="/signin" Component={SigninPage} />
         <Route path="/signup" Component={SignupPage} />
         <Route path="/error404" Component={Error404Page} />

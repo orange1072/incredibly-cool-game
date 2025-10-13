@@ -12,7 +12,12 @@ import { MainPage } from '@/pages/MainPage'
 
 export const AppRouter = () => {
   return (
-    <Router>
+    <Router
+      future={{
+        v7_startTransition: true,
+        v7_relativeSplatPath: true,
+      }}
+    >
       <nav>
         <Link to="/">Main</Link>
         <Link to="/profile">Profile</Link>

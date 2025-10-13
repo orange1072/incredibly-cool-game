@@ -7,7 +7,7 @@ import World from './World'
 class GameEngine {
   private world: World
   private systems: ISystem[] = []
-  private eventBus = new EventBus()
+  private eventBus = EventBus.instance
   private input = new InputManager()
   private renderer: Renderer
   private lastTime = 0

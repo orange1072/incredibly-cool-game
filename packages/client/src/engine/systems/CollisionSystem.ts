@@ -1,9 +1,9 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ISystem } from '../../types/engine.types'
 import {
   PositionComponent,
   CollisionComponent,
   DamageComponent,
+  ProjectileComponent,
 } from '../core/Components'
 import Entity from '../core/Entity'
 import World from '../core/World'
@@ -44,14 +44,14 @@ class CollisionSystem implements ISystem {
     const bIsProjectile = b.hasComponent('projectile')
 
     if (aIsProjectile && b.hasComponent('health')) {
-      const projectile = a.getComponent('projectile')
+      const projectile = a.getComponent<ProjectileComponent>('projectile')
       const damage = projectile?.damage ?? 10
       b.addComponent(new DamageComponent(damage, a.id))
       this.logger.debug(`Projectile hit enemy`, { id: b.id, damage })
     }
 
     if (bIsProjectile && a.hasComponent('health')) {
-      const projectile = b.getComponent('projectile')
+      const projectile = b.getComponent<ProjectileComponent>('projectile')
       const damage = projectile?.damage ?? 10
       a.addComponent(new DamageComponent(damage, b.id))
       world.removeEntity(b.id)

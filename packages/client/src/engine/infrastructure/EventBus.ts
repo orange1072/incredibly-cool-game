@@ -1,10 +1,18 @@
 export type Listener<T = unknown> = (...args: T[]) => void
 
 class EventBus {
+  private static _instance: EventBus | null = null
   private listeners: Record<string, Listener[]>
 
-  constructor() {
+  private constructor() {
     this.listeners = {}
+  }
+
+  static get instance() {
+    if (!EventBus._instance) {
+      EventBus._instance = new EventBus()
+    }
+    return EventBus._instance
   }
 
   on(event: string, callback: Listener) {

@@ -1,4 +1,4 @@
-import { ISystem } from '../../types/engine.types'
+import { COMPONENT_TYPES, ISystem } from '../../types/engine.types'
 import World from '../core/World'
 import EventBus from '../infrastructure/EventBus'
 import { PositionComponent, SpawnPointComponent } from '../core/Components'
@@ -27,17 +27,22 @@ class SpawnSystem implements ISystem {
       this.areaWidth = bounds.width
     }
 
-    const spawns = world.query('spawnPoint', 'position')
+    const spawns = world.query(
+      COMPONENT_TYPES.spawnPoint,
+      COMPONENT_TYPES.position
+    )
 
     for (const sp of spawns) {
-      const spawn = sp.getComponent<SpawnPointComponent>('spawnPoint')
-      const pos = sp.getComponent<PositionComponent>('position')
+      const spawn = sp.getComponent<SpawnPointComponent>(
+        COMPONENT_TYPES.spawnPoint
+      )
+      const pos = sp.getComponent<PositionComponent>(COMPONENT_TYPES.position)
       if (!spawn || !pos) continue
 
       if (!spawn.autoSpawn) continue
       spawn._timer = (spawn._timer ?? 0) + dt
 
-      const enemies = world.query('enemy', 'health')
+      const enemies = world.query(COMPONENT_TYPES.enemy, COMPONENT_TYPES.health)
       if (enemies.length >= spawn.maxEntities) continue
 
       if (spawn._timer < spawn.interval) continue

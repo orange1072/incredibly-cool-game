@@ -1,4 +1,4 @@
-import { ISystem } from '../../types/engine.types'
+import { COMPONENT_TYPES, ISystem } from '../../types/engine.types'
 import {
   AIComponent,
   PositionComponent,
@@ -15,21 +15,30 @@ class AISystem implements ISystem {
   private moveSpeed = 50
 
   update(world: World, dt: number): void {
-    const player = world.query('playerControl', 'position')[0]
+    const player = world.query(
+      COMPONENT_TYPES.playerControl,
+      COMPONENT_TYPES.position
+    )[0]
     if (!player) return
 
     console.log(dt)
 
-    const playerPos = player.getComponent<PositionComponent>('position')
+    const playerPos = player.getComponent<PositionComponent>(
+      COMPONENT_TYPES.position
+    )
     if (!playerPos) return
 
-    const enemies = world.query('ai', 'position', 'velocity')
+    const enemies = world.query(
+      COMPONENT_TYPES.ai,
+      COMPONENT_TYPES.position,
+      COMPONENT_TYPES.velocity
+    )
 
     for (const e of enemies) {
-      const ai = e.getComponent<AIComponent>('ai')
-      const pos = e.getComponent<PositionComponent>('position')
-      const vel = e.getComponent<VelocityComponent>('velocity')
-      const health = e.getComponent<HealthComponent>('health')
+      const ai = e.getComponent<AIComponent>(COMPONENT_TYPES.ai)
+      const pos = e.getComponent<PositionComponent>(COMPONENT_TYPES.position)
+      const vel = e.getComponent<VelocityComponent>(COMPONENT_TYPES.velocity)
+      const health = e.getComponent<HealthComponent>(COMPONENT_TYPES.health)
 
       if (!ai || !pos || !vel || !health) continue
 

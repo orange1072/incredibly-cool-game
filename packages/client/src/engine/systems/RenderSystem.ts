@@ -11,6 +11,7 @@ import World from '../core/World'
 import { regularZombie } from '../settings/enemy-settings/zombie'
 import { player } from '../settings/player-settings/player'
 import worldSettings from '../settings/world-settings/world'
+import { COMPONENT_TYPES } from '../../types/engine.types'
 
 class Renderer {
   private ctx: CanvasRenderingContext2D
@@ -67,9 +68,14 @@ class Renderer {
     const deltaTime = (now - this.lastRenderTime) / 1000
     this.lastRenderTime = now
 
-    const player = world.query('playerControl', 'position')[0]
+    const player = world.query(
+      COMPONENT_TYPES.playerControl,
+      COMPONENT_TYPES.position
+    )[0]
     if (player) {
-      const playerPos = player.getComponent<PositionComponent>('position')
+      const playerPos = player.getComponent<PositionComponent>(
+        COMPONENT_TYPES.position
+      )
       if (playerPos) {
         this.movePlayer(
           playerPos,
@@ -112,18 +118,24 @@ class Renderer {
     const maxY = this.cameraY + visibleHeight + padding
 
     for (const e of world.getEntities()) {
-      const pos = e.getComponent<PositionComponent>('position')
+      const pos = e.getComponent<PositionComponent>(COMPONENT_TYPES.position)
       if (!pos) continue
       if (pos.x < minX || pos.x > maxX || pos.y < minY || pos.y > maxY) {
         continue
       }
 
-      const sprite = e.getComponent<SpriteComponent>('sprite')
-      const velocity = e.getComponent<VelocityComponent>('velocity')
-      const isEnemy = e.getComponent<EnemyComponent>('enemy')
-      const isPlayer = e.getComponent<PlayerControlComponent>('playerControl')
-      const obstacle = e.getComponent<ObstacleComponent>('obstacle')
-      const health = e.getComponent<HealthComponent>('health')
+      const sprite = e.getComponent<SpriteComponent>(COMPONENT_TYPES.sprite)
+      const velocity = e.getComponent<VelocityComponent>(
+        COMPONENT_TYPES.velocity
+      )
+      const isEnemy = e.getComponent<EnemyComponent>(COMPONENT_TYPES.enemy)
+      const isPlayer = e.getComponent<PlayerControlComponent>(
+        COMPONENT_TYPES.playerControl
+      )
+      const obstacle = e.getComponent<ObstacleComponent>(
+        COMPONENT_TYPES.obstacle
+      )
+      const health = e.getComponent<HealthComponent>(COMPONENT_TYPES.health)
 
       let renderedWidth =
         sprite && sprite.source

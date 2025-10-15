@@ -1,4 +1,4 @@
-import { ISystem } from '../../types/engine.types'
+import { COMPONENT_TYPES, ISystem } from '../../types/engine.types'
 import { DamageComponent, HealthComponent } from '../core/Components'
 import World from '../core/World'
 import EventBus from '../infrastructure/EventBus'
@@ -7,11 +7,11 @@ const bus = EventBus.instance
 
 class DamageSystem implements ISystem {
   update(world: World) {
-    const entities = world.query('health', 'damage')
+    const entities = world.query(COMPONENT_TYPES.health, COMPONENT_TYPES.damage)
 
     for (const e of entities) {
-      const health = e.getComponent<HealthComponent>('health')
-      const damage = e.getComponent<DamageComponent>('damage')
+      const health = e.getComponent<HealthComponent>(COMPONENT_TYPES.health)
+      const damage = e.getComponent<DamageComponent>(COMPONENT_TYPES.damage)
 
       if (!health || !damage) continue
 

@@ -14,8 +14,8 @@ class CollisionSystem implements ISystem {
 
   update(world: World): void {
     const colliders = world.query(
-      COMPONENT_TYPES.projectile,
-      COMPONENT_TYPES.collision
+      COMPONENT_TYPES.collision,
+      COMPONENT_TYPES.position
     )
 
     for (let i = 0; i < colliders.length; i++) {

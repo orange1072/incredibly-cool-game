@@ -9,19 +9,48 @@ import {
 } from '../core/Components'
 import Entity from '../core/Entity'
 
+import { regularZombie } from '../settings/enemy-settings/zombie'
+
 export function createZombie(x: number, y: number, level = 1) {
   const zombie = new Entity()
 
-  const baseHp = 30 + level * 10
-  const baseSpeed = 50 + level * 5
+  const zombieHealth = regularZombie.health.health(level)
+  const movementSpeed = regularZombie.movement.speed
+  const collisionRadius = regularZombie.collision.radius
+  const aiState = regularZombie.ai.startingValue
+  const aggroRange = regularZombie.ai.aggroRange
+  const attackDamage = regularZombie.damage.baseValue
+  const xpReward = regularZombie.xpReward
+  const sprite = regularZombie.sprite
 
-  zombie.addComponent(new PositionComponent(x, y))
-  zombie.addComponent(new VelocityComponent(0, 0))
-  zombie.addComponent(new HealthComponent(baseHp, baseHp))
-  zombie.addComponent(new CollisionComponent(12))
-  zombie.addComponent(new EnemyComponent('zombie', 20, 10, baseSpeed, 200))
-  zombie.addComponent(new AIComponent('idle'))
-  zombie.addComponent(new SpriteComponent('zombie-walker', 32, 32))
+  zombie.addComponent(new PositionComponent({ x, y }))
+  zombie.addComponent(new VelocityComponent({ dx: 0, dy: 0 }))
+  zombie.addComponent(
+    new HealthComponent({ hp: zombieHealth, maxHp: zombieHealth })
+  )
+  zombie.addComponent(new CollisionComponent({ radius: collisionRadius }))
+  zombie.addComponent(
+    new EnemyComponent({
+      kind: regularZombie.kind,
+      xpReward,
+      damage: attackDamage,
+      speed: movementSpeed,
+      aggroRange,
+    })
+  )
+  zombie.addComponent(new AIComponent({ state: aiState }))
+  zombie.addComponent(
+    new SpriteComponent({
+      name: sprite.name,
+      width: sprite.width,
+      height: sprite.height,
+      source: sprite.source,
+      scale: sprite.scale,
+      frameDuration: sprite.frameDuration,
+      columns: sprite.columns,
+      rows: sprite.rows,
+    })
+  )
 
   return zombie
 }

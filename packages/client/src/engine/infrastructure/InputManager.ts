@@ -12,7 +12,7 @@ class InputManager {
 
   update(dt: number) {
     // при желании диспатчить события в Redux
-    console.log(dt)
+    void dt
   }
 }
 

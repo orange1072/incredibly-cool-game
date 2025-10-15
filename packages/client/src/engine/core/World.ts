@@ -4,9 +4,18 @@ import Entity from './Entity'
 class World {
   private entities = new Map<string, Entity>()
   private eventBus: EventBus
+  private bounds = { width: 1600, height: 1200 }
 
   constructor(eventBus: EventBus) {
     this.eventBus = eventBus
+  }
+
+  setBounds(bounds: { width: number; height: number }) {
+    this.bounds = { ...bounds }
+  }
+
+  getBounds() {
+    return this.bounds
   }
 
   addEntity(entity: Entity) {

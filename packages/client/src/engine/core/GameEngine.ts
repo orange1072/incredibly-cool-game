@@ -26,6 +26,10 @@ class GameEngine {
     return this.eventBus
   }
 
+  getInputManager() {
+    return this.input
+  }
+
   addSystem(system: ISystem) {
     this.systems.push(system)
     if (system.initialize) {

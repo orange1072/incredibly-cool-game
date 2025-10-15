@@ -18,7 +18,7 @@ export const AppRouter = () => {
         v7_relativeSplatPath: true,
       }}
     >
-      <nav>
+      {/* <nav>
         <Link to="/">Main</Link>
         <Link to="/profile">Profile</Link>
         <Link to="/leaderboard">Leaderboard</Link>
@@ -27,7 +27,7 @@ export const AppRouter = () => {
         <Link to="/signup">Signup</Link>
         <Link to="/error404">Error404</Link>
         <Link to="/error500">Error500</Link>
-      </nav>
+      </nav> */}
       <Routes>
         //Публичные роуты
         <Route path="/" Component={MainPage} />

@@ -1,0 +1,112 @@
+@keyframes shimmer {
+  0% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.3;
+  }
+}
+
+.featuresSection {
+  position: relative;
+  padding: 6rem 1rem;
+}
+
+.featuresContent {
+  position: relative;
+  z-index: 10;
+  max-width: 72rem;
+  margin: 0 auto;
+}
+
+.featuresGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.featureCard {
+  background: linear-gradient(
+    135deg,
+    rgba(26, 30, 28, 0.8),
+    rgba(45, 58, 46, 0.8)
+  );
+  padding: 1.5rem;
+  position: relative;
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(47, 184, 204, 0.2);
+  transition: all 0.3s ease;
+  border-radius: 8px;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(47, 184, 204, 0.1);
+    border-color: rgba(47, 184, 204, 0.5);
+
+    .featureTopLine {
+      opacity: 0.7;
+    }
+  }
+}
+
+.featureTopLine {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, #2fb8cc, transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.featureContent {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+}
+
+.featureIcon {
+  width: 3rem;
+  height: 3rem;
+  margin: 0 auto 1rem;
+
+  &.red {
+    color: #c43a31;
+  }
+  &.orange {
+    color: #f5a623;
+  }
+  &.cyan {
+    color: #2fb8cc;
+  }
+  &.lightCyan {
+    color: #4dd4e8;
+  }
+}
+
+.featureTitle {
+  font-family: 'Courier New', monospace;
+  color: #a8b5a8;
+  letter-spacing: 0.025em;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+  font-size: 0.875rem;
+}
+
+.featureDescription {
+  color: #6a7a6a;
+  font-size: 0.75rem;
+  font-family: 'Courier New', monospace;
+  line-height: 1.625;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .featuresGrid {
+    grid-template-columns: 1fr;
+  }
+}

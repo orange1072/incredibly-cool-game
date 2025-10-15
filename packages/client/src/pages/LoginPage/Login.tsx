@@ -139,7 +139,7 @@ export function SigninPage() {
 
           <div className={styles['warning-row']}>
             <div
-              className={`${styles['warning-box']} ${styles['radiation-glow']}`}
+              className={`${styles['warning-box']} ${styles.pulse} ${styles['radiation-glow']}`}
             >
               <Radiation className={`${styles.icon} ${styles.pulse}`} />
 

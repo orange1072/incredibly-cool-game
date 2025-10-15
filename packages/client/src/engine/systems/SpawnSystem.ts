@@ -10,7 +10,7 @@ interface SpawnSystemOptions {
   eventBus: EventBus
 }
 
-export class SpawnSystem implements ISystem {
+class SpawnSystem implements ISystem {
   private eventBus: EventBus
   private logger = new Logger('SpawnSystem', 'info')
   private bossSpawned = false
@@ -22,6 +22,11 @@ export class SpawnSystem implements ISystem {
   }
 
   update(world: World, dt: number) {
+    const bounds = world.getBounds?.()
+    if (bounds) {
+      this.areaWidth = bounds.width
+    }
+
     const spawns = world.query('spawnPoint', 'position')
 
     for (const sp of spawns) {
@@ -45,7 +50,8 @@ export class SpawnSystem implements ISystem {
       world.addEntity(zombie)
 
       if (this.waveNumber % 5 === 0 && !this.bossSpawned) {
-        const boss = createBoss(this.areaWidth / 2, 100)
+        const bossX = bounds ? bounds.width / 2 : this.areaWidth / 2
+        const boss = createBoss(bossX, 100)
         world.addEntity(boss)
         this.eventBus.emit('bossSpawned', { id: boss.id })
         this.bossSpawned = true
@@ -56,3 +62,5 @@ export class SpawnSystem implements ISystem {
     }
   }
 }
+
+export default SpawnSystem

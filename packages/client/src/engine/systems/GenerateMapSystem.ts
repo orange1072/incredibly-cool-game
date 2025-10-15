@@ -5,6 +5,7 @@ import {
   ObstacleComponent,
   SpriteComponent,
   SpawnPointComponent,
+  type ObstacleKind,
 } from '../core/Components'
 import Entity from '../core/Entity'
 import Logger from '../infrastructure/Logger'
@@ -16,6 +17,12 @@ class GenerateMapSystem implements ISystem {
   private cellSize = 64
 
   initialize(world: World) {
+    const bounds = world.getBounds?.()
+    if (bounds) {
+      this.mapWidth = bounds.width
+      this.mapHeight = bounds.height
+    }
+
     this.logger.info('🗺️  Generating map...')
 
     this.generateWalls(world)
@@ -69,25 +76,31 @@ class GenerateMapSystem implements ISystem {
 
   private generateSpawnPoints(world: World) {
     const playerSpawn = new Entity()
-    playerSpawn.addComponent(new PositionComponent(400, 300))
-    playerSpawn.addComponent(new SpawnPointComponent('player', 15))
+    playerSpawn.addComponent(new PositionComponent({ x: 400, y: 300 }))
+    playerSpawn.addComponent(
+      new SpawnPointComponent({ spawnType: 'player', radius: 15 })
+    )
     world.addEntity(playerSpawn)
 
     for (let i = 0; i < 5; i++) {
       const x = Math.random() * this.mapWidth
       const y = Math.random() * this.mapHeight
       const enemySpawn = new Entity()
-      enemySpawn.addComponent(new PositionComponent(x, y))
-      enemySpawn.addComponent(new SpawnPointComponent('enemy', 20))
+      enemySpawn.addComponent(new PositionComponent({ x, y }))
+      enemySpawn.addComponent(
+        new SpawnPointComponent({ spawnType: 'enemy', radius: 20 })
+      )
       world.addEntity(enemySpawn)
     }
   }
 
-  private createObstacle(x: number, y: number, kind: 'wall' | 'rock') {
+  private createObstacle(x: number, y: number, kind: ObstacleKind) {
     const e = new Entity()
-    e.addComponent(new PositionComponent(x, y))
-    e.addComponent(new ObstacleComponent(64, 64, kind))
-    e.addComponent(new SpriteComponent(kind, 64, 64))
+    e.addComponent(new PositionComponent({ x, y }))
+    e.addComponent(new ObstacleComponent({ width: 64, height: 64, kind }))
+    e.addComponent(
+      new SpriteComponent({ name: kind, width: 64, height: 64, source: kind })
+    )
     return e
   }
 }

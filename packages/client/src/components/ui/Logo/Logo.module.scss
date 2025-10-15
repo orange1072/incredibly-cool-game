@@ -1,0 +1,96 @@
+.logoContainer {
+  margin-bottom: 2rem;
+  display: inline-block;
+}
+
+.logoWrapper {
+  position: relative;
+}
+
+.logoGlow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, rgba(47, 184, 204, 0.3), transparent 70%);
+  filter: blur(2rem);
+}
+
+.logoIcon {
+  color: #2fb8cc;
+  position: relative;
+  z-index: 10;
+  margin: 0 auto;
+  display: block;
+  transition: all 0.3s ease;
+}
+
+/* Size variants */
+.logoContainerSm {
+  margin-bottom: 0.5rem;
+}
+
+.logoContainerMd {
+  margin-bottom: 1rem;
+}
+
+.logoContainerLg {
+  margin-bottom: 2rem;
+}
+
+.logoContainerXl {
+  margin-bottom: 3rem;
+}
+
+.logoIconSm {
+  width: 2rem;
+  height: 2rem;
+}
+
+.logoIconMd {
+  width: 4rem;
+  height: 4rem;
+}
+
+.logoIconLg {
+  width: 8rem;
+  height: 8rem;
+}
+
+.logoIconXl {
+  width: 12rem;
+  height: 12rem;
+}
+
+/* Animation */
+.animated {
+  animation: rotate 10s linear infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes glow {
+  0% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

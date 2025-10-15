@@ -1,5 +1,6 @@
 import { Helmet } from 'react-helmet'
 import { PageInitArgs } from '../routes'
+import { GameCanvas } from '../components/GameCanvas/GameCanvas'
 import '../App.scss'
 
 export const MainPage = () => {
@@ -15,6 +16,22 @@ export const MainPage = () => {
       </Helmet>
 
       <div className="app">
+        <section className="game-section">
+          <GameCanvas />
+          <div className="game-section__overlay">
+            <div className="life-bar">
+              <div className="life-bar__fill" style={{ width: '70%' }}></div>
+            </div>
+            <div className="ammo-count">
+              <span className="ammo-count__current">30</span>/
+              <span className="ammo-count__total">90</span>
+            </div>
+            <p className="game-section__subtitle">
+              Управляйте героем на WASD/стрелках, пробел — стрельба.
+            </p>
+          </div>
+        </section>
+
         <div className="demo-container">
           {/* Заголовок с эффектом */}
           <header className="demo-header scanline">

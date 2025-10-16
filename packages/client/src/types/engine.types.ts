@@ -116,6 +116,8 @@ export interface EnemyComponentState {
   damage?: number
   speed?: number
   aggroRange?: number
+  attackRange?: number
+  attackCooldown?: number
 }
 
 export interface SpriteComponentState {
@@ -132,6 +134,10 @@ export interface SpriteComponentState {
   columns?: number
   rows?: number
   directionRow?: number
+  padding?: {
+    x?: number
+    y?: number
+  }
 }
 
 export interface ObstacleComponentState {

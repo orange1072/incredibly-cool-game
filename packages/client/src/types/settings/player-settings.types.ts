@@ -17,6 +17,11 @@ export type SkinSettings = {
   healthBarColor: string
 }
 
+export type SpritePadding = {
+  x?: number
+  y?: number
+}
+
 export type SpriteSettings = {
   name: string
   width: number
@@ -26,6 +31,7 @@ export type SpriteSettings = {
   frameDuration?: number
   columns?: number
   rows?: number
+  padding?: SpritePadding
 }
 
 export interface PlayerSettings {

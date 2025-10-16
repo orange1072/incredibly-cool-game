@@ -7,17 +7,21 @@ interface GameStats {
     level: number
     enemiesKilled: number
     bossesKilled: number
+    killProgress: number
+    nextLevelThreshold: number
   }
   player: {
     level: number
     hp: number
     xp: number
+    xpToNext: number
     money: number
     ammo: Record<ProjectileKind, number>
     inventory: inventoryItem[]
   }
   missionProgress: {
     wave: number
+    waveSize: number
     amountOfBosses: number
     amountOfEnemiesInWave: number
   }

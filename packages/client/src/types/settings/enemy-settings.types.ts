@@ -1,15 +1,26 @@
 import type { AIState, EnemyKind } from '../component.types'
 
 export type DamageProfile = {
+  radius: number
   baseSpeed: number
   baseValue: number
   actualDamage(this: DamageProfile, bonus: number, multiplier?: number): number
+}
+
+export type AttackProfile = {
+  range: number
+  cooldown: number
 }
 
 export type HealthProfile = {
   baseValue: number
   levelBonus: number
   health(this: HealthProfile, level: number, multiplier?: number): number
+}
+
+export type SpritePadding = {
+  x?: number
+  y?: number
 }
 
 export type SpriteProfile = {
@@ -22,6 +33,7 @@ export type SpriteProfile = {
   frameDuration?: number
   columns?: number
   rows?: number
+  padding?: SpritePadding
 }
 
 export type SkinProfile = {
@@ -53,4 +65,5 @@ export interface EnemySettings {
   collision: CollisionProfile
   health: HealthProfile
   movement: MovementProfile
+  attack: AttackProfile
 }

@@ -123,9 +123,13 @@ class CollisionSystem implements ISystem {
         passthrough: !hitsPlayer,
       })
 
-      // if (hitsPlayer) {
-      world.removeEntity(projectileEntity.id)
-      // }
+      //to-do: здесь будет проверка типа оружия. сейчас удары противника уничтожают снаряд, а игрока заставляют пролетать
+      if (hitsPlayer) {
+        world.removeEntity(projectileEntity.id)
+      } else {
+        return
+      }
+
       return
     }
 

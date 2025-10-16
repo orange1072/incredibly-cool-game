@@ -1,0 +1,150 @@
+@keyframes shimmer {
+  0% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.3;
+  }
+}
+
+@keyframes glitch {
+  0% {
+    transform: translate(0);
+  }
+  20% {
+    transform: translate(-2px, 2px);
+  }
+  40% {
+    transform: translate(-2px, -2px);
+  }
+  60% {
+    transform: translate(2px, 2px);
+  }
+  80% {
+    transform: translate(2px, -2px);
+  }
+  100% {
+    transform: translate(0);
+  }
+}
+
+.heroSection {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 0%,
+    rgba(13, 18, 16, 0.8) 100%
+  );
+}
+
+.parallaxBackground {
+  position: absolute;
+  inset: 0;
+}
+
+.backgroundImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.3;
+}
+
+.backgroundGradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(13, 18, 16, 0.7) 0%,
+    rgba(13, 18, 16, 0.9) 100%
+  );
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.heroContent {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  padding: 0 1rem;
+  max-width: 80rem;
+  margin: 0 auto;
+}
+
+/* Title */
+.title {
+  margin-bottom: 1rem;
+}
+
+.mainTitle {
+  font-family: 'Courier New', monospace;
+  color: #a8b5a8;
+  letter-spacing: 0.3em;
+  margin-bottom: 0.5rem;
+  font-size: 4rem;
+  line-height: 1;
+  animation: glitch 2s infinite;
+}
+
+.subtitle {
+  color: #4dd4e8;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 0.15em;
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+}
+
+.description {
+  color: #6a7a6a;
+  font-family: 'Courier New', monospace;
+  margin-bottom: 2rem;
+  max-width: 32rem;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.625;
+  letter-spacing: 0.025em;
+}
+
+/* CTA Buttons */
+.ctaButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 3rem;
+}
+
+.ctaButton {
+  min-width: 200px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .mainTitle {
+    font-size: 2.5rem;
+  }
+
+  .ctaButtons {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .ctaButton {
+    width: 100%;
+    max-width: 300px;
+  }
+}

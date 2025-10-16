@@ -1,0 +1,31 @@
+@keyframes shimmer {
+  0% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.3;
+  }
+}
+
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  animation: shimmer 3s ease-in-out infinite;
+
+  &.cyan {
+    background-color: rgba(47, 184, 204, 0.2);
+  }
+
+  &.orange {
+    background-color: rgba(245, 166, 35, 0.2);
+  }
+
+  &.red {
+    background-color: rgba(196, 58, 49, 0.2);
+  }
+}

@@ -4,7 +4,7 @@ import { GameCanvas } from '../components/GameCanvas/GameCanvas'
 import { XpBar } from '../components/XpBar/XpBar'
 import '../App.scss'
 
-export const MainPage = () => {
+export const DemoPage = () => {
   return (
     <>
       <Helmet>
@@ -177,6 +177,6 @@ export const MainPage = () => {
   )
 }
 
-export const initMainPage = async (_args: PageInitArgs) => {
+export const initDemoPage = async (_args: PageInitArgs) => {
   // Здесь можно добавить загрузку данных для главной страницы
 }

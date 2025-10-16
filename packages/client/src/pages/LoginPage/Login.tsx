@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { Input } from '@/components/Input/Input'
 import styles from './Login.module.scss'
 import { ParticleBackground } from '@/components/ParticleBackground'
@@ -7,29 +7,51 @@ import { PixelButton } from '@/components/PixelButton'
 import { ArrowRight, Radiation, User, Lock, AlertTriangle } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
+type Errors = Partial<Record<'username' | 'password', string>>
+
 export function SigninPage() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [errors, setErrors] = useState<Errors>({})
 
   const navigate = useNavigate()
 
-  const handleLogin = () => {
-    if (username && password) {
-      console.log('handleLogin')
-    }
-  }
+  const validate = useCallback(() => {
+    const newErrors: Errors = {}
+    if (!username.trim()) newErrors.username = 'Required'
+    if (!password) newErrors.password = 'Required'
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }, [username, password])
 
-  const handleGuestLogin = () => {
-    console.log('handleGuestLogin')
-  }
+  const handleSubmit = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault()
+      if (!validate()) {
+        return
+      }
+
+      navigate('/profile')
+    },
+    [validate, navigate]
+  )
+
+  const handleGuestLogin = useCallback(
+    (e?: React.MouseEvent) => {
+      e?.preventDefault()
+      setErrors({})
+      navigate('/profile')
+    },
+    [navigate]
+  )
 
   return (
-    <div className={styles['login-page']}>
+    <main className={styles['login-page']}>
       <ParticleBackground particleCount={20} />
 
       <div className={styles.content}>
         <div className={styles.container}>
-          <div className={styles.header}>
+          <header className={styles.header}>
             <div
               className={`${styles['logo-wrap']} ${styles['anomaly-pulse']}`}
             >
@@ -55,9 +77,9 @@ export function SigninPage() {
                 className={`${styles.icon} ${styles.small} ${styles.pulse}`}
               />
             </div>
-          </div>
+          </header>
 
-          <div
+          <section
             className={`${styles['metal-panel']} ${styles['grunge-texture']}`}
           >
             <div className={styles['top-line']} />
@@ -71,51 +93,57 @@ export function SigninPage() {
                 <span className={styles['status-text']}>System Online</span>
               </div>
 
-              <Input
-                label="Call Sign"
-                placeholder="marked_one"
-                icon={<User className={styles.icon} />}
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-              />
+              <form onSubmit={handleSubmit} className={styles['panel-inner']}>
+                <Input
+                  name="username"
+                  label="Call Sign"
+                  placeholder="marked_one"
+                  icon={<User className={styles.icon} />}
+                  value={username}
+                  error={errors.username}
+                  onChange={(e) => setUsername(e.target.value)}
+                />
 
-              <Input
-                label="Access Code"
-                type="password"
-                placeholder="••••••••"
-                icon={<Lock className={styles.icon} />}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
+                <Input
+                  name="password"
+                  label="Access Code"
+                  type="password"
+                  placeholder="••••••••"
+                  icon={<Lock className={styles.icon} />}
+                  value={password}
+                  error={errors.password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
 
-              <PixelButton
-                variant="primary"
-                size="lg"
-                className={styles['full-width']}
-                onClick={handleLogin}
-              >
-                Enter Zone
-              </PixelButton>
+                <PixelButton
+                  type="submit"
+                  variant="primary"
+                  size="lg"
+                  className={styles['full-width']}
+                >
+                  Enter Zone
+                </PixelButton>
 
-              <div className={styles.divider}>
-                <div className={styles.line} />
+                <div className={styles.divider}>
+                  <div className={styles.line} />
 
-                <span className={styles.or}>OR</span>
+                  <span className={styles.or}>OR</span>
 
-                <div className={styles.line} />
-              </div>
+                  <div className={styles.line} />
+                </div>
 
-              <PixelButton
-                variant="secondary"
-                size="md"
-                icon={
-                  <ArrowRight className={`${styles.icon} ${styles.small}`} />
-                }
-                className={styles['full-width']}
-                onClick={handleGuestLogin}
-              >
-                Anonymous Access
-              </PixelButton>
+                <PixelButton
+                  variant="secondary"
+                  size="md"
+                  icon={
+                    <ArrowRight className={`${styles.icon} ${styles.small}`} />
+                  }
+                  className={styles['full-width']}
+                  onClick={handleGuestLogin}
+                >
+                  Anonymous Access
+                </PixelButton>
+              </form>
 
               <div className={styles['panel-actions']}>
                 <button
@@ -135,7 +163,7 @@ export function SigninPage() {
             </div>
 
             <div className={styles['bottom-line']} />
-          </div>
+          </section>
 
           <div className={styles['warning-row']}>
             <div
@@ -152,6 +180,6 @@ export function SigninPage() {
           </div>
         </div>
       </div>
-    </div>
+    </main>
   )
 }

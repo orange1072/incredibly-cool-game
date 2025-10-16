@@ -9,6 +9,7 @@ interface PixelButtonProps {
   icon?: ReactNode
   className?: string
   disabled?: boolean
+  type?: 'button' | 'submit' | 'reset'
 }
 
 export function PixelButton({
@@ -19,6 +20,7 @@ export function PixelButton({
   icon,
   className = '',
   disabled = false,
+  type = 'button',
 }: PixelButtonProps) {
   const getVariantClass = () => {
     switch (variant) {
@@ -50,6 +52,7 @@ export function PixelButton({
 
   return (
     <button
+      type={type}
       onClick={onClick}
       disabled={disabled}
       className={`${

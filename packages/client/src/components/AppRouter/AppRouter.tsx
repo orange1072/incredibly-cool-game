@@ -9,6 +9,8 @@ import { Error500Page } from '@/pages/Error500Page'
 import { PrivateRoute } from '../PrivateRoute'
 import { DemoPage } from '@/pages/DemoPage'
 import { MainPage } from '@/pages/MainPage'
+import { GameMenuPage } from '@/pages/GameMenuPage'
+import { GamePlayPage } from '@/pages/GamePlayPage'
 
 export const AppRouter = () => {
   return (
@@ -37,6 +39,22 @@ export const AppRouter = () => {
         <Route path="/error404" Component={Error404Page} />
         <Route path="/error500" Component={Error500Page} />
         //Приватные роуты
+        <Route
+          path="/game-menu"
+          element={
+            <PrivateRoute>
+              <GameMenuPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/game-play"
+          element={
+            <PrivateRoute>
+              <GamePlayPage />
+            </PrivateRoute>
+          }
+        />
         <Route
           path="/profile"
           element={

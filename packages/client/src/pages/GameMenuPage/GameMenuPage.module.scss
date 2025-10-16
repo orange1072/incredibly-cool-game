@@ -1,0 +1,340 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.container {
+  min-height: 100vh;
+  background-color: $stalker-dark;
+  position: relative;
+  overflow: hidden;
+}
+
+.fogOverlay {
+  @include fog-overlay;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.anomalyParticles {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background-color: rgba($stalker-orange, 0.3);
+  border-radius: 50%;
+  animation: shimmer 4s ease-in-out infinite;
+}
+
+.content {
+  position: relative;
+  z-index: 10;
+  container-type: inline-size;
+  padding: 2rem 1rem;
+
+  @include respond-to('medium') {
+    padding: 2rem;
+  }
+}
+
+.innerContent {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 2rem;
+
+  @include respond-to('medium') {
+    margin-bottom: 3rem;
+  }
+}
+
+.title {
+  color: $stalker-text;
+  letter-spacing: 0.2em;
+  margin-bottom: 0.75rem;
+  font-size: $font-size-2xl;
+
+  @include respond-to('medium') {
+    font-size: $font-size-3xl;
+  }
+}
+
+.subtitle {
+  color: $stalker-text-dim;
+  font-size: $font-size-sm;
+  font-family: $font-family-mono;
+  letter-spacing: $letter-spacing-wide;
+  text-transform: uppercase;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+
+  @include respond-to('medium') {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.panel {
+  padding: 1.5rem;
+  position: relative;
+  backdrop-filter: blur(4px);
+
+  & .scanline {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.2;
+  }
+}
+
+.panelTopLine {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    $stalker-cyan,
+    transparent
+  );
+  opacity: 0.7;
+}
+
+.panelContent {
+  position: relative;
+  z-index: 10;
+}
+
+.panelTitle {
+  color: $stalker-text;
+  letter-spacing: $letter-spacing-wider;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-transform: uppercase;
+  font-size: $font-size-sm;
+}
+
+.iconZap {
+  color: $stalker-orange;
+  font-size: 1rem;
+}
+
+.iconUsers {
+  color: $stalker-cyan;
+  font-size: 1rem;
+}
+
+.iconSkull,
+.iconTarget {
+  width: 0.75rem;
+  height: 0.75rem;
+  display: inline-block;
+}
+
+.optionsList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.optionButton {
+  width: 100%;
+  padding: 1rem;
+  border: 2px solid $stalker-border;
+  background-color: $stalker-panel;
+  text-align: left;
+  cursor: pointer;
+  position: relative;
+  @include transition(all, 0.2s);
+
+  &:hover:not(.selected) {
+    border-color: rgba($stalker-cyan, 0.5);
+  }
+
+  &.selected {
+    background-color: rgba($stalker-cyan, 0.2);
+    border-color: $stalker-cyan;
+    @include cyan-glow;
+  }
+}
+
+.optionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
+}
+
+.optionName {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.optionIcon {
+  font-size: 1.125rem;
+}
+
+.optionText {
+  font-family: $font-family-mono;
+  color: $stalker-text;
+  letter-spacing: $letter-spacing-wide;
+  text-transform: uppercase;
+  font-size: $font-size-sm;
+}
+
+.difficulty {
+  font-size: $font-size-xs;
+  font-family: $font-family-mono;
+  letter-spacing: $letter-spacing-wide;
+  text-transform: uppercase;
+}
+
+.difficultyEasy {
+  color: $stalker-cyan-bright;
+}
+
+.difficultyNormal {
+  color: $stalker-orange;
+}
+
+.difficultyHard {
+  color: $stalker-danger;
+}
+
+.health {
+  font-size: $font-size-xs;
+  color: $stalker-text-dim;
+  font-family: $font-family-mono;
+}
+
+.optionInfo {
+  font-size: $font-size-xs;
+  color: $stalker-text-dim;
+  font-family: $font-family-mono;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tipsPanel {
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  border: 2px solid rgba($stalker-orange, 0.3);
+}
+
+.tipsText {
+  color: $stalker-orange;
+  font-size: $font-size-sm;
+  font-family: $font-family-mono;
+  text-align: center;
+  letter-spacing: $letter-spacing-wide;
+  text-transform: uppercase;
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+
+  @include respond-to('medium') {
+    flex-wrap: nowrap;
+  }
+}
+
+.primaryButton {
+  min-width: 300px;
+
+  @include respond-to('small') {
+    min-width: 350px;
+  }
+}
+
+.countdownOverlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba($stalker-dark, 0.95);
+  z-index: 50;
+  @include flex-center;
+}
+
+.countdownContent {
+  text-align: center;
+}
+
+.countdownNumber {
+  font-size: 9rem;
+  font-family: $font-family-mono;
+  color: $stalker-cyan;
+  margin-bottom: 1rem;
+  line-height: 1;
+
+  @include respond-to('small') {
+    font-size: 12rem;
+  }
+}
+
+.countdownText {
+  font-size: $font-size-2xl;
+  color: $stalker-text;
+  letter-spacing: 0.3em;
+
+  @include respond-to('small') {
+    font-size: $font-size-3xl;
+  }
+}
+
+.radiationIndicator {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: $stalker-orange;
+}
+
+.radiationDot {
+  width: 0.5rem;
+  height: 0.5rem;
+  background-color: $stalker-orange;
+  border-radius: 50%;
+  animation: pulse 1s ease-in-out infinite;
+}
+
+.radiationText {
+  font-size: $font-size-xs;
+  font-family: $font-family-mono;
+  letter-spacing: $letter-spacing-wide;
+  text-transform: uppercase;
+}
+
+// Анимации (определены в globals.scss, но добавила пульсацию для точек радиации)
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.1);
+  }
+}

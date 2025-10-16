@@ -8,10 +8,16 @@ type AmmoDeltaPayload = {
   amount: number
 }
 
+type PlayerXpPayload = {
+  current: number
+  toNext: number
+}
+
 const initialState: GameStats['player'] = {
   level: 0,
   hp: 0,
   xp: 0,
+  xpToNext: 100,
   money: 0,
   inventory: ['knife'],
   ammo: {
@@ -32,8 +38,9 @@ const playerSlice = createSlice({
     setPlayerHealth(state, action: PayloadAction<number>) {
       state.hp = action.payload
     },
-    setPlayerXp(state, action: PayloadAction<number>) {
-      state.xp = action.payload
+    setPlayerXp(state, action: PayloadAction<PlayerXpPayload>) {
+      state.xp = action.payload.current
+      state.xpToNext = action.payload.toNext
     },
     addMoney(state, action: PayloadAction<number>) {
       state.money += action.payload

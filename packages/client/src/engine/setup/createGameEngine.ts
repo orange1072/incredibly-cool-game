@@ -11,8 +11,14 @@ import ExperienceSystem from '../systems/ExpirienceSystem'
 import EffectSystem from '../systems/EffectSystem'
 import ProjectileSystem from '../systems/ProjectileSystem'
 import { createPlayer } from '../enteties/createPlayer'
+import { createWorld } from '../enteties/createWorld'
+import type { StoreLike } from '../adapters/ReduxAdapter'
+import type { RootState } from '../../store'
 
-export function createGameEngine(canvas: HTMLCanvasElement) {
+export function createGameEngine(
+  canvas: HTMLCanvasElement,
+  opts?: { store?: StoreLike<RootState> }
+) {
   if (canvas.width === 0 || canvas.height === 0) {
     const baseWidth = canvas.clientWidth
     const baseHeight = canvas.clientHeight
@@ -22,19 +28,15 @@ export function createGameEngine(canvas: HTMLCanvasElement) {
   }
 
   const renderer = new Renderer(canvas)
-  const engine = new GameEngine(renderer)
+  const world = createWorld()
+  const engine = new GameEngine(renderer, world)
 
-  const world = engine.getWorld()
   const eventBus = engine.getEventBus()
   const input = engine.getInputManager()
-  const worldBounds = { width: 1200, height: 600 }
-
-  if (world.setBounds) {
-    world.setBounds(worldBounds)
-  }
+  const worldBounds = world.getBounds()
 
   engine.addSystem(new GenerateMapSystem())
-  engine.addSystem(new SpawnSystem({ eventBus }))
+  engine.addSystem(new SpawnSystem({ eventBus, store: opts?.store }))
   engine.addSystem(new PlayerControlSystem(input))
   engine.addSystem(new MovementSystem())
   engine.addSystem(new ProjectileSystem())

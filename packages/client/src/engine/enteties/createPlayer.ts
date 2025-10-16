@@ -16,6 +16,16 @@ export function createPlayer(
   worldBoundsHeight: number
 ) {
   const player = new Entity()
+  const baseLevel = playerSettings.baseLevel
+  const baseHp = playerSettings.health.health.call(
+    playerSettings.health,
+    baseLevel
+  )
+  const baseDamage = playerSettings.damage.actualDamage.call(
+    playerSettings.damage,
+    0,
+    1
+  )
   player.addComponent(
     new PositionComponent({
       x: worldBoundsWidth / 2,
@@ -27,28 +37,29 @@ export function createPlayer(
   player.addComponent(new PlayerControlComponent())
   player.addComponent(
     new AttackComponent({
-      damage: playerSettings.damage.baseValue,
+      damage: baseDamage,
       cooldown: 0.35,
     })
   )
   player.addComponent(
     new HealthComponent({
-      hp: playerSettings.health.baseValue,
-      maxHp: playerSettings.health.baseValue,
+      hp: baseHp,
+      maxHp: baseHp,
     })
   )
   player.addComponent(new CollisionComponent({ radius: 12 }))
-  player.addComponent(new ExperienceComponent())
+  player.addComponent(new ExperienceComponent({ level: baseLevel }))
   player.addComponent(
     new SpriteComponent({
       name: playerSettings.sprite.name,
       width: playerSettings.sprite.width,
       height: playerSettings.sprite.height,
       source: playerSettings.sprite.source,
-      scale: playerSettings.sprite.scale,
-      frameDuration: playerSettings.sprite.frameDuration,
-      columns: playerSettings.sprite.columns,
-      rows: playerSettings.sprite.rows,
+      scale: playerSettings.sprite.scale ?? 1,
+      frameDuration: playerSettings.sprite.frameDuration ?? 100,
+      columns: playerSettings.sprite.columns ?? 1,
+      rows: playerSettings.sprite.rows ?? 1,
+      padding: playerSettings.sprite.padding,
     })
   )
   return player

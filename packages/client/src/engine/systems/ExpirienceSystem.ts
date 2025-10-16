@@ -4,6 +4,11 @@ import World from '../core/World'
 import EventBus from '../infrastructure/EventBus'
 import Logger from '../infrastructure/Logger'
 
+const ZERO_XP = 0
+const MIN_THRESHOLD = 1
+const THRESHOLD_GROWTH_RATE = 1.25
+const ANOTHER_ONE_LEVEL = 1
+
 interface ExperienceSystemOptions {
   eventBus: EventBus
 }
@@ -18,8 +23,8 @@ class ExperienceSystem implements ISystem {
     const data = rawData as Partial<EnemyKilledPayload> | undefined
     if (!data?.killerId) return
 
-    const xpReward = Number(data.xpReward ?? 0)
-    if (!Number.isFinite(xpReward) || xpReward <= 0) {
+    const xpReward = Number(data.xpReward ?? ZERO_XP)
+    if (!Number.isFinite(xpReward) || xpReward <= ZERO_XP) {
       this.logger.debug('Ignoring non-positive XP reward', data)
       return
     }
@@ -42,7 +47,7 @@ class ExperienceSystem implements ISystem {
     this.flushPendingRewards()
   }
 
-  update(world: World, dt: number): void {
+  update(world: World): void {
     this.world = world
     this.flushPendingRewards()
 
@@ -55,7 +60,6 @@ class ExperienceSystem implements ISystem {
 
       this.processLevelUps(player.id, exp)
     }
-    console.log({ dt })
   }
 
   private grantExperience(killerId: string, xpReward: number) {
@@ -92,10 +96,13 @@ class ExperienceSystem implements ISystem {
   private processLevelUps(entityId: string, exp: ExperienceComponent) {
     let leveledUp = false
 
-    while (exp.xp >= exp.xpToNext && exp.xpToNext > 0) {
+    while (exp.xp >= exp.xpToNext && exp.xpToNext > ZERO_XP) {
       exp.xp -= exp.xpToNext
-      exp.level += 1
-      exp.xpToNext = Math.max(1, Math.floor(exp.xpToNext * 1.25))
+      exp.level += ANOTHER_ONE_LEVEL
+      exp.xpToNext = Math.max(
+        MIN_THRESHOLD,
+        Math.floor(exp.xpToNext * THRESHOLD_GROWTH_RATE)
+      )
       leveledUp = true
 
       this.eventBus.emit('playerLevelUp', {

@@ -12,11 +12,16 @@ import World from '../core/World'
 import Entity from '../core/Entity'
 import Logger from '../infrastructure/Logger'
 
+const DEFAULT_CHASE_DISTANCE = 600
+const DEFAULT_ATTACK_DISTANCE = 40
+const DEFAULT_MOVE_SPEED = 50
+const ZERO_HEALTH = 0
+const ZERO_VELOCITY = 0
+const ZERO_DISTANCE = 0
+const ZERO_COOLDOWN = 0
+const MIN_DISTANCE = 0.0001
 class AISystem implements ISystem {
   private logger = new Logger('AISystem', 'warn')
-  private chaseDistance = 600
-  private attackDistance = 40
-  private moveSpeed = 50
 
   update(world: World, dt: number): void {
     const player = world.query(
@@ -31,7 +36,7 @@ class AISystem implements ISystem {
     const playerHealth = player.getComponent<HealthComponent>(
       COMPONENT_TYPES.health
     )
-    if (!playerPos || !playerHealth || playerHealth.hp <= 0) return
+    if (!playerPos || !playerHealth || playerHealth.hp <= ZERO_HEALTH) return
 
     const enemies = world.query(
       COMPONENT_TYPES.ai,
@@ -50,8 +55,8 @@ class AISystem implements ISystem {
 
       if (!ai || !pos || !vel || !health || !enemy) continue
 
-      if (health.hp <= 0) {
-        vel.dx = vel.dy = 0
+      if (health.hp <= ZERO_HEALTH) {
+        vel.dx = vel.dy = ZERO_VELOCITY
         ai.state = 'dead'
         continue
       }
@@ -59,27 +64,31 @@ class AISystem implements ISystem {
       const dx = playerPos.x - pos.x
       const dy = playerPos.y - pos.y
       const dist = Math.hypot(dx, dy)
-      const chaseDistance = enemy.aggroRange ?? this.chaseDistance
-      const attackDistance = enemy.attackRange ?? this.attackDistance
-      const moveSpeed = enemy.speed ?? this.moveSpeed
+      const chaseDistance = enemy.aggroRange ?? DEFAULT_CHASE_DISTANCE
+      const attackDistance = enemy.attackRange ?? DEFAULT_ATTACK_DISTANCE
+      const moveSpeed = enemy.speed ?? DEFAULT_MOVE_SPEED
 
       if (attack) {
-        attack.cooldownTimer = Math.max(attack.cooldownTimer - dt, 0)
+        attack.cooldownTimer = Math.max(
+          attack.cooldownTimer - dt,
+          ZERO_COOLDOWN
+        )
       }
 
       if (dist > chaseDistance) {
         ai.state = 'idle'
-        vel.dx = vel.dy = 0
+        vel.dx = vel.dy = ZERO_VELOCITY
       } else if (dist > attackDistance) {
         ai.state = 'chase'
-        const normX = dx / dist
-        const normY = dy / dist
+        const effectiveDist = dist === ZERO_DISTANCE ? MIN_DISTANCE : dist
+        const normX = dx / effectiveDist
+        const normY = dy / effectiveDist
         vel.dx = normX * moveSpeed
         vel.dy = normY * moveSpeed
       } else {
         ai.state = 'attack'
-        vel.dx = vel.dy = 0
-        if (attack && attack.cooldownTimer <= 0) {
+        vel.dx = vel.dy = ZERO_VELOCITY
+        if (attack && attack.cooldownTimer <= ZERO_COOLDOWN) {
           this.applyDamage(player, enemy.damage ?? attack.damage, e.id, attack)
         }
       }

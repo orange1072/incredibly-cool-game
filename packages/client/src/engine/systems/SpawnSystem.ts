@@ -9,6 +9,8 @@ import { setEnemyCount, setWave } from '../../slices/game'
 import type { StoreLike } from '../adapters/ReduxAdapter'
 import type { RootState } from '../../store'
 
+const DEFAULT_AREA_WIDTH = 400
+
 interface SpawnSystemOptions {
   eventBus: EventBus
   store?: StoreLike<RootState>
@@ -19,14 +21,14 @@ class SpawnSystem implements ISystem {
   private logger = new Logger('SpawnSystem', 'info')
   private bossSpawned = false
   private waveNumber = 0
-  private areaWidth = 400
+  private areaWidth = DEFAULT_AREA_WIDTH
   private store?: StoreLike<RootState>
   private enemiesSpawnedThisWave = 0
   private enemiesKilledThisWave = 0
   private waveTarget = 0
   private waveComplete = false
-  private readonly spawnBatchSize = 8
-  private readonly baseWaveSize = 32
+  private readonly spawnBatchSize = 2
+  private readonly baseWaveSize = 16
   private readonly waveGrowthFactor = 1.35
 
   constructor({ eventBus, store }: SpawnSystemOptions) {

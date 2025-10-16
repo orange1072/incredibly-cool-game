@@ -11,6 +11,14 @@ import Entity from '../core/Entity'
 import World from '../core/World'
 import Logger from '../infrastructure/Logger'
 
+const DEFAULT_PROJECTILE_DAMAGE = 10
+
+const ZERO_DISTANCE = 0
+
+const MIN_D_X = 1
+const MIN_D_Y = 0
+const MIN_DISTANCE = 0.0001
+
 class CollisionSystem implements ISystem {
   private logger = new Logger('CollisionSystem', 'warn')
 
@@ -109,7 +117,7 @@ class CollisionSystem implements ISystem {
     const hitsPlayer = target.hasComponent(COMPONENT_TYPES.playerControl)
 
     if (target.hasComponent(COMPONENT_TYPES.health)) {
-      const damage = projectile.damage ?? 10
+      const damage = projectile.damage ?? DEFAULT_PROJECTILE_DAMAGE
       target.addComponent(
         new DamageComponent({
           amount: damage,
@@ -147,21 +155,13 @@ class CollisionSystem implements ISystem {
   }
 
   private resolvePlayerObstacle(player: Entity, obstacle: Entity) {
-    const playerPos = player.getComponent<PositionComponent>(
-      COMPONENT_TYPES.position
-    )
-    const playerCollision = player.getComponent<CollisionComponent>(
-      COMPONENT_TYPES.collision
-    )
-    const obstaclePos = obstacle.getComponent<PositionComponent>(
-      COMPONENT_TYPES.position
-    )
-    const obstacleCollision = obstacle.getComponent<CollisionComponent>(
-      COMPONENT_TYPES.collision
-    )
-    const obstacleData = obstacle.getComponent<ObstacleComponent>(
-      COMPONENT_TYPES.obstacle
-    )
+    const { position: playerPos, collision: playerCollision } =
+      this.getCollisionComponents(player)
+    const {
+      position: obstaclePos,
+      collision: obstacleCollision,
+      obstacle: obstacleData,
+    } = this.getCollisionComponents(obstacle)
     if (!playerPos || !playerCollision || !obstaclePos || !obstacleCollision) {
       return
     }
@@ -175,14 +175,14 @@ class CollisionSystem implements ISystem {
     let distance = Math.hypot(dx, dy)
     const minDistance = playerCollision.radius + obstacleCollision.radius
 
-    if (distance === 0) {
-      dx = 1
-      dy = 0
-      distance = 0.0001
+    if (distance === ZERO_DISTANCE) {
+      dx = MIN_D_X
+      dy = MIN_D_Y
+      distance = MIN_DISTANCE
     }
 
     const overlap = minDistance - distance
-    if (overlap <= 0) {
+    if (overlap <= ZERO_DISTANCE) {
       return
     }
 
@@ -198,10 +198,24 @@ class CollisionSystem implements ISystem {
 
     if (velocity) {
       const pushBack = velocity.dx * nx + velocity.dy * ny
-      if (pushBack < 0) {
+      if (pushBack < ZERO_DISTANCE) {
         velocity.dx -= pushBack * nx
         velocity.dy -= pushBack * ny
       }
+    }
+  }
+
+  private getCollisionComponents(entity: Entity) {
+    return {
+      position: entity.getComponent<PositionComponent>(
+        COMPONENT_TYPES.position
+      ),
+      collision: entity.getComponent<CollisionComponent>(
+        COMPONENT_TYPES.collision
+      ),
+      obstacle: entity.getComponent<ObstacleComponent>(
+        COMPONENT_TYPES.obstacle
+      ),
     }
   }
 
@@ -223,26 +237,27 @@ class CollisionSystem implements ISystem {
       return
     }
 
+    //to-do: повторяющийся код
     let dx = posA.x - posB.x
     let dy = posA.y - posB.y
     let distance = Math.hypot(dx, dy)
     const minDistance = colA.radius + colB.radius
 
-    if (distance === 0) {
-      dx = 1
-      dy = 0
-      distance = 0.0001
+    if (distance === ZERO_DISTANCE) {
+      dx = MIN_D_X
+      dy = MIN_D_Y
+      distance = MIN_DISTANCE
     }
 
     const overlap = minDistance - distance
-    if (overlap <= 0) {
+    if (overlap <= ZERO_DISTANCE) {
       return
     }
 
     const nx = dx / distance
     const ny = dy / distance
 
-    const totalRadius = Math.max(colA.radius + colB.radius, 0.0001)
+    const totalRadius = Math.max(colA.radius + colB.radius, MIN_DISTANCE)
     const moveA = overlap * (colB.radius / totalRadius)
     const moveB = overlap * (colA.radius / totalRadius)
 

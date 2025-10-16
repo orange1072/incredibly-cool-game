@@ -13,6 +13,33 @@ import { player } from '../settings/player-settings/player'
 import worldSettings from '../settings/world-settings/world'
 import { COMPONENT_TYPES } from '../../types/engine.types'
 
+const CAMERA_PADDING = 16
+const MIN_RENDER_SIZE = 12
+const HEALTH_BAR_OFFSET = 6
+const DEFAULT_SCALE = 1
+const MIN_FRAME_DURATION = 0.016
+const DEFAULT_FRAME_DURATION_MS = 100
+const MILLISECONDS_IN_SECOND = 1000
+const ZERO_FRAMES = 0
+const MIN_COLUMNS = 1
+const MIN_ROWS = 1
+const ZERO_ANIMATION_TIMER = 0
+const ZERO_DELTA = 0
+const MOVING_THRESHOLD = 1
+const MIN_SOURCE_SIZE = 1
+const OCTANTS = 8
+const OCTANT_RADIANS = Math.PI / 4
+const OBSTACLE_FILL_COLOR = 'rgba(120, 130, 140, 0.9)'
+const DEFAULT_ENTITY_FILL_COLOR = 'rgba(255, 255, 255, 0.6)'
+const HEALTH_HIGH_THRESHOLD = 0.5
+const HEALTH_MEDIUM_THRESHOLD = 0.25
+const HEALTH_COLOR_HIGH = '#48ff8a'
+const HEALTH_COLOR_MEDIUM = '#ffe066'
+const HEALTH_COLOR_LOW = '#ff4d6d'
+const HEALTH_BAR_BACKGROUND = 'rgba(20, 20, 20, 0.8)'
+const HEALTH_BAR_HEIGHT = 4
+const HEALTH_BAR_STROKE = 'rgba(0, 0, 0, 0.6)'
+
 class Renderer {
   private ctx: CanvasRenderingContext2D
   private cameraX = 0
@@ -110,7 +137,7 @@ class Renderer {
     visibleHeight: number,
     deltaTime: number
   ) {
-    const padding = 16
+    const padding = CAMERA_PADDING
 
     const minX = this.cameraX - padding
     const maxX = this.cameraX + visibleWidth + padding
@@ -148,14 +175,14 @@ class Renderer {
         } else if (isEnemy) {
           this.ctx.fillStyle = regularZombie.skin.color
         } else if (obstacle) {
-          this.ctx.fillStyle = 'rgba(120, 130, 140, 0.9)'
+          this.ctx.fillStyle = OBSTACLE_FILL_COLOR
         } else {
-          this.ctx.fillStyle = 'rgba(255, 255, 255, 0.6)'
+          this.ctx.fillStyle = DEFAULT_ENTITY_FILL_COLOR
         }
 
         const size = sprite
-          ? Math.max(sprite.width * worldSettings.zoom, 12)
-          : 12
+          ? Math.max(sprite.width * worldSettings.zoom, MIN_RENDER_SIZE)
+          : MIN_RENDER_SIZE
         this.ctx.fillRect(pos.x - size / 2, pos.y - size / 2, size, size)
         renderedWidth = size
       }
@@ -163,7 +190,7 @@ class Renderer {
       if (health) {
         this.drawHealthBar(
           pos.x,
-          pos.y - renderedWidth / 2 - 6,
+          pos.y - renderedWidth / 2 - HEALTH_BAR_OFFSET,
           renderedWidth,
           health
         )
@@ -198,27 +225,28 @@ class Renderer {
     velocity: VelocityComponent | undefined,
     deltaTime: number
   ) {
-    const velX = velocity?.dx ?? 0
-    const velY = velocity?.dy ?? 0
+    const velX = velocity?.dx ?? ZERO_DELTA
+    const velY = velocity?.dy ?? ZERO_DELTA
     const speedSq = velX * velX + velY * velY
-    const moving = speedSq > 1
+    const moving = speedSq > MOVING_THRESHOLD
 
     if (moving) {
       sprite.directionRow = this.calculateDirection(velX, velY)
       const frameDurationSeconds = Math.max(
-        0.016,
-        (sprite.frameDuration ?? 100) / 1000
+        MIN_FRAME_DURATION,
+        (sprite.frameDuration ?? DEFAULT_FRAME_DURATION_MS) /
+          MILLISECONDS_IN_SECOND
       )
       sprite.animationTimer += deltaTime
       while (sprite.animationTimer >= frameDurationSeconds) {
         sprite.animationTimer -= frameDurationSeconds
         sprite.frame = sprite.loop
-          ? (sprite.frame + 1) % Math.max(1, sprite.columns)
+          ? (sprite.frame + 1) % Math.max(MIN_COLUMNS, sprite.columns)
           : Math.min(sprite.columns - 1, sprite.frame + 1)
       }
     } else {
-      sprite.animationTimer = 0
-      sprite.frame = 0
+      sprite.animationTimer = ZERO_ANIMATION_TIMER
+      sprite.frame = ZERO_FRAMES
     }
   }
 
@@ -233,20 +261,23 @@ class Renderer {
 
     const frameWidth = sprite.width
     const frameHeight = sprite.height
-    const columns = Math.max(1, sprite.columns)
-    const rows = Math.max(1, sprite.rows)
+    const columns = Math.max(MIN_COLUMNS, sprite.columns)
+    const rows = Math.max(MIN_ROWS, sprite.rows)
     const currentFrame = Math.min(
       columns - 1,
-      Math.max(0, Math.floor(sprite.frame))
+      Math.max(ZERO_FRAMES, Math.floor(sprite.frame))
     )
-    const currentRow = Math.min(rows - 1, Math.max(0, sprite.directionRow))
-    const baseScale = sprite.scale ?? 1
+    const currentRow = Math.min(
+      rows - 1,
+      Math.max(ZERO_FRAMES, sprite.directionRow)
+    )
+    const baseScale = sprite.scale ?? DEFAULT_SCALE
     const paddingX = Math.min(sprite.padding.x, frameWidth / 2)
     const paddingY = Math.min(sprite.padding.y, frameHeight / 2)
     const sourceX = currentFrame * frameWidth + paddingX
     const sourceY = currentRow * frameHeight + paddingY
-    const sourceWidth = Math.max(1, frameWidth - paddingX * 2)
-    const sourceHeight = Math.max(1, frameHeight - paddingY * 2)
+    const sourceWidth = Math.max(MIN_SOURCE_SIZE, frameWidth - paddingX * 2)
+    const sourceHeight = Math.max(MIN_SOURCE_SIZE, frameHeight - paddingY * 2)
     const destWidth = sourceWidth * baseScale
     const destHeight = sourceHeight * baseScale
     const drawX = position.x - destWidth / 2
@@ -274,8 +305,8 @@ class Renderer {
 
   private calculateDirection(dx: number, dy: number) {
     const angle = Math.atan2(dy, dx)
-    const sector = Math.round(angle / (Math.PI / 4))
-    return (sector + 8) % 8
+    const sector = Math.round(angle / OCTANT_RADIANS)
+    return (sector + OCTANTS) % OCTANTS
   }
 
   private getImage(source: string) {
@@ -289,7 +320,9 @@ class Renderer {
   }
 
   private getHealthBar(ratio: number) {
-    return ratio > 0.5 ? '#48ff8a' : ratio > 0.25 ? '#ffe066' : '#ff4d6d'
+    if (ratio > HEALTH_HIGH_THRESHOLD) return HEALTH_COLOR_HIGH
+    if (ratio > HEALTH_MEDIUM_THRESHOLD) return HEALTH_COLOR_MEDIUM
+    return HEALTH_COLOR_LOW
   }
 
   private getHealthBarRect(
@@ -312,10 +345,10 @@ class Renderer {
     health: HealthComponent
   ) {
     const barWidth = Math.max(width, 18)
-    const barHeight = 4
+    const barHeight = HEALTH_BAR_HEIGHT
     const ratio = Math.max(0, Math.min(1, health.hp / health.maxHp))
 
-    this.ctx.fillStyle = 'rgba(20, 20, 20, 0.8)'
+    this.ctx.fillStyle = HEALTH_BAR_BACKGROUND
 
     const [fullRectX, fullRectY, fullRectWidth, fullRectHeight] =
       this.getHealthBarRect(centerX, topY, barWidth, barHeight)
@@ -327,7 +360,7 @@ class Renderer {
 
     this.ctx.fillRect(fullRectX, fullRectY, damageRectWidth, fullRectHeight)
 
-    this.ctx.strokeStyle = 'rgba(0, 0, 0, 0.6)'
+    this.ctx.strokeStyle = HEALTH_BAR_STROKE
     // this.ctx.lineWidth = 1 / worldSettings.zoom
     this.ctx.strokeRect(fullRectX, fullRectY, fullRectWidth, fullRectHeight)
   }

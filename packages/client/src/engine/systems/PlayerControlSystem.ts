@@ -12,11 +12,26 @@ import World from '../core/World'
 import InputManager from '../infrastructure/InputManager'
 import Entity from '../core/Entity'
 
-class PlayerControlSystem implements ISystem {
-  private bulletSpeed = 600
-  private autoFireRange = 100
+const DEFAULT_BULLET_SPEED = 600
+const DEFAULT_AUTO_FIRE_RANGE = 100
+const DEFAULT_PLAYER_SPEED = 200
+const ZERO_DISTANCE = 0
+const ZERO_COOLDOWN = 0
+const PROJECTILE_LIFETIME = 2
+const PROJECTILE_RADIUS = 6
+const DEFAULT_BULLET_WIDTH = 2
+const DEFAULT_BULLET_HEIGHT = 2
+const MOVE_FLAG = 1
+const STOP_FLAG = 0
 
-  constructor(private input: InputManager, private speed = 200) {}
+class PlayerControlSystem implements ISystem {
+  private bulletSpeed = DEFAULT_BULLET_SPEED
+  private autoFireRange = DEFAULT_AUTO_FIRE_RANGE
+
+  constructor(
+    private input: InputManager,
+    private speed = DEFAULT_PLAYER_SPEED
+  ) {}
 
   update(world: World, dt: number): void {
     const entities = world.query(
@@ -36,15 +51,27 @@ class PlayerControlSystem implements ISystem {
       if (!pos || !vel || !control) continue
 
       if (attack) {
-        attack.cooldownTimer = Math.max(0, attack.cooldownTimer - dt)
+        attack.cooldownTimer = Math.max(
+          ZERO_COOLDOWN,
+          attack.cooldownTimer - dt
+        )
       }
 
       const horizontal =
-        (this.input.isPressed('d') || this.input.isPressed('в') ? 1 : 0) -
-        (this.input.isPressed('a') || this.input.isPressed('ф') ? 1 : 0)
+        (this.input.isPressed('d') || this.input.isPressed('в')
+          ? MOVE_FLAG
+          : STOP_FLAG) -
+        (this.input.isPressed('a') || this.input.isPressed('ф')
+          ? MOVE_FLAG
+          : STOP_FLAG)
+
       const vertical =
-        (this.input.isPressed('s') || this.input.isPressed('ы') ? 1 : 0) -
-        (this.input.isPressed('w') || this.input.isPressed('ц') ? 1 : 0)
+        (this.input.isPressed('s') || this.input.isPressed('ы')
+          ? MOVE_FLAG
+          : STOP_FLAG) -
+        (this.input.isPressed('w') || this.input.isPressed('ц')
+          ? MOVE_FLAG
+          : STOP_FLAG)
 
       vel.dx = horizontal * this.speed
       vel.dy = vertical * this.speed
@@ -52,7 +79,7 @@ class PlayerControlSystem implements ISystem {
       const target = this.findNearestEnemy(world, pos, this.autoFireRange)
       control.shooting = Boolean(target)
 
-      if (target && attack && attack.cooldownTimer <= 0) {
+      if (target && attack && attack.cooldownTimer <= ZERO_COOLDOWN) {
         const projectile = this.spawnProjectile(e, pos, target, attack)
         if (projectile) {
           world.addEntity(projectile)
@@ -76,7 +103,7 @@ class PlayerControlSystem implements ISystem {
     const dx = targetPos.x - sourcePos.x
     const dy = targetPos.y - sourcePos.y
     const dist = Math.hypot(dx, dy)
-    if (dist === 0) return null
+    if (dist === ZERO_DISTANCE) return null
 
     const dirX = dx / dist
     const dirY = dy / dist
@@ -96,15 +123,17 @@ class PlayerControlSystem implements ISystem {
         damage: attack.damage,
         sourceId: source.id,
         speed: this.bulletSpeed,
-        lifetime: 2,
+        lifetime: PROJECTILE_LIFETIME,
       })
     )
-    projectile.addComponent(new CollisionComponent({ radius: 6 }))
+    projectile.addComponent(
+      new CollisionComponent({ radius: PROJECTILE_RADIUS })
+    )
     projectile.addComponent(
       new SpriteComponent({
         name: 'bullet',
-        width: 4,
-        height: 4,
+        width: DEFAULT_BULLET_WIDTH,
+        height: DEFAULT_BULLET_HEIGHT,
         source: 'bullet',
       })
     )

@@ -9,6 +9,9 @@ import EventBus from '../infrastructure/EventBus'
 
 const bus = EventBus.instance
 
+const ZERO_XP_REWARD = 0
+const ZERO_HP = 0
+
 class DamageSystem implements ISystem {
   update(world: World) {
     const entities = world.query(COMPONENT_TYPES.health, COMPONENT_TYPES.damage)
@@ -21,10 +24,10 @@ class DamageSystem implements ISystem {
 
       health.hp -= damage.amount
 
-      if (health.hp <= 0) {
+      if (health.hp <= ZERO_HP) {
         const enemy = e.getComponent<EnemyComponent>(COMPONENT_TYPES.enemy)
         const killerId = damage.sourceId
-        const xpReward = enemy?.xpReward ?? 0
+        const xpReward = enemy?.xpReward ?? ZERO_XP_REWARD
 
         world.removeEntity(e.id)
 

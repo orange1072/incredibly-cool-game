@@ -21,6 +21,7 @@ import type {
   HealthComponent,
 } from '../core/Components'
 import EventBus, { type Listener } from '../infrastructure/EventBus'
+import { isProperEntity } from '../systems/helpers/utils'
 
 type GameSliceState = ReturnType<typeof gameReducer>
 
@@ -190,14 +191,14 @@ class ReduxAdapter<TState = RootState> {
   private handleEntityAdded: Listener = (...args) => {
     if (!this.isActive) return
     const [entity] = args as [Entity | undefined]
-    if (!entity || !entity.hasComponent(COMPONENT_TYPES.enemy)) return
+    if (!entity || !isProperEntity(entity, COMPONENT_TYPES.enemy)) return
     this.syncEnemyCounts()
   }
 
   private handleEntityRemoved: Listener = (...args) => {
     if (!this.isActive) return
     const [entity] = args as [Entity | undefined]
-    if (!entity || !entity.hasComponent(COMPONENT_TYPES.enemy)) {
+    if (!entity || !isProperEntity(entity, COMPONENT_TYPES.enemy)) {
       return
     }
 

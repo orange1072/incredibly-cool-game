@@ -11,6 +11,7 @@ import {
 import World from '../core/World'
 import InputManager from '../infrastructure/InputManager'
 import Entity from '../core/Entity'
+import { getProximity, calculateUnitDirection } from './helpers/calculations'
 
 const DEFAULT_BULLET_SPEED = 600
 const DEFAULT_AUTO_FIRE_RANGE = 100
@@ -19,8 +20,8 @@ const ZERO_DISTANCE = 0
 const ZERO_COOLDOWN = 0
 const PROJECTILE_LIFETIME = 2
 const PROJECTILE_RADIUS = 6
-const DEFAULT_BULLET_WIDTH = 2
-const DEFAULT_BULLET_HEIGHT = 2
+const DEFAULT_BULLET_WIDTH = 4
+const DEFAULT_BULLET_HEIGHT = 4
 const MOVE_FLAG = 1
 const STOP_FLAG = 0
 
@@ -100,13 +101,13 @@ class PlayerControlSystem implements ISystem {
     )
     if (!targetPos) return null
 
-    const dx = targetPos.x - sourcePos.x
-    const dy = targetPos.y - sourcePos.y
+    const dx = getProximity(targetPos.x, sourcePos.x)
+    const dy = getProximity(targetPos.y, sourcePos.y)
     const dist = Math.hypot(dx, dy)
     if (dist === ZERO_DISTANCE) return null
 
-    const dirX = dx / dist
-    const dirY = dy / dist
+    const dirX = calculateUnitDirection(dx, dist)
+    const dirY = calculateUnitDirection(dy, dist)
 
     const projectile = new Entity()
     projectile.addComponent(
@@ -155,7 +156,10 @@ class PlayerControlSystem implements ISystem {
         COMPONENT_TYPES.position
       )
       if (!enemyPos) continue
-      const dist = Math.hypot(enemyPos.x - origin.x, enemyPos.y - origin.y)
+      const dist = Math.hypot(
+        getProximity(enemyPos.x, origin.x),
+        getProximity(enemyPos.y, origin.y)
+      )
       if (dist < nearestDist && dist <= maxDistance) {
         nearestDist = dist
         nearest = enemy

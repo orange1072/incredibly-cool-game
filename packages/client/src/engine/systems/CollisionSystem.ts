@@ -10,6 +10,16 @@ import {
 import Entity from '../core/Entity'
 import World from '../core/World'
 import Logger from '../infrastructure/Logger'
+import {
+  displaceAlongNormal,
+  getProximity,
+  calculateUnitDirection,
+} from './helpers/calculations'
+import {
+  getProperEntity,
+  checkWhoIsEnemy,
+  isProperEntity,
+} from './helpers/utils'
 
 const DEFAULT_PROJECTILE_DAMAGE = 10
 
@@ -42,8 +52,8 @@ class CollisionSystem implements ISystem {
         )
         if (!posB || !colB) continue
 
-        const dx = posA.x - posB.x
-        const dy = posA.y - posB.y
+        const dx = getProximity(posA.x, posB.x)
+        const dy = getProximity(posA.y, posB.y)
         const dist = Math.hypot(dx, dy)
         const minDist = colA.radius + colB.radius
 
@@ -55,8 +65,8 @@ class CollisionSystem implements ISystem {
   }
 
   private handleCollision(a: Entity, b: Entity, world: World) {
-    const aIsProjectile = a.hasComponent(COMPONENT_TYPES.projectile)
-    const bIsProjectile = b.hasComponent(COMPONENT_TYPES.projectile)
+    const aIsProjectile = isProperEntity(a, COMPONENT_TYPES.projectile)
+    const bIsProjectile = isProperEntity(b, COMPONENT_TYPES.projectile)
 
     if (aIsProjectile) {
       this.processProjectileHit(a, b, world)
@@ -70,16 +80,9 @@ class CollisionSystem implements ISystem {
       return
     }
 
-    const playerEntity = a.hasComponent(COMPONENT_TYPES.playerControl)
-      ? a
-      : b.hasComponent(COMPONENT_TYPES.playerControl)
-      ? b
-      : null
+    const playerEntity = getProperEntity([a, b], COMPONENT_TYPES.playerControl)
 
-    const aIsEnemy = a.hasComponent(COMPONENT_TYPES.enemy)
-    const bIsEnemy = b.hasComponent(COMPONENT_TYPES.enemy)
-    const aIsPlayer = playerEntity === a
-    const bIsPlayer = playerEntity === b
+    const { aIsEnemy, bIsEnemy, aIsPlayer, bIsPlayer } = checkWhoIsEnemy(a, b)
 
     if (
       (aIsPlayer && bIsEnemy) ||
@@ -89,11 +92,7 @@ class CollisionSystem implements ISystem {
       this.resolveDynamicOverlap(a, b)
     }
 
-    const obstacleEntity = a.hasComponent(COMPONENT_TYPES.obstacle)
-      ? a
-      : b.hasComponent(COMPONENT_TYPES.obstacle)
-      ? b
-      : null
+    const obstacleEntity = getProperEntity([a, b], COMPONENT_TYPES.obstacle)
 
     if (playerEntity && obstacleEntity && playerEntity !== obstacleEntity) {
       this.resolvePlayerObstacle(playerEntity, obstacleEntity)
@@ -114,9 +113,9 @@ class CollisionSystem implements ISystem {
       return
     }
 
-    const hitsPlayer = target.hasComponent(COMPONENT_TYPES.playerControl)
+    const hitsPlayer = isProperEntity(target, COMPONENT_TYPES.playerControl)
 
-    if (target.hasComponent(COMPONENT_TYPES.health)) {
+    if (isProperEntity(target, COMPONENT_TYPES.health)) {
       const damage = projectile.damage ?? DEFAULT_PROJECTILE_DAMAGE
       target.addComponent(
         new DamageComponent({
@@ -141,7 +140,7 @@ class CollisionSystem implements ISystem {
       return
     }
 
-    if (target.hasComponent(COMPONENT_TYPES.obstacle)) {
+    if (isProperEntity(target, COMPONENT_TYPES.obstacle)) {
       this.logger.debug(`Projectile passed through obstacle`, {
         projectileId: projectileEntity.id,
         obstacleId: target.id,
@@ -149,7 +148,7 @@ class CollisionSystem implements ISystem {
       return
     }
 
-    if (!target.hasComponent(COMPONENT_TYPES.projectile)) {
+    if (!isProperEntity(target, COMPONENT_TYPES.projectile)) {
       world.removeEntity(projectileEntity.id)
     }
   }
@@ -170,8 +169,8 @@ class CollisionSystem implements ISystem {
       return
     }
 
-    let dx = playerPos.x - obstaclePos.x
-    let dy = playerPos.y - obstaclePos.y
+    let dx = getProximity(playerPos.x, obstaclePos.x)
+    let dy = getProximity(playerPos.y, obstaclePos.y)
     let distance = Math.hypot(dx, dy)
     const minDistance = playerCollision.radius + obstacleCollision.radius
 
@@ -186,11 +185,11 @@ class CollisionSystem implements ISystem {
       return
     }
 
-    const nx = dx / distance
-    const ny = dy / distance
+    const nx = calculateUnitDirection(dx, distance)
+    const ny = calculateUnitDirection(dy, distance)
 
-    playerPos.x += nx * overlap
-    playerPos.y += ny * overlap
+    playerPos.x = displaceAlongNormal(playerPos.x, nx, overlap)
+    playerPos.y = displaceAlongNormal(playerPos.y, ny, overlap)
 
     const velocity = player.getComponent<VelocityComponent>(
       COMPONENT_TYPES.velocity
@@ -238,8 +237,8 @@ class CollisionSystem implements ISystem {
     }
 
     //to-do: повторяющийся код
-    let dx = posA.x - posB.x
-    let dy = posA.y - posB.y
+    let dx = getProximity(posA.x, posB.x)
+    let dy = getProximity(posA.y, posB.y)
     let distance = Math.hypot(dx, dy)
     const minDistance = colA.radius + colB.radius
 
@@ -254,17 +253,17 @@ class CollisionSystem implements ISystem {
       return
     }
 
-    const nx = dx / distance
-    const ny = dy / distance
+    const nx = calculateUnitDirection(dx, distance)
+    const ny = calculateUnitDirection(dy, distance)
 
     const totalRadius = Math.max(colA.radius + colB.radius, MIN_DISTANCE)
     const moveA = overlap * (colB.radius / totalRadius)
     const moveB = overlap * (colA.radius / totalRadius)
 
-    posA.x += nx * moveA
-    posA.y += ny * moveA
-    posB.x -= nx * moveB
-    posB.y -= ny * moveB
+    posA.x = displaceAlongNormal(posA.x, nx, moveA)
+    posA.y = displaceAlongNormal(posA.y, ny, moveA)
+    posB.x = displaceAlongNormal(posB.x, -nx, moveB)
+    posB.y = displaceAlongNormal(posB.y, -ny, moveB)
 
     const velA = entityA.getComponent<VelocityComponent>(
       COMPONENT_TYPES.velocity

@@ -11,6 +11,7 @@ import {
 import World from '../core/World'
 import Entity from '../core/Entity'
 import Logger from '../infrastructure/Logger'
+import { getProximity, calculateUnitDirection } from './helpers/calculations'
 
 const DEFAULT_CHASE_DISTANCE = 600
 const DEFAULT_ATTACK_DISTANCE = 40
@@ -61,8 +62,8 @@ class AISystem implements ISystem {
         continue
       }
 
-      const dx = playerPos.x - pos.x
-      const dy = playerPos.y - pos.y
+      const dx = getProximity(playerPos.x, pos.x)
+      const dy = getProximity(playerPos.y, pos.y)
       const dist = Math.hypot(dx, dy)
       const chaseDistance = enemy.aggroRange ?? DEFAULT_CHASE_DISTANCE
       const attackDistance = enemy.attackRange ?? DEFAULT_ATTACK_DISTANCE
@@ -81,8 +82,8 @@ class AISystem implements ISystem {
       } else if (dist > attackDistance) {
         ai.state = 'chase'
         const effectiveDist = dist === ZERO_DISTANCE ? MIN_DISTANCE : dist
-        const normX = dx / effectiveDist
-        const normY = dy / effectiveDist
+        const normX = calculateUnitDirection(dx, effectiveDist)
+        const normY = calculateUnitDirection(dy, effectiveDist)
         vel.dx = normX * moveSpeed
         vel.dy = normY * moveSpeed
       } else {
@@ -93,8 +94,7 @@ class AISystem implements ISystem {
         }
       }
 
-      // опционально логируем смену состояния
-      // this.logger.debug(`${e.id} → ${ai.state}`, { dist })
+      this.logger.debug(`${e.id} → ${ai.state}`, { dist })
     }
   }
 

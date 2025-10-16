@@ -12,6 +12,7 @@ import { regularZombie } from '../settings/enemy-settings/zombie'
 import { player } from '../settings/player-settings/player'
 import worldSettings from '../settings/world-settings/world'
 import { COMPONENT_TYPES } from '../../types/engine.types'
+import { resetCanvas } from './helpers/canvas'
 
 const CAMERA_PADDING = 16
 const MIN_RENDER_SIZE = 12
@@ -114,7 +115,7 @@ class Renderer {
       }
     }
 
-    this.ctx.clearRect(0, 0, width, height)
+    resetCanvas(this.ctx)
 
     this.ctx.fillStyle = worldSettings.tileGrid.bg
     this.ctx.fillRect(0, 0, width, height)

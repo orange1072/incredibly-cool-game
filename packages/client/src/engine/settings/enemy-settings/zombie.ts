@@ -9,10 +9,11 @@ const regularZombie: EnemySettings = {
   kind: 'zombie',
   ai: {
     startingValue: 'idle',
-    aggroRange: 60,
+    aggroRange: 700,
   },
   damage: {
-    baseSpeed: 10,
+    radius: 5,
+    baseSpeed: 30,
     baseValue: 10,
     actualDamage(this: DamageProfile, bonus: number, multiplier = 1) {
       return this.baseValue * multiplier + bonus
@@ -21,8 +22,8 @@ const regularZombie: EnemySettings = {
   xpReward: 20,
   sprite: {
     defaultColor: 'rgba(255, 75, 75, 0.95)',
-    width: 64,
-    height: 64,
+    width: 32,
+    height: 32,
     name: 'zombie-walker',
     source: '',
   },
@@ -34,14 +35,18 @@ const regularZombie: EnemySettings = {
     radius: 12,
   },
   health: {
-    baseValue: 100,
+    baseValue: 300,
     levelBonus: 10,
     health(this: HealthProfile, level: number, multiplier = 1) {
       return this.baseValue * multiplier + this.levelBonus * level
     },
   },
   movement: {
-    speed: 80,
+    speed: 60,
+  },
+  attack: {
+    range: 28,
+    cooldown: 1.5,
   },
 }
 

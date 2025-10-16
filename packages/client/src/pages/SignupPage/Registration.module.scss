@@ -8,12 +8,6 @@ $cyan-20: rgba(47,184,204,0.2);
   100% { transform: scale(1); opacity: 1; }
 }
 
-@keyframes shimmer {
-  0% { opacity: .2; }
-  50% { opacity: .6; }
-  100% { opacity: .2; }
-}
-
 .registration-page {
   min-height: 100vh;
   position: relative;
@@ -120,6 +114,10 @@ $cyan-20: rgba(47,184,204,0.2);
   height: 2px;
   background: linear-gradient(90deg, transparent, $stalker-cyan, transparent);
   opacity: .7;
+}
+
+fieldset {
+  border: none;
 }
 
 .bottom-line {
@@ -251,16 +249,4 @@ $cyan-20: rgba(47,184,204,0.2);
 
 .flex-1 {
   flex: 1;
-}
-
-.radiation-glow {
-  box-shadow: 0 0 6px rgba(245,166,35,0.25);
-}
-
-.cyan-glow {
-  filter: drop-shadow(0 0 6px rgba(47,184,204,0.16));
-}
-
-.anomaly-shimmer {
-  animation: shimmer 4s infinite;
 }

@@ -7,11 +7,11 @@ function calculateUnitDirection(proximity: number, totalDistance: number) {
 }
 
 function displaceAlongNormal(
-  coordinate: number,
+  coord: number,
   normalComponent: number,
   overlap: number
 ) {
-  return coordinate + normalComponent * overlap
+  return coord + normalComponent * overlap
 }
 
 export { getProximity, calculateUnitDirection, displaceAlongNormal }

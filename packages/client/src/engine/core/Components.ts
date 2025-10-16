@@ -190,6 +190,8 @@ class EnemyComponent
   damage: number
   speed: number
   aggroRange: number
+  attackRange: number
+  attackCooldown: number
 
   constructor({
     kind = 'zombie',
@@ -197,18 +199,20 @@ class EnemyComponent
     damage = 10,
     speed = 60,
     aggroRange = 250,
+    attackRange = 40,
+    attackCooldown = 1.5,
   }: EnemyComponentState = {}) {
     this.kind = kind
     this.xpReward = xpReward
     this.damage = damage
     this.speed = speed
     this.aggroRange = aggroRange
+    this.attackRange = attackRange
+    this.attackCooldown = attackCooldown
   }
 }
 
-class SpriteComponent
-  implements IPureDataComponent, Required<SpriteComponentState>
-{
+class SpriteComponent implements IPureDataComponent, SpriteComponentState {
   type = COMPONENT_TYPES.sprite
   entity!: IEntity
   name: string
@@ -225,6 +229,7 @@ class SpriteComponent
   rows: number
   directionRow: number
   animationTimer: number
+  padding: { x: number; y: number }
 
   constructor({
     name,
@@ -240,6 +245,7 @@ class SpriteComponent
     columns = 1,
     rows = 1,
     directionRow = 2,
+    padding,
   }: SpriteComponentState) {
     this.name = name
     this.width = width
@@ -255,6 +261,10 @@ class SpriteComponent
     this.rows = Math.max(1, rows)
     this.directionRow = Math.min(this.rows - 1, Math.max(0, directionRow))
     this.animationTimer = 0
+    this.padding = {
+      x: padding?.x ?? 0,
+      y: padding?.y ?? 0,
+    }
   }
 }
 

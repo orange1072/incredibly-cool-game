@@ -1,38 +1,39 @@
 import { useEffect, useMemo, useRef } from 'react'
 import { ReactAdapter } from '../../engine/adapters/ReactAdapter'
 import { createGameEngine } from '../../engine/setup/createGameEngine'
+import ReduxAdapter from '../../engine/adapters/ReduxAdapter'
+import { useStore, type RootState } from '../../store'
 
 export const GameCanvas = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const adapterRef = useRef<ReactAdapter | null>(null)
+  const reduxAdapterRef = useRef<ReduxAdapter | null>(null)
+  const store = useStore()
 
   useEffect(() => {
     const canvas = canvasRef.current
-    if (!canvas || adapterRef.current) return
 
-    const engine = createGameEngine(canvas)
+    if (!canvas || adapterRef.current) return
+    canvas.width = window.innerWidth
+    canvas.height = window.innerHeight
+
+    const engine = createGameEngine(canvas, { store })
     const adapter = new ReactAdapter({ canvasRef, engine })
+    const reduxAdapter = new ReduxAdapter<RootState>({ engine, store })
 
     adapterRef.current = adapter
+    reduxAdapterRef.current = reduxAdapter
+
+    reduxAdapter.connect()
     adapter.start()
 
     return () => {
       adapterRef.current?.destroy()
       adapterRef.current = null
+      reduxAdapterRef.current?.destroy()
+      reduxAdapterRef.current = null
     }
-  }, [])
+  }, [store])
 
-  const canvasStyle = useMemo(
-    () => ({
-      width: '100%',
-      height: '100%',
-      display: 'block',
-      flex: 1,
-      border: '1px solid rgba(255, 255, 255, 0.2)',
-      backgroundColor: 'rgba(0, 0, 0, 0.85)',
-    }),
-    []
-  )
-
-  return <canvas ref={canvasRef} className="game-canvas" style={canvasStyle} />
+  return <canvas ref={canvasRef} className="game-canvas" />
 }

@@ -5,6 +5,7 @@ import {
   ObstacleComponent,
   SpriteComponent,
   SpawnPointComponent,
+  CollisionComponent,
   type ObstacleKind,
 } from '../core/Components'
 import Entity from '../core/Entity'
@@ -96,10 +97,15 @@ class GenerateMapSystem implements ISystem {
 
   private createObstacle(x: number, y: number, kind: ObstacleKind) {
     const e = new Entity()
+    const width = 64
+    const height = 64
     e.addComponent(new PositionComponent({ x, y }))
-    e.addComponent(new ObstacleComponent({ width: 64, height: 64, kind }))
+    e.addComponent(new ObstacleComponent({ width, height, kind }))
     e.addComponent(
-      new SpriteComponent({ name: kind, width: 64, height: 64, source: kind })
+      new CollisionComponent({ radius: Math.max(width, height) / 2 })
+    )
+    e.addComponent(
+      new SpriteComponent({ name: kind, width, height, source: kind })
     )
     return e
   }

@@ -1,6 +1,7 @@
 import { Helmet } from 'react-helmet'
 import { PageInitArgs } from '../routes'
 import { GameCanvas } from '../components/GameCanvas/GameCanvas'
+import { XpBar } from '../components/XpBar/XpBar'
 import '../App.scss'
 
 export const MainPage = () => {
@@ -19,16 +20,7 @@ export const MainPage = () => {
         <section className="game-section">
           <GameCanvas />
           <div className="game-section__overlay">
-            <div className="life-bar">
-              <div className="life-bar__fill" style={{ width: '70%' }}></div>
-            </div>
-            <div className="ammo-count">
-              <span className="ammo-count__current">30</span>/
-              <span className="ammo-count__total">90</span>
-            </div>
-            <p className="game-section__subtitle">
-              Управляйте героем на WASD/стрелках, пробел — стрельба.
-            </p>
+            <XpBar />
           </div>
         </section>
 

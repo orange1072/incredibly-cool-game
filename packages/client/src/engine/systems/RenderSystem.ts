@@ -30,7 +30,7 @@ class Renderer {
     }
   }
 
-  private movePlayer(
+  private moveCamera(
     position: PositionComponent,
     maxCameraX: number,
     maxCameraY: number,
@@ -77,7 +77,7 @@ class Renderer {
         COMPONENT_TYPES.position
       )
       if (playerPos) {
-        this.movePlayer(
+        this.moveCamera(
           playerPos,
           maxCameraX,
           maxCameraY,
@@ -190,41 +190,7 @@ class Renderer {
       return 0
     }
 
-    this.updateSpriteAnimation(sprite, velocity, deltaTime)
-
-    const frameWidth = sprite.width
-    const frameHeight = sprite.height
-    const columns = Math.max(1, sprite.columns)
-    const rows = Math.max(1, sprite.rows)
-    const currentFrame = Math.min(
-      columns - 1,
-      Math.max(0, Math.floor(sprite.frame))
-    )
-    const currentRow = Math.min(rows - 1, Math.max(0, sprite.directionRow))
-    const baseScale = sprite.scale
-    const effectiveScale = baseScale
-    const destWidth = frameWidth * effectiveScale
-    const destHeight = frameHeight * effectiveScale
-    const drawX = position.x - destWidth / 2
-    const drawY = position.y - destHeight / 2
-
-    const previousAlpha = this.ctx.globalAlpha
-    this.ctx.globalAlpha = sprite.alpha
-
-    this.ctx.drawImage(
-      image,
-      currentFrame * frameWidth,
-      currentRow * frameHeight,
-      frameWidth,
-      frameHeight,
-      drawX,
-      drawY,
-      destWidth,
-      destHeight
-    )
-    this.ctx.globalAlpha = previousAlpha
-
-    return destWidth
+    return this.animateSprite(image, sprite, position, velocity, deltaTime)
   }
 
   private updateSpriteAnimation(
@@ -254,6 +220,56 @@ class Renderer {
       sprite.animationTimer = 0
       sprite.frame = 0
     }
+  }
+
+  private animateSprite(
+    image: HTMLImageElement,
+    sprite: SpriteComponent,
+    position: PositionComponent,
+    velocity: VelocityComponent | undefined,
+    deltaTime: number
+  ): number {
+    this.updateSpriteAnimation(sprite, velocity, deltaTime)
+
+    const frameWidth = sprite.width
+    const frameHeight = sprite.height
+    const columns = Math.max(1, sprite.columns)
+    const rows = Math.max(1, sprite.rows)
+    const currentFrame = Math.min(
+      columns - 1,
+      Math.max(0, Math.floor(sprite.frame))
+    )
+    const currentRow = Math.min(rows - 1, Math.max(0, sprite.directionRow))
+    const baseScale = sprite.scale ?? 1
+    const paddingX = Math.min(sprite.padding.x, frameWidth / 2)
+    const paddingY = Math.min(sprite.padding.y, frameHeight / 2)
+    const sourceX = currentFrame * frameWidth + paddingX
+    const sourceY = currentRow * frameHeight + paddingY
+    const sourceWidth = Math.max(1, frameWidth - paddingX * 2)
+    const sourceHeight = Math.max(1, frameHeight - paddingY * 2)
+    const destWidth = sourceWidth * baseScale
+    const destHeight = sourceHeight * baseScale
+    const drawX = position.x - destWidth / 2
+    const drawY = position.y - destHeight / 2
+
+    const previousAlpha = this.ctx.globalAlpha
+    this.ctx.globalAlpha = sprite.alpha
+
+    this.ctx.drawImage(
+      image,
+      sourceX,
+      sourceY,
+      sourceWidth,
+      sourceHeight,
+      drawX,
+      drawY,
+      destWidth,
+      destHeight
+    )
+
+    this.ctx.globalAlpha = previousAlpha
+
+    return destWidth
   }
 
   private calculateDirection(dx: number, dy: number) {

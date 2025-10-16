@@ -13,8 +13,8 @@ class GameEngine {
   private lastTime = 0
   private isRunning = false
 
-  constructor(renderer: Renderer) {
-    this.world = new World(this.eventBus)
+  constructor(renderer: Renderer, world?: World) {
+    this.world = world ?? new World(this.eventBus)
     this.renderer = renderer
   }
 

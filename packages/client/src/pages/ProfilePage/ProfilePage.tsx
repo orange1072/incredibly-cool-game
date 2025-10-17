@@ -10,10 +10,11 @@ import {
 import styles from './styles.module.scss'
 import { Button } from '@/components/Button'
 import { ParticleBackground } from '@/components/ParticleBackground'
-import { useMemo, memo, useRef, useCallback } from 'react'
+import { useMemo, memo, useRef, useCallback, useState, FormEvent } from 'react'
 import { Input } from '@/components/Input'
 import { useDispatch, useSelector } from '@/store'
 import { updateUserAvatarThunk, selectUser } from '@/slices/userSlice'
+import { Modal } from '@/components/Modal'
 
 const ProfileHeader = memo(() => (
   <div className={styles.top}>
@@ -156,6 +157,50 @@ ProfileInfo.displayName = 'ProfileInfo'
 ProfileStats.displayName = 'ProfileStats'
 
 export const ProfilePage = () => {
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false)
+  const [oldPassword, setOldPassword] = useState('')
+  const [newPassword, setNewPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [error, setError] = useState('')
+
+  const handleOpenPasswordModal = useCallback(() => {
+    setIsPasswordModalOpen(true)
+  }, [])
+
+  const handleClosePasswordModal = useCallback(() => {
+    setIsPasswordModalOpen(false)
+    setOldPassword('')
+    setNewPassword('')
+    setConfirmPassword('')
+    setError('')
+  }, [])
+
+  const handlePasswordSubmit = useCallback(
+    (e: FormEvent) => {
+      e.preventDefault()
+      setError('')
+
+      if (!oldPassword || !newPassword || !confirmPassword) {
+        setError('All fields are required')
+        return
+      }
+
+      if (newPassword.length < 6) {
+        setError('New password must be at least 6 characters')
+        return
+      }
+
+      if (newPassword !== confirmPassword) {
+        setError('New passwords do not match')
+        return
+      }
+
+      console.log('Password change:', { oldPassword, newPassword })
+      handleClosePasswordModal()
+    },
+    [oldPassword, newPassword, confirmPassword, handleClosePasswordModal]
+  )
+
   return (
     <main>
       <ParticleBackground />
@@ -200,22 +245,91 @@ export const ProfilePage = () => {
               type="phone"
               placeholder="Phone Number"
             />
-            <Input
-              label="Access Code"
-              name="accessCode"
-              type="password"
-              placeholder="Access Code"
-            />
-            <Button
-              className={styles.submitButton}
-              size="md"
-              Icon={<GuardSVG />}
-            >
+            <div className={styles.inputsGroup}>
+              <Input
+                label="Access Code"
+                name="accessCode"
+                type="password"
+                placeholder="Access Code"
+                value="123456"
+                disabled
+              />
+              <Button
+                className={styles.changePasswordButton}
+                size="sm"
+                onClick={handleOpenPasswordModal}
+                type="button"
+              >
+                Change Password
+              </Button>
+            </div>
+            <Button size="md" Icon={<GuardSVG />}>
               Update Equipment
             </Button>
           </form>
         </div>
       </section>
+
+      <Modal
+        isOpen={isPasswordModalOpen}
+        onClose={handleClosePasswordModal}
+        title="CHANGE ACCESS CODE"
+      >
+        <form onSubmit={handlePasswordSubmit} className={styles.passwordForm}>
+          <p className={styles.passwordDescription}>
+            Enter your current access code and create a new one. The new code
+            must be at least 6 characters long.
+          </p>
+
+          {error && <div className={styles.passwordError}>{error}</div>}
+
+          <div className={styles.passwordInputsGroup}>
+            <Input
+              label="Current Access Code"
+              name="oldPassword"
+              type="password"
+              placeholder="Enter current password"
+              value={oldPassword}
+              onChange={(e) => setOldPassword(e.target.value)}
+              required
+            />
+
+            <Input
+              label="New Access Code"
+              name="newPassword"
+              type="password"
+              placeholder="Enter new password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              required
+            />
+
+            <Input
+              label="Confirm New Access Code"
+              name="confirmPassword"
+              type="password"
+              placeholder="Confirm new password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className={styles.passwordButtonsGroup}>
+            <Button type="submit" size="md" Icon={<GuardSVG />}>
+              Update Code
+            </Button>
+            <Button
+              type="button"
+              size="md"
+              styleType="danger"
+              onClick={handleClosePasswordModal}
+            >
+              Cancel
+            </Button>
+          </div>
+        </form>
+      </Modal>
     </main>
   )
 }

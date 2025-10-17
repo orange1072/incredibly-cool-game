@@ -178,12 +178,18 @@
       > div {
         margin-bottom: 20px;
       }
+
+      .changePasswordButton {
+        width: 40%;
+        height: 42px;
+      }
     }
   }
 }
 
 .inputsGroup {
   display: flex;
+  align-items: flex-end;
   gap: 16px;
   width: 100%;
 }
@@ -318,5 +324,68 @@
 
   .submitButton {
     margin-top: 20px;
+  }
+}
+
+.passwordForm {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.passwordDescription {
+  margin: 0;
+  color: rgba(106, 122, 106, 1);
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  line-height: 18px;
+  padding: 12px;
+  background: rgba(47, 184, 204, 0.05);
+  border-left: 3px solid rgba(77, 212, 232, 1);
+  border-radius: 2px;
+}
+
+.passwordError {
+  padding: 12px;
+  background: rgba(196, 58, 49, 0.15);
+  border: 1px solid rgba(255, 82, 82, 1);
+  color: rgba(255, 82, 82, 1);
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  line-height: 18px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 0 10px rgba(196, 58, 49, 0.3);
+  animation: errorPulse 0.3s ease-in-out;
+}
+
+@keyframes errorPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+}
+
+.passwordInputsGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.passwordButtonsGroup {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+
+  button {
+    flex: 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .passwordButtonsGroup {
+    flex-direction: column;
   }
 }

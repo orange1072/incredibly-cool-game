@@ -7,7 +7,7 @@ import {
   PositionComponent,
   SpriteComponent,
   VelocityComponent,
-} from '../core/Components'
+} from '../components'
 import Entity from '../core/Entity'
 import { player as playerSettings } from '../settings/player-settings/player'
 

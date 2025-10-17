@@ -6,7 +6,7 @@ import {
   PlayerControlComponent,
   HealthComponent,
   VelocityComponent,
-} from '../core/Components'
+} from '../components'
 import World from '../core/World'
 import { regularZombie } from '../settings/enemy-settings/zombie'
 import { player } from '../settings/player-settings/player'

@@ -7,7 +7,7 @@ import {
   CollisionComponent,
   ProjectileComponent,
   SpriteComponent,
-} from '../core/Components'
+} from '../components'
 import World from '../core/World'
 import InputManager from '../infrastructure/InputManager'
 import Entity from '../core/Entity'

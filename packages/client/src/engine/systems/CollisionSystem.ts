@@ -6,7 +6,7 @@ import {
   ProjectileComponent,
   ObstacleComponent,
   VelocityComponent,
-} from '../core/Components'
+} from '../components'
 import Entity from '../core/Entity'
 import World from '../core/World'
 import Logger from '../infrastructure/Logger'

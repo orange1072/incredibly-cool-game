@@ -1,5 +1,5 @@
 import { COMPONENT_TYPES, ISystem } from '../../types/engine.types'
-import { ExperienceComponent } from '../core/Components'
+import { ExperienceComponent } from '../components'
 import World from '../core/World'
 import EventBus from '../infrastructure/EventBus'
 import Logger from '../infrastructure/Logger'

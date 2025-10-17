@@ -1,9 +1,5 @@
 import { COMPONENT_TYPES, ISystem } from '../../types/engine.types'
-import {
-  DamageComponent,
-  HealthComponent,
-  EnemyComponent,
-} from '../core/Components'
+import { DamageComponent, HealthComponent, EnemyComponent } from '../components'
 import World from '../core/World'
 import EventBus from '../infrastructure/EventBus'
 

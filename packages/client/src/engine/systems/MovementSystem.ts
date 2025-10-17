@@ -1,5 +1,5 @@
 import { COMPONENT_TYPES, ISystem } from '../../types/engine.types'
-import { PositionComponent, VelocityComponent } from '../core/Components'
+import { PositionComponent, VelocityComponent } from '../components'
 import World from '../core/World'
 
 class MovementSystem implements ISystem {

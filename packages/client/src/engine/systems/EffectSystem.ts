@@ -3,7 +3,7 @@ import {
   EffectComponent,
   HealthComponent,
   VelocityComponent,
-} from '../core/Components'
+} from '../components'
 import World from '../core/World'
 
 const ZERO_EFFECT_TIME = 0

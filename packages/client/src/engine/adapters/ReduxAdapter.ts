@@ -19,7 +19,7 @@ import type {
   EnemyComponent,
   ExperienceComponent,
   HealthComponent,
-} from '../core/Components'
+} from '../components'
 import EventBus, { type Listener } from '../infrastructure/EventBus'
 import { isProperEntity } from '../systems/helpers/utils'
 

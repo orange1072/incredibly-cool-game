@@ -7,7 +7,7 @@ import {
   SpriteComponent,
   AIComponent,
   AttackComponent,
-} from '../core/Components'
+} from '../components'
 import Entity from '../core/Entity'
 
 import { regularZombie } from '../settings/enemy-settings/zombie'

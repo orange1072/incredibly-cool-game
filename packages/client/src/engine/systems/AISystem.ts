@@ -8,7 +8,7 @@ import {
   AttackComponent,
   EnemyComponent,
   DamageComponent,
-} from '../core/Components'
+} from '../components'
 import World from '../core/World'
 import Entity from '../core/Entity'
 import Logger from '../infrastructure/Logger'

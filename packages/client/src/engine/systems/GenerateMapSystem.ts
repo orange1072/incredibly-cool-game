@@ -7,7 +7,7 @@ import {
   SpawnPointComponent,
   CollisionComponent,
   type ObstacleKind,
-} from '../core/Components'
+} from '../components'
 import Entity from '../core/Entity'
 import Logger from '../infrastructure/Logger'
 

@@ -1,7 +1,7 @@
 import { COMPONENT_TYPES, ISystem } from '../../types/engine.types'
 import World from '../core/World'
 import EventBus from '../infrastructure/EventBus'
-import { PositionComponent, SpawnPointComponent } from '../core/Components'
+import { PositionComponent, SpawnPointComponent } from '../components'
 import Logger from '../infrastructure/Logger'
 import { createZombie } from '../enteties/createZombie'
 import { createBoss } from '../enteties/createBoss'

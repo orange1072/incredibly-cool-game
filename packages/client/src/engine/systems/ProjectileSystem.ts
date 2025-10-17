@@ -1,5 +1,5 @@
 import { COMPONENT_TYPES, ISystem } from '../../types/engine.types'
-import { ProjectileComponent } from '../core/Components'
+import { ProjectileComponent } from '../components'
 import World from '../core/World'
 
 const ZERO_LIFETIME = 0

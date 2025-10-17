@@ -1,0 +1,17 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.container {
+  background-color: $stalker-dark;
+  min-height: 100vh;
+  position: relative;
+}
+
+.fogOverlay {
+  @include fog-overlay;
+  position: absolute;
+  inset: 0;
+}
+
+.content {
+}

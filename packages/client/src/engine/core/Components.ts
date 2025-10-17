@@ -18,7 +18,11 @@ import {
   type ObstacleComponentState,
   type SpawnPointComponentState,
 } from '../../types/engine.types'
-import type { AIState, EffectEntry } from '../../types/component.types'
+import {
+  AI_STATES,
+  type AIState,
+  type EffectEntry,
+} from '../../types/component.types'
 import OBSTACLE_PRESETS from '../settings/obstacles-settings/obstacles'
 
 class PositionComponent implements IPureDataComponent, PositionComponentState {
@@ -87,7 +91,7 @@ class AIComponent implements IPureDataComponent {
   entity!: IEntity
   state: AIState
 
-  constructor({ state = 'idle' }: AIComponentState = {}) {
+  constructor({ state = AI_STATES.idle }: AIComponentState = {}) {
     this.state = state
   }
 }

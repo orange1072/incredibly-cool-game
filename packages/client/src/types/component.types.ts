@@ -1,4 +1,11 @@
-export type AIState = 'idle' | 'chase' | 'attack' | 'dead'
+export const AI_STATES = {
+  idle: 'idle',
+  chase: 'chase',
+  attack: 'attack',
+  dead: 'dead',
+} as const
+
+export type AIState = (typeof AI_STATES)[keyof typeof AI_STATES]
 
 export type EnemyKind = 'zombie' | 'runner' | 'bloater' | 'boss'
 

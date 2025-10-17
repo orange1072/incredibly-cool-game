@@ -1,4 +1,5 @@
 import { COMPONENT_TYPES, ISystem } from '../../types/engine.types'
+import { AI_STATES } from '../../types/component.types'
 import {
   AIComponent,
   PositionComponent,
@@ -21,6 +22,7 @@ const ZERO_VELOCITY = 0
 const ZERO_DISTANCE = 0
 const ZERO_COOLDOWN = 0
 const MIN_DISTANCE = 0.0001
+
 class AISystem implements ISystem {
   private logger = new Logger('AISystem', 'warn')
 
@@ -58,7 +60,7 @@ class AISystem implements ISystem {
 
       if (health.hp <= ZERO_HEALTH) {
         vel.dx = vel.dy = ZERO_VELOCITY
-        ai.state = 'dead'
+        ai.state = AI_STATES.dead
         continue
       }
 
@@ -77,17 +79,17 @@ class AISystem implements ISystem {
       }
 
       if (dist > chaseDistance) {
-        ai.state = 'idle'
+        ai.state = AI_STATES.idle
         vel.dx = vel.dy = ZERO_VELOCITY
       } else if (dist > attackDistance) {
-        ai.state = 'chase'
+        ai.state = AI_STATES.chase
         const effectiveDist = dist === ZERO_DISTANCE ? MIN_DISTANCE : dist
         const normX = calculateUnitDirection(dx, effectiveDist)
         const normY = calculateUnitDirection(dy, effectiveDist)
         vel.dx = normX * moveSpeed
         vel.dy = normY * moveSpeed
       } else {
-        ai.state = 'attack'
+        ai.state = AI_STATES.attack
         vel.dx = vel.dy = ZERO_VELOCITY
         if (attack && attack.cooldownTimer <= ZERO_COOLDOWN) {
           this.applyDamage(player, enemy.damage ?? attack.damage, e.id, attack)

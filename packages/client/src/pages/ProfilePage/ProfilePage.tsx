@@ -13,7 +13,11 @@ import { ParticleBackground } from '@/components/ParticleBackground'
 import { useMemo, memo, useRef, useCallback, useState, FormEvent } from 'react'
 import { Input } from '@/components/Input'
 import { useDispatch, useSelector } from '@/store'
-import { updateUserAvatarThunk, selectUser } from '@/slices/userSlice'
+import {
+  updateUserAvatarThunk,
+  changePasswordThunk,
+  selectUser,
+} from '@/slices/userSlice'
 import { Modal } from '@/components/Modal'
 
 const ProfileHeader = memo(() => (
@@ -157,11 +161,13 @@ ProfileInfo.displayName = 'ProfileInfo'
 ProfileStats.displayName = 'ProfileStats'
 
 export const ProfilePage = () => {
+  const dispatch = useDispatch()
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false)
   const [oldPassword, setOldPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [error, setError] = useState('')
+  const passwordChanging = useSelector((state) => state.user.passwordChanging)
 
   const handleOpenPasswordModal = useCallback(() => {
     setIsPasswordModalOpen(true)
@@ -176,7 +182,7 @@ export const ProfilePage = () => {
   }, [])
 
   const handlePasswordSubmit = useCallback(
-    (e: FormEvent) => {
+    async (e: FormEvent) => {
       e.preventDefault()
       setError('')
 
@@ -195,10 +201,24 @@ export const ProfilePage = () => {
         return
       }
 
-      console.log('Password change:', { oldPassword, newPassword })
-      handleClosePasswordModal()
+      try {
+        await dispatch(
+          changePasswordThunk({ oldPassword, newPassword })
+        ).unwrap()
+        handleClosePasswordModal()
+      } catch (err) {
+        setError(
+          'Failed to change password. Please check your current password.'
+        )
+      }
     },
-    [oldPassword, newPassword, confirmPassword, handleClosePasswordModal]
+    [
+      oldPassword,
+      newPassword,
+      confirmPassword,
+      dispatch,
+      handleClosePasswordModal,
+    ]
   )
 
   return (
@@ -316,14 +336,20 @@ export const ProfilePage = () => {
           </div>
 
           <div className={styles.passwordButtonsGroup}>
-            <Button type="submit" size="md" Icon={<GuardSVG />}>
-              Update Code
+            <Button
+              type="submit"
+              size="md"
+              Icon={<GuardSVG />}
+              disabled={passwordChanging}
+            >
+              {passwordChanging ? 'Updating...' : 'Update Code'}
             </Button>
             <Button
               type="button"
               size="md"
               styleType="danger"
               onClick={handleClosePasswordModal}
+              disabled={passwordChanging}
             >
               Cancel
             </Button>

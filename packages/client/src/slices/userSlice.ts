@@ -12,12 +12,14 @@ export interface UserState {
   data: User | null
   isLoading: boolean
   avatarUploading: boolean
+  passwordChanging: boolean
 }
 
 const initialState: UserState = {
   data: null,
   isLoading: false,
   avatarUploading: false,
+  passwordChanging: false,
 }
 
 export const fetchUserThunk = createAsyncThunk(
@@ -41,6 +43,35 @@ export const updateUserAvatarThunk = createAsyncThunk(
         Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
     }).then((res) => res.json())
+  }
+)
+
+export const changePasswordThunk = createAsyncThunk(
+  'user/changePasswordThunk',
+  async ({
+    oldPassword,
+    newPassword,
+  }: {
+    oldPassword: string
+    newPassword: string
+  }) => {
+    const url = `${SERVER_HOST}/user/profile/password`
+    return fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+      body: JSON.stringify({
+        oldPassword,
+        newPassword,
+      }),
+    }).then((res) => {
+      if (!res.ok) {
+        throw new Error('Failed to change password')
+      }
+      return res.json()
+    })
   }
 )
 
@@ -78,6 +109,15 @@ export const userSlice = createSlice({
       )
       .addCase(updateUserAvatarThunk.rejected.type, (state) => {
         state.avatarUploading = false
+      })
+      .addCase(changePasswordThunk.pending.type, (state) => {
+        state.passwordChanging = true
+      })
+      .addCase(changePasswordThunk.fulfilled.type, (state) => {
+        state.passwordChanging = false
+      })
+      .addCase(changePasswordThunk.rejected.type, (state) => {
+        state.passwordChanging = false
       })
   },
 })

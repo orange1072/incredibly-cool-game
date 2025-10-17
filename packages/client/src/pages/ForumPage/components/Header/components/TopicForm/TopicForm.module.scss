@@ -5,3 +5,66 @@
   width: 1.5rem;
   height: 1.5rem;
 }
+
+.dialogWrapper {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba($stalker-dark, 0.7);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dialog {
+  background-color: $stalker-panel;
+  border: 2px solid $stalker-border;
+  @include metal-panel;
+  animation: appear 0.2s ease-in;
+  width: min(60vw, 42rem);
+  padding: 20px;
+}
+
+.form {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  textarea {
+    background-color: rgba($stalker-panel, 0.8);
+    border: 2px solid $stalker-border;
+    color: $stalker-text;
+    font-family: $font-family-mono;
+    width: 100%;
+    max-width: 100%;
+    min-height: 10lh;
+    padding: 10px;
+    margin-bottom: 5px;
+
+    &:focus {
+      outline: none;
+      border-color: $stalker-cyan;
+    }
+  }
+}
+
+.label {
+  color: $stalker-text-dim;
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

@@ -34,6 +34,7 @@ const ReplyForm = ({ setComments }: ReplyFormProps) => {
         })
         return newComments
       })
+      setCommentText('')
     }
   }
 

@@ -1,55 +1,61 @@
 import { PixelButton } from '@/components/PixelButton'
 import styles from './TopicForm.module.scss'
-import { Plus } from 'lucide-react'
+import { Plus, Send } from 'lucide-react'
+import { FormEvent, useReducer, useState } from 'react'
+import { Input } from '@/components/Input'
 
 const TopicForm = () => {
+  const [isOpen, toggleOpen] = useReducer((open) => !open, false)
+  const [topicTitle, setTopicTitle] = useState('')
+  const [topicPreview, setTopicPreview] = useState('')
+
+  const formSubmit = (e: FormEvent) => {
+    e.preventDefault()
+    setTopicTitle('')
+    setTopicPreview('')
+    toggleOpen()
+  }
+
   return (
     <>
-      <PixelButton variant="primary" icon={<Plus className={styles.icon} />}>
+      <PixelButton
+        onClick={() => toggleOpen()}
+        variant="primary"
+        icon={<Plus />}
+      >
         New Topic
       </PixelButton>
-    </>
-    /*         <Dialog>
-          <DialogTrigger asChild>
-            <PixelButton variant="primary" icon={<Plus className="w-4 h-4" />}>
-              New Topic
-            </PixelButton>
-          </DialogTrigger>
-          <DialogContent className="bg-[#1a1e1c] border-2 border-[#2fb8cc] max-w-2xl metal-panel">
-            <div className="scanline absolute inset-0 pointer-events-none opacity-20" />
-            <DialogHeader className="relative z-10">
-              <DialogTitle className="stalker-text text-[#a8b5a8] tracking-wider uppercase">
-                Create New Topic
-              </DialogTitle>
-            </DialogHeader>
-            <div className="space-y-4 mt-4 relative z-10">
-              <TerminalInput
+      {isOpen && (
+        <div onClick={() => toggleOpen()} className={styles.dialogWrapper}>
+          <div className={styles.dialog} onClick={(e) => e.stopPropagation()}>
+            <h3>Create New Topic</h3>
+            <form onSubmit={formSubmit} className={styles.form}>
+              <Input
                 label="Title"
                 placeholder="Topic title..."
-                value={newTopicTitle}
-                onChange={(e) => setNewTopicTitle(e.target.value)}
+                value={topicTitle}
+                onChange={(e) => setTopicTitle(e.target.value)}
               />
               <div>
-                <label className="block text-[#6a7a6a] text-xs tracking-[0.15em] uppercase font-mono mb-1.5">
-                  Message
+                <label className={styles.label} htmlFor="topic-description">
+                  Description
                 </label>
-                <Textarea
+                <textarea
+                  name="preview"
+                  id="topic-description"
                   placeholder="Describe your topic..."
-                  value={newTopicContent}
-                  onChange={(e) => setNewTopicContent(e.target.value)}
-                  className="bg-[#1a1e1c]/80 border-2 border-[#2d3a2e] focus:border-[#2fb8cc] text-[#a8b5a8] font-mono min-h-[150px]"
+                  value={topicPreview}
+                  onChange={(e) => setTopicPreview(e.target.value)}
                 />
               </div>
-              <PixelButton
-                variant="primary"
-                className="w-full"
-                icon={<Send className="w-4 h-4" />}
-              >
+              <PixelButton variant="primary" icon={<Send />}>
                 Publish
               </PixelButton>
-            </div>
-          </DialogContent>
-        </Dialog> */
+            </form>
+          </div>
+        </div>
+      )}
+    </>
   )
 }
 

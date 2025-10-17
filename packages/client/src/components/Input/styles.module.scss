@@ -11,6 +11,11 @@
   transition: all 0.3s ease;
   width: 100%;
 
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
   &:focus {
     outline: none;
     border-color: var(--stalker-cyan);

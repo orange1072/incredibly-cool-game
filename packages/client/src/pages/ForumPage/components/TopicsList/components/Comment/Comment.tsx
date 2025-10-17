@@ -8,12 +8,14 @@ type CommentProps = ForumComment & {
 const Comment = ({ id, author, avatar, date, text }: CommentProps) => {
   return (
     <div className={styles.wrapper}>
-      <span>{avatar}</span>
-      <div className={styles.header}>
-        <span>{author}</span>
-        <span>{date}</span>
+      <span className={styles.avatar}>{avatar}</span>
+      <div className={styles.main}>
+        <div className={styles.header}>
+          <span>{author}</span>
+          <span className={styles.date}>{date}</span>
+        </div>
+        <p>{text}</p>
       </div>
-      <p>{text}</p>
     </div>
   )
 }

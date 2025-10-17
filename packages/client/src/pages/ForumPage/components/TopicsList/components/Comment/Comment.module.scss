@@ -6,4 +6,31 @@
   border: 2px solid $stalker-border;
   padding: 20px;
   @include grunge-texture;
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.avatar {
+  font-size: $font-size-2xl;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  font-family: $font-family-mono;
+  color: $stalker-text;
+  font-size: $font-size-xs;
+}
+
+.header {
+  @include flex-center;
+  gap: 10px;
+  margin-bottom: 5px;
+}
+
+.date {
+  font-size: $font-size-xs;
+  color: $stalker-text-dim;
 }

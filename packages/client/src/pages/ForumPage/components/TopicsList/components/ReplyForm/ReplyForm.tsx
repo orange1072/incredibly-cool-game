@@ -30,7 +30,7 @@ const ReplyForm = ({ setComments }: ReplyFormProps) => {
           author: 'You',
           date: now.toLocaleString('ru-RU', options),
           text: commentText,
-          avatar: '☢️',
+          avatar: '☠',
         })
         return newComments
       })

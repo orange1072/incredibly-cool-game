@@ -1,10 +1,32 @@
 import { Helmet } from 'react-helmet'
 import styles from './ForumPage.module.scss'
-import { Particle } from '@/components/Particle'
 import { ParticleBackground } from '@/components/ParticleBackground'
-import ForumHeader from './components/ForumHeader'
+import Header from './components/Header'
+import TopicsList from './components/TopicsList'
+import { useMemo, useState } from 'react'
+import { ForumTopic } from './types'
+
+const filterTopics = (topics: ForumTopic[], searchQuery: string) => {
+  if (topics.length > 0) {
+    return topics.filter(
+      (topic) =>
+        topic.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        topic.tags.some((tag) =>
+          tag.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+    )
+  }
+}
 
 export const ForumPage = () => {
+  const [searchQuery, setSearchQuery] = useState('')
+  const [topics, setTopics] = useState<ForumTopic[]>([])
+
+  const filteredTopics = useMemo(
+    () => filterTopics(topics, searchQuery),
+    [searchQuery, topics]
+  )
+
   return (
     <>
       <Helmet>
@@ -19,7 +41,8 @@ export const ForumPage = () => {
         <div className={styles.fogOverlay} />
         <ParticleBackground />
         <main className={styles.content}>
-          <ForumHeader />
+          <Header />
+          <TopicsList />
         </main>
       </div>
     </>

@@ -1,0 +1,9 @@
+@use '/src/styles/variables' as *;
+@use '/src/styles/mixins' as *;
+
+.wrapper {
+  background-color: $stalker-panel;
+  border: 2px solid $stalker-border;
+  padding: 20px;
+  @include grunge-texture;
+}

@@ -1,5 +1,6 @@
 import { Helmet } from 'react-helmet'
 import styles from './ForumPage.module.scss'
+import './forum-global.scss'
 import { ParticleBackground } from '@/components/ParticleBackground'
 import Header from './components/Header'
 import TopicsList from './components/TopicsList'
@@ -20,6 +21,7 @@ const filterTopics = (topics: ForumTopic[], searchQuery: string) => {
 export const ForumPage = () => {
   const [searchQuery, setSearchQuery] = useState('')
   const [topics, setTopics] = useState<ForumTopic[]>(mockTopics)
+  const [selectedTopic, setSelectedTopic] = useState<number | null>(null)
 
   const filteredTopics: ForumTopic[] = useMemo(
     () => filterTopics(topics, searchQuery),
@@ -41,7 +43,11 @@ export const ForumPage = () => {
         <ParticleBackground />
         <main className={styles.content}>
           <Header searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-          <TopicsList filteredTopics={filteredTopics} />
+          <TopicsList
+            filteredTopics={filteredTopics}
+            setSelectedTopic={setSelectedTopic}
+            selectedTopic={selectedTopic}
+          />
         </main>
       </div>
     </>

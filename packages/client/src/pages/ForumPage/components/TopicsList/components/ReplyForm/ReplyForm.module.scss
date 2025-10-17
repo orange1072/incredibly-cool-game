@@ -1,0 +1,25 @@
+@use '/src/styles/variables' as *;
+@use '/src/styles/mixins' as *;
+
+.form {
+  background-color: $stalker-panel;
+  padding: 20px;
+  border: 2px solid rgba($stalker-cyan, 0.3);
+
+  textarea {
+    background-color: rgba($stalker-panel, 0.8);
+    border: 2px solid $stalker-border;
+    color: $stalker-text;
+    font-family: $font-family-mono;
+    width: 100%;
+    max-width: 100%;
+    min-height: 5lh;
+    padding: 10px;
+    margin-bottom: 5px;
+
+    &:focus {
+      outline: none;
+      border-color: $stalker-cyan;
+    }
+  }
+}

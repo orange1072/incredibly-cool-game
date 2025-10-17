@@ -1,0 +1,108 @@
+@use '/src/styles/variables' as *;
+@use '/src/styles/mixins' as *;
+
+.wrapper {
+  --spacing: 20px;
+}
+
+.topicWrapper {
+  @include metal-panel;
+  @include grunge-texture;
+  padding: var(--spacing);
+  transition: border-color 0.2s;
+  margin-bottom: var(--spacing);
+
+  &:hover {
+    cursor: pointer;
+    border-color: $stalker-glow-cyan;
+  }
+
+  & > *:not(:last-child) {
+    margin-bottom: var(--spacing);
+  }
+}
+
+.scanline {
+  @include scanline;
+  inset: 0;
+  position: absolute;
+  pointer-events: none;
+}
+
+.header {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+}
+
+.bright {
+  color: $primary;
+}
+
+.topicInfo {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing);
+  font-size: $font-size-xs;
+  color: $stalker-text-dim;
+  font-family: $font-family-mono;
+}
+
+.inlineIcon {
+  font-size: $font-size-base;
+}
+
+.badge {
+  padding: 2px 10px;
+  border: 1px solid rgba($primary, 0.3);
+  background-color: rgba($primary, 0.2);
+  color: $stalker-cyan-bright;
+  text-transform: uppercase;
+}
+
+.preview {
+  color: $stalker-text-dim;
+  font-size: $font-size-sm;
+  font-family: $font-family-mono;
+}
+
+.tags {
+  display: flex;
+  gap: 10px;
+
+  & > span {
+    padding: 2px 10px;
+    background-color: $stalker-panel;
+    border: 1px solid $stalker-border;
+    color: $stalker-text-dim;
+    font-size: $font-size-xs;
+    text-transform: uppercase;
+    @include flex-center;
+    gap: 2px;
+  }
+
+  .tagIcon {
+    width: $font-size-xs;
+    height: $font-size-xs;
+  }
+}
+
+.stats {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: $font-family-mono;
+  font-size: $font-size-sm;
+  color: $stalker-text-dim;
+
+  & > span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+}
+
+.commentsSection {
+  border-top: 2px solid $stalker-border;
+  padding-top: 20px;
+}

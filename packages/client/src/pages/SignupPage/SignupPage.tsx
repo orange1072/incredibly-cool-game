@@ -81,7 +81,7 @@ export const SignupPage = () => {
 
   const steps = ['Personal Data', 'Contacts', 'Access ID']
 
-  const cx = (...names: Array<string | undefined | false>) =>
+  const combineClassNames = (...names: Array<string | undefined | false>) =>
     names.filter(Boolean).join(' ')
 
   return (
@@ -93,7 +93,7 @@ export const SignupPage = () => {
           <header className={styles.header}>
             <div className={styles['logo-wrap']}>
               <div className={`${styles.glow}`} />
-              <Shield className={cx(styles.icon, styles.shield)} />
+              <Shield className={`${styles.icon} ${styles.shield}`} />
             </div>
 
             <h1 className={styles['stalker-text']}>STALKER REGISTRATION</h1>
@@ -106,7 +106,7 @@ export const SignupPage = () => {
               <div key={index} className={styles['progress__segment']}>
                 <div className={styles['progress__inner']}>
                   <div
-                    className={cx(
+                    className={combineClassNames(
                       styles['progress__bar'],
                       index + 1 <= step
                         ? styles['is-active']
@@ -116,7 +116,7 @@ export const SignupPage = () => {
 
                   {index < steps.length - 1 && (
                     <Activity
-                      className={cx(
+                      className={combineClassNames(
                         styles['mini-activity'],
                         index + 1 < step ? styles.active : undefined
                       )}
@@ -244,7 +244,7 @@ export const SignupPage = () => {
                     <PixelButton
                       variant="secondary"
                       size="lg"
-                      className={cx(styles.btn, styles['flex-1'])}
+                      className={`${styles.btn} ${styles['flex-1']}`}
                       onClick={() => setStep(step - 1)}
                     >
                       ← Back
@@ -255,7 +255,7 @@ export const SignupPage = () => {
                     type="submit"
                     variant="primary"
                     size="lg"
-                    className={cx(styles.btn, styles['flex-1'])}
+                    className={`${styles.btn} ${styles['flex-1']}`}
                   >
                     {step === 3 ? 'Complete Registration' : 'Next →'}
                   </PixelButton>

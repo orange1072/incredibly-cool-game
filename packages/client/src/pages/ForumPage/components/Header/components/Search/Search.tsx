@@ -1,6 +1,12 @@
+import { Input } from '@/components/Input'
 import styles from './Search.module.scss'
+import { Search } from 'lucide-react'
 
-const Search = () => {
+export type SearchProps = {
+  searchQuery: string
+  setSearchQuery: (value: string) => void
+}
+const SearchForm = ({ searchQuery, setSearchQuery }: SearchProps) => {
   return (
     /*     <TerminalInput
       placeholder="Search topics and tags..."
@@ -8,8 +14,13 @@ const Search = () => {
       value={searchQuery}
       onChange={(e) => setSearchQuery(e.target.value)}
     /> */
-    <h1>Search</h1>
+    <Input
+      placeholder="Search topics and tags..."
+      icon={<Search className="w-4 h-4" />}
+      value={searchQuery}
+      onChange={(e) => setSearchQuery(e.target.value)}
+    />
   )
 }
 
-export default Search
+export default SearchForm

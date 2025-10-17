@@ -13,6 +13,7 @@
   .title {
     @include flex-center;
     gap: $spacing;
+    margin-bottom: $spacing;
 
     .icon {
       width: $spacing;

@@ -1,0 +1,184 @@
+.profileSection {
+  max-width: 895px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 90px 16px 0;
+
+  .top {
+    margin-bottom: 24px;
+
+    .title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: 'Courier New', monospace;
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 24px;
+      letter-spacing: 1.6px;
+      margin-bottom: 12px;
+
+      .icon {
+        background: transparent;
+        box-shadow: 0px 0px 8px 0px rgba(77, 212, 232, 0.3);
+        width: 20px;
+        height: 20px;
+        display: block;
+      }
+    }
+
+    .subtitle {
+      color: rgba(106, 122, 106, 1);
+      font-size: 14px;
+      text-transform: uppercase;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 20px;
+      letter-spacing: 0.35px;
+    }
+  }
+
+  .content {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+
+    .profilePreview {
+      width: 100%;
+      max-width: 280px;
+
+      .info {
+        border: 1px solid rgba(45, 58, 46, 1);
+        box-shadow: inset 0px 1px 0px 0px rgba(47, 184, 204, 0.1),
+          inset 0px -1px 0px 0px rgba(0, 0, 0, 0.5);
+        background: linear-gradient(
+          135deg,
+          rgba(26, 30, 28, 1),
+          rgba(26, 30, 28, 0.8) 100%
+        );
+        padding: 18px;
+        margin-bottom: 16px;
+
+        .avatar {
+          width: 100%;
+          aspect-ratio: 1/1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border: 1px solid rgba(47, 184, 204, 0.3);
+          box-shadow: 0px 0px 13.250499725341797px 0px rgba(77, 212, 232, 0.6),
+            0px 0px 26.501100540161133px 0px rgba(77, 212, 232, 0.6),
+            inset 0px 0px 13.250499725341797px 0px rgba(77, 212, 232, 0.6);
+          background: rgba(26, 30, 28, 1);
+          margin-bottom: 16px;
+        }
+
+        .buttonsGroup {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        }
+      }
+
+      .stats {
+        border: 1px solid rgba(45, 58, 46, 1);
+        box-shadow: inset 0px 1px 0px 0px rgba(47, 184, 204, 0.1),
+          inset 0px -1px 0px 0px rgba(0, 0, 0, 0.5);
+        background: linear-gradient(
+          135deg,
+          rgba(26, 30, 28, 1),
+          rgba(26, 30, 28, 0.8) 100%
+        );
+        padding: 18px;
+
+        .statsHeader {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 12px;
+
+          .statsTitle {
+            color: rgba(106, 122, 106, 1);
+            font-size: 12px;
+            font-weight: 400;
+            line-height: 16px;
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+          }
+
+          .statsIcon {
+            width: 12px;
+            height: 12px;
+
+            path {
+              stroke: rgba(106, 122, 106, 1);
+            }
+          }
+        }
+
+        .stat {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 9px;
+          border: 1px solid rgba(45, 58, 46, 1);
+          background: rgba(26, 30, 28, 0.5);
+
+          .statIcon {
+            width: 20px;
+            height: 20px;
+          }
+
+          .statValueGroup {
+            .statLabel {
+              color: rgba(106, 122, 106, 1);
+              font-size: 9px;
+              font-weight: 400;
+              line-height: 13.5px;
+              letter-spacing: 0.8px;
+              text-align: left;
+              text-transform: uppercase;
+            }
+          }
+        }
+      }
+    }
+
+    .profileSettings {
+      width: 100%;
+      border: 1px solid rgba(45, 58, 46, 1);
+      box-shadow: inset 0px 1px 0px 0px rgba(47, 184, 204, 0.1),
+        inset 0px -1px 0px 0px rgba(0, 0, 0, 0.5);
+      background: linear-gradient(
+        135deg,
+        rgba(26, 30, 28, 1),
+        rgba(26, 30, 28, 0.8) 100%
+      );
+      padding: 24px;
+
+      .title {
+        font-family: 'Courier New', monospace;
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 24px;
+        letter-spacing: 1.6px;
+        margin-bottom: 28px;
+        text-transform: uppercase;
+      }
+
+      > div {
+        margin-bottom: 20px;
+      }
+    }
+  }
+}
+
+.inputsGroup {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+}
+
+.submitButton {
+  margin-top: 36px;
+}

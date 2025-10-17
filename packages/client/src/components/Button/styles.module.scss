@@ -1,0 +1,56 @@
+.button {
+  border: 1px solid rgba(47, 184, 204, 1);
+  background: rgba(47, 184, 204, 0.2);
+  color: rgba(77, 212, 232, 1);
+  font-weight: 400;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: rgba(47, 184, 204, 0.3);
+    box-shadow: 0 0 15px rgba(77, 212, 232, 0.5);
+  }
+
+  &:active {
+    transform: scale(0.99);
+  }
+
+  .icon {
+    width: fit-content;
+    height: fit-content;
+    display: flex;
+  }
+
+  &.danger {
+    border: 1px solid rgba(196, 58, 49, 1);
+    background: rgba(196, 58, 49, 0.2);
+    color: rgba(255, 82, 82, 1);
+
+    &:hover {
+      background: rgba(196, 58, 49, 0.3);
+      box-shadow: 0 0 15px rgba(255, 82, 82, 0.5);
+    }
+    
+    &:active {
+      transform: scale(0.99);
+    }
+  }
+
+  &.md {
+    padding: 13px;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 2.4px;
+  }
+
+  &.sm {
+    padding: 7px;
+    font-size: 12px;
+  }
+}

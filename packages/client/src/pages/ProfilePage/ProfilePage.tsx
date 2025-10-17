@@ -10,8 +10,10 @@ import {
 import styles from './styles.module.scss'
 import { Button } from '@/components/Button'
 import { ParticleBackground } from '@/components/ParticleBackground'
-import { useMemo, memo } from 'react'
+import { useMemo, memo, useRef, useCallback } from 'react'
 import { Input } from '@/components/Input'
+import { useDispatch, useSelector } from '@/store'
+import { updateUserAvatarThunk, selectUser } from '@/slices/userSlice'
 
 const ProfileHeader = memo(() => (
   <div className={styles.top}>
@@ -26,19 +28,84 @@ const ProfileHeader = memo(() => (
 ))
 
 const ProfileInfo = memo(() => {
+  const dispatch = useDispatch()
+  const user = useSelector(selectUser)
+  const avatarUploading = useSelector((state) => state.user.avatarUploading)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  const handleUploadClick = useCallback(() => {
+    fileInputRef.current?.click()
+  }, [])
+
+  const handleFileChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0]
+      if (file) {
+        if (!file.type.startsWith('image/')) {
+          console.error('Please upload an image file')
+          return
+        }
+
+        const maxSize = 5 * 1024 * 1024
+        if (file.size > maxSize) {
+          console.error('File size should not exceed 5MB')
+          return
+        }
+
+        dispatch(updateUserAvatarThunk(file))
+      }
+    },
+    [dispatch]
+  )
+
+  const handleRemoveAvatar = useCallback(() => {
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''
+    }
+  }, [])
+
   return (
     <div className={styles.info}>
       <div className={styles.avatar}>
-        <ProfileSVG />
+        {user?.avatar ? (
+          <img
+            src={user.avatar}
+            alt="Profile avatar"
+            className={styles.avatarImage}
+          />
+        ) : (
+          <ProfileSVG />
+        )}
       </div>
       <div className={styles.buttonsGroup}>
-        <Button size="sm" Icon={<UploadSVG />}>
-          Upload Photo
+        <Button
+          size="sm"
+          Icon={<UploadSVG />}
+          onClick={handleUploadClick}
+          disabled={avatarUploading}
+        >
+          {avatarUploading ? 'Uploading...' : 'Upload Photo'}
         </Button>
-        <Button size="sm" Icon={<RemoveSVG />} styleType="danger">
-          Remove
-        </Button>
+        {user?.avatar && (
+          <Button
+            size="sm"
+            Icon={<RemoveSVG />}
+            styleType="danger"
+            onClick={handleRemoveAvatar}
+            disabled={avatarUploading}
+          >
+            Remove
+          </Button>
+        )}
       </div>
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        onChange={handleFileChange}
+        className={styles.hiddenInput}
+        disabled={avatarUploading}
+      />
     </div>
   )
 })

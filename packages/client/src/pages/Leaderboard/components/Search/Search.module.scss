@@ -1,0 +1,41 @@
+@use '/src/styles/variables' as *;
+@use '/src/styles/mixins' as *;
+.main{
+  display: flex;
+  width: 100%;
+  .container{
+    img{
+      position: relative;
+      top: 4px;
+      left: 30px;
+    }
+    input{
+      padding-left: 50px;
+      width: 488px;
+      height: 48px;
+      color: var(--stalker-glow-cyan);
+      background: var(--stalker-panel);
+      @include metal-panel;
+      background-color: var(--stalker-border);
+      &:focus{
+        outline: none;
+        background-color: var(--stalker-panel);
+        color: var(--stalker-glow-cyan);
+      }
+    }
+
+  }.search_container{
+     button{
+       margin-left: 10px;
+       justify-content: flex-start;
+       width: 240px;
+       @include secondary;
+
+       &:hover{
+         @include primary;
+
+       }
+     }
+   }
+}
+

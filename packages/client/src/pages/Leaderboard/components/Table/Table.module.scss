@@ -1,0 +1,53 @@
+@use '/src/styles/variables' as *;
+@use '/src/styles/mixins' as *;
+
+.main{
+  margin-top: 20px;
+  width: 100%;
+  border: 1px solid var(--stalker-border);
+  border-top: 2px solid var(--stalker-border);
+  margin-left: 17px;
+  border-collapse: collapse;
+  font-family: var(--font-family-base),monospace;
+  thead{
+    height: 60px;
+    background-color:var(--stalker-panel);
+    border-bottom: 2px solid var(--stalker-border);
+    tr{
+      th{
+        font-family: var(--font-family-base),monospace;
+        font-weight: var(--font-weight-bold);
+        font-size: var(--font-size-xs);
+        line-height: var(--line-height-tight);
+        letter-spacing: var(--letter-spacing);
+        text-transform: uppercase;
+        color: var(--stalker-text-dim);
+
+      }
+    }
+  }
+  tbody{
+    tr:nth-child(-n + 3){
+      background-color: var(--sidebar-border);
+    }
+    tr{
+      height: 50px;
+      background-color:var(--stalker-panel);
+      border-bottom: 1px solid var(--stalker-border);
+      font-family: var(--font-family-base),monospace;
+      th{
+        img.img_rank{
+          width: 20px;
+          height: 20px;
+          margin-right: 8px;
+          vertical-align: middle;
+        }
+        img.img_table{
+          padding-right: 10px;
+        }
+
+      }
+    }
+  }
+
+}

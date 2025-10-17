@@ -158,8 +158,30 @@
   justify-content: center;
   align-items: center;
 }
+// Flex row mixin
+@mixin flex-row {
+  display: flex;
+flex-direction: row;
+}
+// Flex column mixin
+@mixin flex-column {
+  display: flex;
+flex-direction: column;
+}
 
 // Transition mixin
 @mixin transition($properties: all, $duration: 0.3s, $easing: ease-in-out) {
   transition: $properties $duration $easing;
+}
+
+//Styles mixin
+@mixin primary{
+  color: var(--primary);
+  border: 1px solid var(--primary);
+  @include cyan-glow;
+}
+
+@mixin secondary{
+  border: 1px solid var(--secondary);
+  color: var(--color-switch-background);
 }

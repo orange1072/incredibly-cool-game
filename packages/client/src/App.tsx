@@ -1,5 +1,9 @@
-import { AppRouter } from './components/AppRouter/AppRouter'
+import { AppRouter } from './components/AppRouter/AppRouter';
 
 export const App = () => {
-  return <AppRouter />
-}
+  return (
+    <>
+      <AppRouter />
+    </>
+  );
+};

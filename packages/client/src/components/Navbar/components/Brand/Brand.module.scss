@@ -1,0 +1,49 @@
+@use '/src/styles/variables' as *;
+@use '/src/styles/mixins' as *;
+
+.brand_container {
+  margin-top: 5px;
+  margin-left: 150px;
+  width: 200px;
+  @include flex-center;
+  flex-direction: column;
+
+  .main {
+    @include flex-center;
+    gap: 10px;
+    margin-bottom: 5px;
+    position: relative;
+
+    .title {
+      font-family: $font-family-headings;
+      font-size: $font-size-lg;
+      font-weight: $font-weight-normal;
+      color:white;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .lightning {
+      object-fit: contain;
+      position: absolute;
+      right: -25px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
+
+  .subtitle {
+    sub {
+      position: absolute;
+      top: 5%;
+      left: 12%;
+      font-family: $font-family-base;
+      font-size: 10px;
+      color: #ccc;
+      letter-spacing: 0.5px;
+      text-align: center;
+      display: block;
+      margin-top: -2px;
+    }
+  }
+}

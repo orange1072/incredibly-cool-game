@@ -1,0 +1,18 @@
+@use '/src/styles/variables' as *;
+@use '/src/styles/mixins' as *;
+
+.header{
+  @include flex-row;
+  justify-content: flex-start;
+  align-items: center;
+
+  .content{
+    img {
+      @include flex-column;
+    }
+  }
+
+  .title{
+    @include flex-column;
+  }
+}

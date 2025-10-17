@@ -39,10 +39,12 @@ export const updateUserAvatarThunk = createAsyncThunk(
     return fetch(url, {
       method: 'PUT',
       body: formData,
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
-    }).then((res) => res.json())
+    }).then((res) => {
+      if (!res.ok) {
+        throw new Error('Failed to upload avatar')
+      }
+      return res.json()
+    })
   }
 )
 

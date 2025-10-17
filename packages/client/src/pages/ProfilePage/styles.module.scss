@@ -389,3 +389,19 @@
     flex-direction: column;
   }
 }
+
+.avatarError {
+  padding: 8px 12px;
+  background: rgba(196, 58, 49, 0.15);
+  border: 1px solid rgba(255, 82, 82, 1);
+  color: rgba(255, 82, 82, 1);
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  line-height: 16px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 0 8px rgba(196, 58, 49, 0.3);
+  animation: errorPulse 0.3s ease-in-out;
+  margin-bottom: 12px;
+  border-radius: 2px;
+}

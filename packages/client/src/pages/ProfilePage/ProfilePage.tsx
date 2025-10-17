@@ -33,6 +33,7 @@ const ProfileHeader = memo(() => (
 ))
 
 const ProfileInfo = memo(() => {
+  const [avatarError, setAvatarError] = useState('')
   const dispatch = useDispatch()
   const user = useSelector(selectUser)
   const avatarUploading = useSelector((state) => state.user.avatarUploading)
@@ -40,24 +41,31 @@ const ProfileInfo = memo(() => {
 
   const handleUploadClick = useCallback(() => {
     fileInputRef.current?.click()
+    setAvatarError('')
   }, [])
 
   const handleFileChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
+    async (event: React.ChangeEvent<HTMLInputElement>) => {
       const file = event.target.files?.[0]
       if (file) {
         if (!file.type.startsWith('image/')) {
-          console.error('Please upload an image file')
+          setAvatarError('Please upload an image file')
           return
         }
 
         const maxSize = 5 * 1024 * 1024
         if (file.size > maxSize) {
-          console.error('File size should not exceed 5MB')
+          setAvatarError('File size should not exceed 5MB')
           return
         }
 
-        dispatch(updateUserAvatarThunk(file))
+        try {
+          await dispatch(updateUserAvatarThunk(file)).unwrap()
+          setAvatarError('')
+        } catch (err) {
+          console.error('Avatar upload error:', err)
+          setAvatarError('Failed to upload avatar. Please try again.')
+        }
       }
     },
     [dispatch]
@@ -67,6 +75,7 @@ const ProfileInfo = memo(() => {
     if (fileInputRef.current) {
       fileInputRef.current.value = ''
     }
+    setAvatarError('')
   }, [])
 
   return (
@@ -82,6 +91,7 @@ const ProfileInfo = memo(() => {
           <ProfileSVG />
         )}
       </div>
+      {avatarError && <div className={styles.avatarError}>{avatarError}</div>}
       <div className={styles.buttonsGroup}>
         <Button
           size="sm"

@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
-import { SigninPage } from '@/pages/Login'
+import { SigninPage } from '@/pages/LoginPage'
 import { SignupPage } from '@/pages/SignupPage'
 import { ForumPage } from '@/pages/ForumPage'
 import { ProfilePage } from '@/pages/ProflePage'

@@ -1,0 +1,133 @@
+$bg-input: rgba(26,30,28,0.8);
+$border-default: rgba(45,58,46,1);
+$border-error: #c43a31;
+$focus-cyan: rgba(47,184,204,0.9);
+$text-muted: #a8b5a8;
+$placeholder: #3a4a3e;
+
+.terminal-input {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+
+  .ti-label {
+    color: #6a7a6a;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .ti-input-wrap {
+    position: relative;
+    display: block;
+
+    &:focus-within .ti-top-glow {
+      opacity: 0.7;
+    }
+
+    &.has-error {
+      .ti-field {
+        border-color: $border-error;
+        box-shadow: 0 0 10px rgba(196,58,49,0.18);
+      }
+
+      .ti-top-glow {
+        background: linear-gradient(90deg, transparent, $border-error, transparent);
+        opacity: 0.7;
+      }
+    }
+  }
+
+  .ti-icon {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    color: $focus-cyan;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  textarea:-webkit-autofill,
+  select:-webkit-autofill {
+    -webkit-text-fill-color: $text-muted !important;
+    -webkit-box-shadow: 0 0 0 1000px $bg-input inset !important;
+    box-shadow: 0 0 0 1000px $bg-input inset !important;
+    transition: background-color 5000s ease-in-out 0s !important;
+    caret-color: $text-muted !important;
+  }
+
+  .ti-field {
+    width: 100%;
+    background: $bg-input !important;
+    border: 2px solid $border-default;
+    color: $text-muted;
+    padding: 0.5rem 0.75rem;
+    padding-left: 0.75rem;
+    font-size: 0.95rem;
+    letter-spacing: 0.05em;
+    outline: none;
+    transition: all 180ms ease;
+    -webkit-appearance: none;
+
+    &.with-icon {
+      padding-left: 2.5rem;
+    }
+
+    &::placeholder {
+      color: $placeholder;
+    }
+
+    &:hover {
+      border-color: rgba($focus-cyan, 0.5);
+    }
+
+    &:focus {
+      border-color: $focus-cyan;
+      box-shadow: 0 0 10px rgba(47,184,204,0.3);
+    }
+  }
+
+  .ti-scanline {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.1;
+    background-image: linear-gradient(transparent 50%, rgba(255,255,255,0.02) 50%);
+    background-size: 100% 3px;
+  }
+
+  .ti-top-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, $focus-cyan, transparent);
+    opacity: 0;
+    transition: opacity 160ms ease;
+    pointer-events: none;
+  }
+
+  .ti-error-row {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    color: $border-error;
+    font-size: 0.75rem;
+
+    .ti-error-icon {
+      font-size: 0.9rem;
+      line-height: 1;
+    }
+
+    .ti-error-text {
+      letter-spacing: 0.04em;
+    }
+  }
+}

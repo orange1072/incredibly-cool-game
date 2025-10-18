@@ -1,0 +1,16 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 2rem;
+}
+
+.description {
+  color: var(--stalker-text-dim);
+  font-family: var(--font-family-mono);
+  text-align: center;
+  max-width: 600px;
+}

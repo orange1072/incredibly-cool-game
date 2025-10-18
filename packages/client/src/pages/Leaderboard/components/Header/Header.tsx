@@ -4,7 +4,7 @@ export const Header = () => {
   const title = 'GLOBAL RANKINGS';
   const subTitle = 'Top Survivors in The Zone';
   return (
-    <div className={styles.header}>
+    <header className={styles.header}>
       <div className={styles.content}>
         <img src="/leaderboardBrand.png" alt="leaderboardBrand" />
       </div>
@@ -12,6 +12,6 @@ export const Header = () => {
         <h2>{title}</h2>
         <h5>{subTitle}</h5>
       </div>
-    </div>
+    </header>
   );
 };

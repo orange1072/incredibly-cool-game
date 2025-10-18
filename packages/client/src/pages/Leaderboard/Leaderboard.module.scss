@@ -3,9 +3,30 @@
 
 .main {
   margin: 1% 19%;
-
+  min-height: 100vh;
+  position: relative;
 }
 
+/* Планшеты */
+@media (max-width: 1024px) {
+  .main {
+    margin: 2% 10%;
+  }
+}
+
+/* Мобильные устройства */
+@media (max-width: 768px) {
+  .main {
+    margin: 3% 5%;
+  }
+}
+
+/* Маленькие мобильные */
+@media (max-width: 480px) {
+  .main {
+    margin: 2% 3%;
+  }
+}
 
 
 

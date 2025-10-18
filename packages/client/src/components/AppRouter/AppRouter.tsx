@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { SigninPage } from '@/pages/LoginPage'
+import { SigninPage } from '@/pages/LoginPage';
 import { SignupPage } from '@/pages/SignupPage';
 import { ForumPage } from '@/pages/ForumPage';
 import { ProfilePage } from '@/pages/ProflePage';
@@ -12,6 +12,7 @@ import { MainPage } from '@/pages/MainPage';
 import { NavBar } from '../Navbar';
 import { GameMenuPage } from '@/pages/GameMenuPage'
 import { GamePlayPage } from '@/pages/GamePlayPage'
+
 
 export const AppRouter = () => {
   return (

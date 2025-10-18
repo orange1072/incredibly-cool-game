@@ -41,25 +41,25 @@ export const Table = () => {
       </thead>
       <tbody>
         {MOCK_LEADERBOARD.map((user, index) => (
-          <tr key={index + 1}>
-            <th scope={'row'}>
+          <tr key={`${user.rank}-${user.name}`}>
+            <td scope={'row'}>
               {rankIcons(user.rank)}#{user.rank}
-            </th>
-            <th scope={'row'}>{user.name}</th>
-            <th scope={'row'}>
+            </td>
+            <td scope={'row'}>{user.name}</td>
+            <td scope={'row'}>
               <img
                 className={styles.img_table}
                 src={'/kills.png'}
                 alt="kills"
               />
               {user.kills}
-            </th>
-            <th scope={'row'}>
+            </td>
+            <td scope={'row'}>
               <img className={styles.img_table} src={'/lvl.png'} alt="lvl" />
               {user.level}
-            </th>
-            <th scope={'row'}>{user.time}</th>
-            <th scope={'row'}>{`${user.date}`}</th>
+            </td>
+            <td scope={'row'}>{user.time}</td>
+            <td scope={'row'}>{`${user.date}`}</td>
           </tr>
         ))}
       </tbody>

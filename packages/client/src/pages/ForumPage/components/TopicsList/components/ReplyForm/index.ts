@@ -1,1 +1,1 @@
-export { default } from './ReplyForm'
+export { ReplyForm } from './ReplyForm'

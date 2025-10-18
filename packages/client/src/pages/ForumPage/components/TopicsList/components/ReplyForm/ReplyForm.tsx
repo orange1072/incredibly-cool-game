@@ -8,7 +8,7 @@ type ReplyFormProps = {
   setComments: React.Dispatch<React.SetStateAction<ForumComment[]>>
 }
 
-const ReplyForm = ({ setComments }: ReplyFormProps) => {
+export const ReplyForm = ({ setComments }: ReplyFormProps) => {
   const [commentText, setCommentText] = useState<string>('')
 
   const formSubmit = (e: FormEvent) => {
@@ -53,5 +53,3 @@ const ReplyForm = ({ setComments }: ReplyFormProps) => {
     </form>
   )
 }
-
-export default ReplyForm

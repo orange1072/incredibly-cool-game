@@ -1,1 +1,1 @@
-export { default } from './TopicsList'
+export { TopicsList } from './TopicsList'

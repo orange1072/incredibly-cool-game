@@ -1,11 +1,7 @@
 import { ForumComment } from '@/pages/ForumPage/types'
 import styles from './Comment.module.scss'
 
-type CommentProps = ForumComment & {
-  key: number
-}
-
-const Comment = ({ id, author, avatar, date, text }: CommentProps) => {
+export const Comment = ({ id, author, avatar, date, text }: ForumComment) => {
   return (
     <div className={styles.wrapper}>
       <span className={styles.avatar}>{avatar}</span>
@@ -19,5 +15,3 @@ const Comment = ({ id, author, avatar, date, text }: CommentProps) => {
     </div>
   )
 }
-
-export default Comment

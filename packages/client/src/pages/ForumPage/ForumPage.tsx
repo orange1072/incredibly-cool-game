@@ -1,9 +1,8 @@
 import { Helmet } from 'react-helmet'
 import styles from './ForumPage.module.scss'
-import './forum-global.scss'
 import { ParticleBackground } from '@/components/ParticleBackground'
-import Header from './components/Header'
-import TopicsList from './components/TopicsList'
+import { Header } from './components/Header'
+import { TopicsList } from './components/TopicsList'
 import { useMemo, useState } from 'react'
 import { ForumTopic } from './types'
 import { topics as mockTopics } from './mockData'
@@ -35,7 +34,7 @@ export const ForumPage = () => {
         <meta charSet="utf-8" />
         <meta
           name="description"
-          content="{{Zone Community Network to ask questions about surviving in the Z.O.N.E.}}"
+          content="Zone Community Network to ask questions about surviving in the Z.O.N.E."
         />
       </Helmet>
       <div className={styles.container}>

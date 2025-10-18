@@ -1,1 +1,1 @@
-export { default } from './TopicForm'
+export { TopicForm } from './TopicForm'

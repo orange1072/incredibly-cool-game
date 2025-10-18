@@ -1,10 +1,10 @@
 import { Radio } from 'lucide-react'
-import Search from './components/Search'
+import { SearchForm } from './components/Search'
 import styles from './Header.module.scss'
-import TopicForm from './components/TopicForm'
+import { TopicForm } from './components/TopicForm'
 import { SearchProps } from './components/Search/Search'
 
-const Header = ({ searchQuery, setSearchQuery }: SearchProps) => {
+export const Header = ({ searchQuery, setSearchQuery }: SearchProps) => {
   return (
     <div className={styles.wrapper}>
       <div className={styles.header}>
@@ -17,9 +17,7 @@ const Header = ({ searchQuery, setSearchQuery }: SearchProps) => {
         </div>
         <TopicForm />
       </div>
-      <Search searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+      <SearchForm searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
     </div>
   )
 }
-
-export default Header

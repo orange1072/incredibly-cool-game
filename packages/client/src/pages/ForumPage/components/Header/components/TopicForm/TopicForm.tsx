@@ -4,7 +4,7 @@ import { Plus, Send } from 'lucide-react'
 import { FormEvent, useReducer, useState } from 'react'
 import { Input } from '@/components/Input'
 
-const TopicForm = () => {
+export const TopicForm = () => {
   const [isOpen, toggleOpen] = useReducer((open) => !open, false)
   const [topicTitle, setTopicTitle] = useState('')
   const [topicPreview, setTopicPreview] = useState('')
@@ -58,5 +58,3 @@ const TopicForm = () => {
     </>
   )
 }
-
-export default TopicForm

@@ -1,10 +1,14 @@
 const MAX_SMOOTHING = 1
 const DEFAULT_FRAME_RATE = 60
 
+// camera movements helpers
+
+//scaling
 export function clamp(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max)
 }
 
+//screen centering calculation
 export function screenFollows(
   start: number,
   end: number,
@@ -13,6 +17,7 @@ export function screenFollows(
   return start + (end - start) * interpolation
 }
 
+//smothing movements
 export function computeCameraSmoothing(
   smoothing: number,
   deltaSeconds: number

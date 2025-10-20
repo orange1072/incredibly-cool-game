@@ -32,5 +32,6 @@ export class ReactAdapter {
 
   destroy() {
     this.stop()
+    this.destroy()
   }
 }

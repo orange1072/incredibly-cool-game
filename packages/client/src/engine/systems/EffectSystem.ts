@@ -1,20 +1,27 @@
-import { COMPONENT_TYPES, ISystem } from '../../types/engine.types'
+import {
+  COMPONENT_TYPES,
+  ISystem,
+  SYSTEM_TYPES,
+  SystemType,
+} from '../../types/engine.types'
 import {
   EffectComponent,
   HealthComponent,
   VelocityComponent,
 } from '../components'
 import World from '../core/World'
+import {
+  ONE_TICK,
+  SLOW_BOOST_MULTIPLIER,
+  SPEED_BOOST_MULTIPLIER,
+  ZERO_EFFECTS,
+  ZERO_EFFECT_TIME,
+  ZERO_HEALTH,
+  ZERO_TICK_TIMER,
+} from './consts/effect'
 
-const ZERO_EFFECT_TIME = 0
-const ZERO_TICK_TIMER = 0
-const ONE_TICK = 1
-const SPEED_BOOST_MULTIPLIER = 1.1
-const SLOW_BOOST_MULTIPLIER = 0.9
-const ZERO_EFFECTS = 0
-const ZERO_HEALTH = 0
-
-class EffectSystem implements ISystem {
+class EffectSystem implements ISystem<SystemType> {
+  type: SystemType = SYSTEM_TYPES.effect as SystemType
   update(world: World, dt: number): void {
     const entities = world.query(COMPONENT_TYPES.effect)
 

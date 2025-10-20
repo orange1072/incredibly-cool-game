@@ -1,10 +1,15 @@
-import { COMPONENT_TYPES, ISystem } from '../../types/engine.types'
+import {
+  COMPONENT_TYPES,
+  ISystem,
+  SYSTEM_TYPES,
+  SystemType,
+} from '../../types/engine.types'
 import { ProjectileComponent } from '../components'
 import World from '../core/World'
+import { ZERO_LIFETIME } from './consts/projectile'
 
-const ZERO_LIFETIME = 0
-
-class ProjectileSystem implements ISystem {
+class ProjectileSystem implements ISystem<SystemType> {
+  type: SystemType = SYSTEM_TYPES.projectile as SystemType
   update(world: World, dt: number): void {
     const projectiles = world.query(COMPONENT_TYPES.projectile)
 

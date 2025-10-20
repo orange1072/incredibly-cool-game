@@ -1,4 +1,9 @@
-import { COMPONENT_TYPES, ISystem } from '../../types/engine.types'
+import {
+  COMPONENT_TYPES,
+  ISystem,
+  SYSTEM_TYPES,
+  SystemType,
+} from '../../types/engine.types'
 import {
   PlayerControlComponent,
   PositionComponent,
@@ -12,20 +17,22 @@ import World from '../core/World'
 import InputManager from '../infrastructure/InputManager'
 import Entity from '../core/Entity'
 import { getProximity, calculateUnitDirection } from './helpers/calculations'
+import {
+  DEFAULT_AUTO_FIRE_RANGE,
+  DEFAULT_BULLET_HEIGHT,
+  DEFAULT_BULLET_SPEED,
+  DEFAULT_BULLET_WIDTH,
+  DEFAULT_PLAYER_SPEED,
+  MOVE_FLAG,
+  PROJECTILE_LIFETIME,
+  PROJECTILE_RADIUS,
+  STOP_FLAG,
+  ZERO_COOLDOWN,
+  ZERO_DISTANCE,
+} from './consts/player-control'
 
-const DEFAULT_BULLET_SPEED = 600
-const DEFAULT_AUTO_FIRE_RANGE = 100
-const DEFAULT_PLAYER_SPEED = 200
-const ZERO_DISTANCE = 0
-const ZERO_COOLDOWN = 0
-const PROJECTILE_LIFETIME = 2
-const PROJECTILE_RADIUS = 6
-const DEFAULT_BULLET_WIDTH = 4
-const DEFAULT_BULLET_HEIGHT = 4
-const MOVE_FLAG = 1
-const STOP_FLAG = 0
-
-class PlayerControlSystem implements ISystem {
+class PlayerControlSystem implements ISystem<SystemType> {
+  type: SystemType = SYSTEM_TYPES.playerControl as SystemType
   private bulletSpeed = DEFAULT_BULLET_SPEED
   private autoFireRange = DEFAULT_AUTO_FIRE_RANGE
 

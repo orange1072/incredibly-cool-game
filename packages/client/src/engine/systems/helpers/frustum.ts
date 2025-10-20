@@ -5,6 +5,8 @@ export interface RenderFrustum {
   maxY: number
 }
 
+//calculates visible camera view
+
 export function createFrustum(
   cameraX: number,
   cameraY: number,

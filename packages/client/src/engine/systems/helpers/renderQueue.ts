@@ -4,6 +4,8 @@ import { PositionComponent, SpriteComponent } from '../../components'
 import { COMPONENT_TYPES } from '../../../types/engine.types'
 import { pointInFrustum, type RenderFrustum } from './frustum'
 
+//queue for rendering sprites
+
 export function buildRenderQueue(
   world: World,
   frustum: RenderFrustum

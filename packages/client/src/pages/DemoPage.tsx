@@ -1,5 +1,7 @@
 import { Helmet } from 'react-helmet'
 import { PageInitArgs } from '../routes'
+import { GameCanvas } from '../components/GameCanvas/GameCanvas'
+import { XpBar } from '../components/XpBar/XpBar'
 import '../App.scss'
 
 export const DemoPage = () => {
@@ -15,6 +17,13 @@ export const DemoPage = () => {
       </Helmet>
 
       <div className="app">
+        <section className="game-section">
+          <GameCanvas />
+          <div className="game-section__overlay">
+            <XpBar />
+          </div>
+        </section>
+
         <div className="demo-container">
           {/* Заголовок с эффектом */}
           <header className="demo-header scanline">

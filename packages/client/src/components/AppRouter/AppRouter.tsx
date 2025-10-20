@@ -1,16 +1,17 @@
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
-import { SigninPage } from '@/pages/LoginPage'
-import { SignupPage } from '@/pages/SignupPage'
-import { ForumPage } from '@/pages/ForumPage'
-import { ProfilePage } from '@/pages/ProfilePage'
-import { LeaderboardPage } from '@/pages/LeaderboardPage'
-import { Error404Page } from '@/pages/Error404Page'
-import { Error500Page } from '@/pages/Error500Page'
-import { PrivateRoute } from '../PrivateRoute'
-import { DemoPage } from '@/pages/DemoPage'
-import { MainPage } from '@/pages/MainPage'
-import { GameMenuPage } from '@/pages/GameMenuPage'
-import { GamePlayPage } from '@/pages/GamePlayPage'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { SigninPage } from '@/pages/LoginPage';
+import { SignupPage } from '@/pages/SignupPage';
+import { ForumPage } from '@/pages/ForumPage';
+import { ProfilePage } from '@/pages/ProfilePage';
+import { LeaderboardPage } from '@/pages/Leaderboard';
+import { Error404Page } from '@/pages/Error404Page';
+import { Error500Page } from '@/pages/Error500Page';
+import { PrivateRoute } from '../PrivateRoute';
+import { DemoPage } from '@/pages/DemoPage';
+import { MainPage } from '@/pages/MainPage';
+import { NavBar } from '../Navbar';
+import { GameMenuPage } from '@/pages/GameMenuPage';
+import { GamePlayPage } from '@/pages/GamePlayPage';
 
 export const AppRouter = () => {
   return (
@@ -20,16 +21,7 @@ export const AppRouter = () => {
         v7_relativeSplatPath: true,
       }}
     >
-      {/* <nav>
-        <Link to="/">Main</Link>
-        <Link to="/profile">Profile</Link>
-        <Link to="/leaderboard">Leaderboard</Link>
-        <Link to="/forum">Forum</Link>
-        <Link to="/signin">Signin</Link>
-        <Link to="/signup">Signup</Link>
-        <Link to="/error404">Error404</Link>
-        <Link to="/error500">Error500</Link>
-      </nav> */}
+      <NavBar />
       <Routes>
         //Публичные роуты
         <Route path="/" Component={MainPage} />
@@ -83,5 +75,5 @@ export const AppRouter = () => {
         <Route path="*" Component={Error404Page} />
       </Routes>
     </Router>
-  )
-}
+  );
+};

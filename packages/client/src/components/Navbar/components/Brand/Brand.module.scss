@@ -1,0 +1,125 @@
+@use '/src/styles/variables' as *;
+@use '/src/styles/mixins' as *;
+
+.brand_container {
+  margin-top: 5px;
+  margin-left: 150px;
+  width: 200px;
+  max-width: 100%; /* Предотвращаем переполнение */
+  @include flex-center;
+  flex-direction: column;
+
+  .main {
+    @include flex-center;
+    gap: 10px;
+    margin-bottom: 5px;
+    position: relative;
+
+    .title {
+      font-family: $font-family-headings;
+      font-size: $font-size-lg;
+      font-weight: $font-weight-normal;
+      color:white;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .lightning {
+      object-fit: contain;
+      position: absolute;
+      right: -25px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
+
+  .subtitle {
+    sub {
+      position: absolute;
+      top: 5%;
+      left: 12%;
+      font-family: $font-family-base;
+      font-size: 10px;
+      color: #ccc;
+      letter-spacing: 0.5px;
+      text-align: center;
+      display: block;
+      margin-top: -2px;
+    }
+  }
+/* Планшеты */
+@media (max-width: 1024px) {
+  .brand_container {
+    width: 180px;
+    margin-left: auto;
+    margin-right: auto;
+    
+    .main .title {
+      font-size: 0.9rem;
+    }
+    
+    .subtitle sub {
+      font-size: 9px;
+    }
+  }
+}
+
+/* Мобильные устройства */
+@media (max-width: 768px) {
+  .brand_container {
+    width: 160px;
+    margin-left: auto;
+    margin-right: auto;
+    
+    .main {
+      gap: 8px;
+      
+      .title {
+        font-size: 0.8rem;
+      }
+      
+      .lightning {
+        right: -20px;
+        width: 20px;
+        height: 20px;
+      }
+    }
+    
+    .subtitle sub {
+      font-size: 8px;
+      left: 8%;
+      letter-spacing: 0.4px;
+    }
+  }
+}
+
+/* Маленькие мобильные */
+@media (max-width: 480px) {
+  .brand_container {
+    width: 140px;
+    margin-left: auto;
+    margin-right: auto;
+    
+    .main {
+      gap: 6px;
+      
+      .title {
+        font-size: 0.75rem;
+      }
+      
+      .lightning {
+        right: -15px;
+        width: 16px;
+        height: 16px;
+      }
+    }
+    
+    .subtitle sub {
+      font-size: 7px;
+      left: 6%;
+      letter-spacing: 0.3px;
+    }
+  }
+}
+}
+

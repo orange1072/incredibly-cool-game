@@ -1,0 +1,66 @@
+@use '/src/styles/variables' as *;
+@use '/src/styles/mixins' as *;
+
+.content{
+  margin-top: 20px;
+  @include flex-center;
+  flex-wrap: wrap;
+  gap: 5px;
+  
+  button{
+    height: 32px;
+    padding: 8px 16px;
+    min-width: 40px;
+    @include secondary;
+    
+    &:hover{
+      @include primary;
+      @include cyan-glow;
+    }
+  }
+}
+
+/* Планшеты */
+@media (max-width: 1024px) {
+  .content {
+    margin-top: 15px;
+    gap: 4px;
+    
+    button {
+      height: 30px;
+      padding: 6px 14px;
+      font-size: 0.9rem;
+      min-width: 35px;
+    }
+  }
+}
+
+/* Мобильные устройства */
+@media (max-width: 768px) {
+  .content {
+    margin-top: 12px;
+    gap: 3px;
+    
+    button {
+      height: 28px;
+      padding: 5px 12px;
+      font-size: 0.85rem;
+      min-width: 32px;
+    }
+  }
+}
+
+/* Маленькие мобильные */
+@media (max-width: 480px) {
+  .content {
+    margin-top: 10px;
+    gap: 2px;
+    
+    button {
+      height: 26px;
+      padding: 4px 10px;
+      font-size: 0.8rem;
+      min-width: 30px;
+    }
+  }
+}

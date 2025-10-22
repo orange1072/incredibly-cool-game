@@ -1,4 +1,4 @@
-import { ISystem } from '../../types/engine.types'
+import { ISystem, SYSTEM_TYPES, SystemType } from '../../types/engine.types'
 import World from '../core/World'
 import {
   PositionComponent,
@@ -10,22 +10,24 @@ import {
 } from '../components'
 import Entity from '../core/Entity'
 import Logger from '../infrastructure/Logger'
+import {
+  BORDER_INDEX,
+  DEFAULT_CELL_SIZE,
+  DEFAULT_MAP_HEIGHT,
+  DEFAULT_MAP_WIDTH,
+  ENEMY_SPAWN_COUNT,
+  ENEMY_SPAWN_RADIUS,
+  OBSTACLE_COUNT,
+  OBSTACLE_PADDING,
+  OBSTACLE_SIZE,
+  PLAYER_SPAWN_RADIUS,
+  PLAYER_SPAWN_X,
+  PLAYER_SPAWN_Y,
+  SPAWN_PADDING,
+} from './consts/generate-map'
 
-const DEFAULT_MAP_WIDTH = 800
-const DEFAULT_MAP_HEIGHT = 600
-const DEFAULT_CELL_SIZE = 64
-const BORDER_INDEX = 0
-const OBSTACLE_COUNT = 10
-const OBSTACLE_PADDING = 50
-const SPAWN_PADDING = 100
-const PLAYER_SPAWN_X = 400
-const PLAYER_SPAWN_Y = 300
-const PLAYER_SPAWN_RADIUS = 15
-const ENEMY_SPAWN_COUNT = 5
-const ENEMY_SPAWN_RADIUS = 20
-const OBSTACLE_SIZE = 64
-
-class GenerateMapSystem implements ISystem {
+class GenerateMapSystem implements ISystem<SystemType> {
+  type: SystemType = SYSTEM_TYPES.generateMap as SystemType
   private logger = new Logger('GenerateMapSystem', 'info')
   private mapWidth = DEFAULT_MAP_WIDTH
   private mapHeight = DEFAULT_MAP_HEIGHT

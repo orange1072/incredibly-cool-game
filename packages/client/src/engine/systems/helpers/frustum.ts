@@ -1,8 +1,8 @@
 export interface RenderFrustum {
-  minX: number
-  maxX: number
-  minY: number
-  maxY: number
+  minX: number;
+  maxX: number;
+  minY: number;
+  maxY: number;
 }
 
 //calculates visible camera view
@@ -19,7 +19,7 @@ export function createFrustum(
     maxX: cameraX + visibleWidth + padding,
     minY: cameraY - padding,
     maxY: cameraY + visibleHeight + padding,
-  }
+  };
 }
 
 export function pointInFrustum(frustum: RenderFrustum, x: number, y: number) {
@@ -28,5 +28,5 @@ export function pointInFrustum(frustum: RenderFrustum, x: number, y: number) {
     x <= frustum.maxX &&
     y >= frustum.minY &&
     y <= frustum.maxY
-  )
+  );
 }

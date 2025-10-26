@@ -1,9 +1,9 @@
-import playerRunSprite from '../../../assets/player/Run.png'
+import playerRunSprite from '../../../assets/player/Run.png';
 import type {
   PlayerSettings,
   DamageSettings,
   HealthSettings,
-} from '../../../types/settings/player-settings.types'
+} from '../../../types/settings/player-settings.types';
 
 const player: PlayerSettings = {
   name: 'stalker',
@@ -13,14 +13,14 @@ const player: PlayerSettings = {
     baseSpeed: 30,
     baseValue: 100,
     actualDamage(this: DamageSettings, bonus: number, multiplier = 1) {
-      return this.baseValue * multiplier + bonus
+      return this.baseValue * multiplier + bonus;
     },
   },
   health: {
     baseValue: 200,
     levelBonus: 20,
     health(this: HealthSettings, level: number, multiplier = 1) {
-      return this.baseValue * multiplier + this.levelBonus * level
+      return this.baseValue * multiplier + this.levelBonus * level;
     },
   },
   skin: {
@@ -42,6 +42,6 @@ const player: PlayerSettings = {
     },
   },
   abilities: [],
-}
+};
 
-export { player }
+export { player };

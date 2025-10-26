@@ -1,20 +1,20 @@
-import { useMemo } from 'react'
-import { useSelector } from 'react-redux'
+import { useMemo } from 'react';
+import { useSelector } from 'react-redux';
 import {
   getMissionProgress,
   getPlayerState,
   getWorldStats,
-} from '../../slices/game'
+} from '../../slices/game';
 
 export const XpStatsRow = () => {
-  const player = useSelector(getPlayerState)
-  const world = useSelector(getWorldStats)
-  const mission = useSelector(getMissionProgress)
+  const player = useSelector(getPlayerState);
+  const world = useSelector(getWorldStats);
+  const mission = useSelector(getMissionProgress);
 
   const items = useMemo(() => {
-    const waveTarget = Math.max(1, mission.waveSize)
-    const remaining = Math.max(0, mission.amountOfEnemiesInWave)
-    const clearedInWave = Math.min(waveTarget, waveTarget - remaining)
+    const waveTarget = Math.max(1, mission.waveSize);
+    const remaining = Math.max(0, mission.amountOfEnemiesInWave);
+    const clearedInWave = Math.min(waveTarget, waveTarget - remaining);
 
     return [
       {
@@ -29,7 +29,7 @@ export const XpStatsRow = () => {
         label: 'Волна',
         value: `#${Math.max(mission.wave, 1)} · ${clearedInWave}/${waveTarget}`,
       },
-    ]
+    ];
   }, [
     mission.amountOfEnemiesInWave,
     mission.wave,
@@ -38,7 +38,7 @@ export const XpStatsRow = () => {
     world.killProgress,
     world.level,
     world.nextLevelThreshold,
-  ])
+  ]);
 
   return (
     <div className="xp-bar__stats-row">
@@ -49,5 +49,5 @@ export const XpStatsRow = () => {
         </div>
       ))}
     </div>
-  )
-}
+  );
+};

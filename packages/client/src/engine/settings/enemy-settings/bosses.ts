@@ -2,7 +2,7 @@ import type {
   EnemySettings,
   DamageProfile,
   HealthProfile,
-} from '../../../types/settings/enemy-settings.types'
+} from '../../../types/settings/enemy-settings.types';
 
 const fatZombieBoss: EnemySettings = {
   name: 'zombie-boss',
@@ -16,7 +16,7 @@ const fatZombieBoss: EnemySettings = {
     baseSpeed: 10,
     baseValue: 40,
     actualDamage(this: DamageProfile, bonus: number, multiplier = 1) {
-      return this.baseValue * multiplier + bonus
+      return this.baseValue * multiplier + bonus;
     },
   },
   xpReward: 500,
@@ -38,7 +38,7 @@ const fatZombieBoss: EnemySettings = {
     baseValue: 500,
     levelBonus: 150,
     health(this: HealthProfile, level: number, multiplier = 1) {
-      return this.baseValue * multiplier + this.levelBonus * level
+      return this.baseValue * multiplier + this.levelBonus * level;
     },
   },
   movement: {
@@ -48,6 +48,6 @@ const fatZombieBoss: EnemySettings = {
     range: 64,
     cooldown: 2.5,
   },
-}
+};
 
-export { fatZombieBoss }
+export { fatZombieBoss };

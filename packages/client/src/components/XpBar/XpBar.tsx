@@ -1,25 +1,25 @@
-import { useMemo } from 'react'
-import { useSelector } from 'react-redux'
-import { getPlayerState } from '../../slices/game'
-import { XpStatsRow } from './XpStatsRow'
+import { useMemo } from 'react';
+import { useSelector } from 'react-redux';
+import { getPlayerState } from '../../slices/game';
+import { XpStatsRow } from './XpStatsRow';
 
 export const XpBar = () => {
-  const { level, xp, xpToNext } = useSelector(getPlayerState)
+  const { level, xp, xpToNext } = useSelector(getPlayerState);
 
   const { progressPercent, progressLabel } = useMemo(() => {
     if (!xpToNext || xpToNext <= 0) {
       return {
         progressPercent: 0,
         progressLabel: '0%',
-      }
+      };
     }
-    const ratio = Math.max(0, Math.min(1, xp / xpToNext))
-    const percent = Math.round(ratio * 100)
+    const ratio = Math.max(0, Math.min(1, xp / xpToNext));
+    const percent = Math.round(ratio * 100);
     return {
       progressPercent: percent,
       progressLabel: `${percent}%`,
-    }
-  }, [xp, xpToNext])
+    };
+  }, [xp, xpToNext]);
 
   return (
     <div className="xp-bar">
@@ -39,5 +39,5 @@ export const XpBar = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};

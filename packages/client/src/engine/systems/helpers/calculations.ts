@@ -1,12 +1,12 @@
 //вычисляет сближение
 
 function getProximity(subjectCoordinate: number, targetCoordinate: number) {
-  return subjectCoordinate - targetCoordinate
+  return subjectCoordinate - targetCoordinate;
 }
 
 //вычисляет направление
 function calculateUnitDirection(proximity: number, totalDistance: number) {
-  return proximity / totalDistance
+  return proximity / totalDistance;
 }
 
 // вычисляет смещение
@@ -15,7 +15,7 @@ function displaceAlongNormal(
   normalComponent: number,
   overlap: number
 ) {
-  return coord + normalComponent * overlap
+  return coord + normalComponent * overlap;
 }
 
-export { getProximity, calculateUnitDirection, displaceAlongNormal }
+export { getProximity, calculateUnitDirection, displaceAlongNormal };

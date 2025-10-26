@@ -1,10 +1,12 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from '../store'
 import { SERVER_HOST } from '../constants'
+import { userApi } from '../api'
 
 interface User {
   name: string
   secondName: string
+  avatar?: string
 }
 
 export interface UserState {
@@ -45,6 +47,14 @@ export const userSlice = createSlice({
       .addCase(fetchUserThunk.rejected.type, (state) => {
         state.isLoading = false
       })
+      .addMatcher(
+        userApi.endpoints.updateUserAvatar.matchFulfilled,
+        (state, { payload }) => {
+          if (state.data) {
+            state.data.avatar = payload.avatar
+          }
+        }
+      )
   },
 })
 

@@ -1,36 +1,36 @@
-import { combineReducers } from '@reduxjs/toolkit'
-import worldStatsReducer from './worldStatsSlice'
-import missionProgressReducer from './missionProgressSlice'
-import modifiersReducer from './modifiersSlice'
-import playerReducer from './playerSlice'
+import { combineReducers } from '@reduxjs/toolkit';
+import worldStatsReducer from './worldStatsSlice';
+import missionProgressReducer from './missionProgressSlice';
+import modifiersReducer from './modifiersSlice';
+import playerReducer from './playerSlice';
 
 export const gameReducer = combineReducers({
   worldStats: worldStatsReducer,
   missionProgress: missionProgressReducer,
   modifiers: modifiersReducer,
   player: playerReducer,
-})
+});
 
-export default gameReducer
+export default gameReducer;
 
 export {
   countFrag,
   countBossFrag,
   worldLevelUp,
   resetWorldStats,
-} from './worldStatsSlice'
+} from './worldStatsSlice';
 export {
   setWave,
   setBossCount,
   setEnemyCount,
   resetMissionProgress,
-} from './missionProgressSlice'
+} from './missionProgressSlice';
 export {
   setDamageModifier,
   setAttackSpeedModifier,
   setMovementSpeedModifier,
   resetModifiers,
-} from './modifiersSlice'
+} from './modifiersSlice';
 export {
   levelUp,
   setPlayerHealth,
@@ -42,14 +42,14 @@ export {
   setAmmo,
   adjustAmmo,
   resetPlayer,
-} from './playerSlice'
+} from './playerSlice';
 
-import type { RootState } from '../../store'
+import type { RootState } from '../../store';
 
-export const getWorldStats = (state: RootState) => state.game.worldStats
+export const getWorldStats = (state: RootState) => state.game.worldStats;
 export const getMissionProgress = (state: RootState) =>
-  state.game.missionProgress
-export const getModifiers = (state: RootState) => state.game.modifiers
-export const getPlayerState = (state: RootState) => state.game.player
-export const getExperience = (state: RootState) => state.game.player.xp
-export const getInventory = (state: RootState) => state.game.player.inventory
+  state.game.missionProgress;
+export const getModifiers = (state: RootState) => state.game.modifiers;
+export const getPlayerState = (state: RootState) => state.game.player;
+export const getExperience = (state: RootState) => state.game.player.xp;
+export const getInventory = (state: RootState) => state.game.player.inventory;

@@ -1,5 +1,5 @@
-import { ISystem, SYSTEM_TYPES, SystemType } from '../../types/engine.types'
-import World from '../core/World'
+import { ISystem, SYSTEM_TYPES, SystemType } from '../../types/engine.types';
+import World from '../core/World';
 import {
   PositionComponent,
   ObstacleComponent,
@@ -7,9 +7,9 @@ import {
   SpawnPointComponent,
   CollisionComponent,
   type ObstacleKind,
-} from '../components'
-import Entity from '../core/Entity'
-import Logger from '../infrastructure/Logger'
+} from '../components';
+import Entity from '../core/Entity';
+import Logger from '../infrastructure/Logger';
 import {
   BORDER_INDEX,
   DEFAULT_CELL_SIZE,
@@ -24,40 +24,40 @@ import {
   PLAYER_SPAWN_X,
   PLAYER_SPAWN_Y,
   SPAWN_PADDING,
-} from './consts/generate-map'
+} from './consts/generate-map';
 
 class GenerateMapSystem implements ISystem<SystemType> {
-  type: SystemType = SYSTEM_TYPES.generateMap as SystemType
-  private logger = new Logger('GenerateMapSystem', 'info')
-  private mapWidth = DEFAULT_MAP_WIDTH
-  private mapHeight = DEFAULT_MAP_HEIGHT
-  private cellSize = DEFAULT_CELL_SIZE
+  type: SystemType = SYSTEM_TYPES.generateMap as SystemType;
+  private logger = new Logger('GenerateMapSystem', 'info');
+  private mapWidth = DEFAULT_MAP_WIDTH;
+  private mapHeight = DEFAULT_MAP_HEIGHT;
+  private cellSize = DEFAULT_CELL_SIZE;
 
   initialize(world: World) {
-    const bounds = world.getBounds?.()
+    const bounds = world.getBounds?.();
     if (bounds) {
-      this.mapWidth = bounds.width
-      this.mapHeight = bounds.height
+      this.mapWidth = bounds.width;
+      this.mapHeight = bounds.height;
     }
 
-    this.logger.info('🗺️  Generating map...')
+    this.logger.info('🗺️  Generating map...');
 
-    this.generateBorderWallsForMap(world)
+    this.generateBorderWallsForMap(world);
 
-    this.generateObstacles(world, OBSTACLE_COUNT)
+    this.generateObstacles(world, OBSTACLE_COUNT);
 
-    this.generateSpawnPoints(world)
+    this.generateSpawnPoints(world);
 
-    this.logger.info('✅ Map generated successfully')
+    this.logger.info('✅ Map generated successfully');
   }
 
   update() {
-    return
+    return;
   }
 
   private generateBorderWallsForMap(world: World) {
-    const cols = Math.floor(this.mapWidth / this.cellSize)
-    const rows = Math.floor(this.mapHeight / this.cellSize)
+    const cols = Math.floor(this.mapWidth / this.cellSize);
+    const rows = Math.floor(this.mapHeight / this.cellSize);
 
     for (let i = 0; i < cols; i++) {
       for (const j of [BORDER_INDEX, rows - 1]) {
@@ -65,8 +65,8 @@ class GenerateMapSystem implements ISystem<SystemType> {
           i * this.cellSize,
           j * this.cellSize,
           'wall'
-        )
-        world.addEntity(wall)
+        );
+        world.addEntity(wall);
       }
     }
 
@@ -76,8 +76,8 @@ class GenerateMapSystem implements ISystem<SystemType> {
           i * this.cellSize,
           j * this.cellSize,
           'wall'
-        )
-        world.addEntity(wall)
+        );
+        world.addEntity(wall);
       }
     }
   }
@@ -85,56 +85,56 @@ class GenerateMapSystem implements ISystem<SystemType> {
   private generateObstacles(world: World, count: number) {
     for (let i = 0; i < count; i++) {
       const x =
-        Math.random() * (this.mapWidth - SPAWN_PADDING) + OBSTACLE_PADDING
+        Math.random() * (this.mapWidth - SPAWN_PADDING) + OBSTACLE_PADDING;
       const y =
-        Math.random() * (this.mapHeight - SPAWN_PADDING) + OBSTACLE_PADDING
-      const rock = this.createObstacle(x, y, 'rock')
-      world.addEntity(rock)
+        Math.random() * (this.mapHeight - SPAWN_PADDING) + OBSTACLE_PADDING;
+      const rock = this.createObstacle(x, y, 'rock');
+      world.addEntity(rock);
     }
   }
 
   private generateSpawnPoints(world: World) {
-    const playerSpawn = new Entity()
+    const playerSpawn = new Entity();
     playerSpawn.addComponent(
       new PositionComponent({ x: PLAYER_SPAWN_X, y: PLAYER_SPAWN_Y })
-    )
+    );
     playerSpawn.addComponent(
       new SpawnPointComponent({
         spawnType: 'player',
         radius: PLAYER_SPAWN_RADIUS,
       })
-    )
-    world.addEntity(playerSpawn)
+    );
+    world.addEntity(playerSpawn);
 
     for (let i = 0; i < ENEMY_SPAWN_COUNT; i++) {
-      const x = Math.random() * this.mapWidth
-      const y = Math.random() * this.mapHeight
-      const enemySpawn = new Entity()
-      enemySpawn.addComponent(new PositionComponent({ x, y }))
+      const x = Math.random() * this.mapWidth;
+      const y = Math.random() * this.mapHeight;
+      const enemySpawn = new Entity();
+      enemySpawn.addComponent(new PositionComponent({ x, y }));
       enemySpawn.addComponent(
         new SpawnPointComponent({
           spawnType: 'enemy',
           radius: ENEMY_SPAWN_RADIUS,
         })
-      )
-      world.addEntity(enemySpawn)
+      );
+      world.addEntity(enemySpawn);
     }
   }
 
   private createObstacle(x: number, y: number, kind: ObstacleKind) {
-    const e = new Entity()
-    const width = OBSTACLE_SIZE
-    const height = OBSTACLE_SIZE
-    e.addComponent(new PositionComponent({ x, y }))
-    e.addComponent(new ObstacleComponent({ width, height, kind }))
+    const e = new Entity();
+    const width = OBSTACLE_SIZE;
+    const height = OBSTACLE_SIZE;
+    e.addComponent(new PositionComponent({ x, y }));
+    e.addComponent(new ObstacleComponent({ width, height, kind }));
     e.addComponent(
       new CollisionComponent({ radius: Math.max(width, height) / 2 })
-    )
+    );
     e.addComponent(
       new SpriteComponent({ name: kind, width, height, source: kind })
-    )
-    return e
+    );
+    return e;
   }
 }
 
-export default GenerateMapSystem
+export default GenerateMapSystem;

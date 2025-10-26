@@ -1,35 +1,35 @@
-import { ProjectileKind } from './component.types'
+import { ProjectileKind } from './component.types';
 
-export type inventoryItem = 'gun' | 'rocketLauncher' | 'shotgun' | 'knife'
+export type inventoryItem = 'gun' | 'rocketLauncher' | 'shotgun' | 'knife';
 
 interface GameStats {
   worldStats: {
-    level: number
-    enemiesKilled: number
-    bossesKilled: number
-    killProgress: number
-    nextLevelThreshold: number
-  }
+    level: number;
+    enemiesKilled: number;
+    bossesKilled: number;
+    killProgress: number;
+    nextLevelThreshold: number;
+  };
   player: {
-    level: number
-    hp: number
-    xp: number
-    xpToNext: number
-    money: number
-    ammo: Record<ProjectileKind, number>
-    inventory: inventoryItem[]
-  }
+    level: number;
+    hp: number;
+    xp: number;
+    xpToNext: number;
+    money: number;
+    ammo: Record<ProjectileKind, number>;
+    inventory: inventoryItem[];
+  };
   missionProgress: {
-    wave: number
-    waveSize: number
-    amountOfBosses: number
-    amountOfEnemiesInWave: number
-  }
+    wave: number;
+    waveSize: number;
+    amountOfBosses: number;
+    amountOfEnemiesInWave: number;
+  };
   modifiers: {
-    damage: number
-    attackSpeed: number
-    movementSpeed: number
-  }
+    damage: number;
+    attackSpeed: number;
+    movementSpeed: number;
+  };
 }
 
-export default GameStats
+export default GameStats;

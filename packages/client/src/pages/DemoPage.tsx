@@ -1,8 +1,8 @@
-import { Helmet } from 'react-helmet'
-import { PageInitArgs } from '../routes'
-import { GameCanvas } from '../components/GameCanvas/GameCanvas'
-import { XpBar } from '../components/XpBar/XpBar'
-import '../App.scss'
+import { Helmet } from 'react-helmet';
+import { PageInitArgs } from '../routes';
+import { GameCanvas } from '../components/GameCanvas/GameCanvas';
+import { XpBar } from '../components/XpBar/XpBar';
+import '../App.scss';
 
 export const DemoPage = () => {
   return (
@@ -174,9 +174,9 @@ export const DemoPage = () => {
         </div>
       </div>
     </>
-  )
-}
+  );
+};
 
 export const initDemoPage = async (_args: PageInitArgs) => {
   // Здесь можно добавить загрузку данных для главной страницы
-}
+};

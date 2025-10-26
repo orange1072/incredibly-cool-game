@@ -7,28 +7,28 @@ import {
   SpriteComponent,
   AIComponent,
   AttackComponent,
-} from '../components'
-import Entity from '../core/Entity'
-import { fatZombieBoss } from '../settings/enemy-settings/bosses'
+} from '../components';
+import Entity from '../core/Entity';
+import { fatZombieBoss } from '../settings/enemy-settings/bosses';
 
 export function createBoss(x: number, y: number, level = 1) {
-  const boss = new Entity()
+  const boss = new Entity();
 
-  const baseHp = fatZombieBoss.health.health.call(fatZombieBoss.health, level)
-  const baseSpeed = fatZombieBoss.movement.speed + level * 3
+  const baseHp = fatZombieBoss.health.health.call(fatZombieBoss.health, level);
+  const baseSpeed = fatZombieBoss.movement.speed + level * 3;
   const baseDamage = fatZombieBoss.damage.actualDamage.call(
     fatZombieBoss.damage,
     0,
     1
-  )
-  const attackProfile = fatZombieBoss.attack
+  );
+  const attackProfile = fatZombieBoss.attack;
 
-  boss.addComponent(new PositionComponent({ x, y }))
-  boss.addComponent(new VelocityComponent({ dx: 0, dy: 0 }))
-  boss.addComponent(new HealthComponent({ hp: baseHp, maxHp: baseHp }))
+  boss.addComponent(new PositionComponent({ x, y }));
+  boss.addComponent(new VelocityComponent({ dx: 0, dy: 0 }));
+  boss.addComponent(new HealthComponent({ hp: baseHp, maxHp: baseHp }));
   boss.addComponent(
     new CollisionComponent({ radius: fatZombieBoss.collision.radius })
-  )
+  );
   boss.addComponent(
     new EnemyComponent({
       kind: fatZombieBoss.kind,
@@ -39,14 +39,14 @@ export function createBoss(x: number, y: number, level = 1) {
       attackRange: attackProfile.range,
       attackCooldown: attackProfile.cooldown,
     })
-  )
-  boss.addComponent(new AIComponent({ state: fatZombieBoss.ai.startingValue }))
+  );
+  boss.addComponent(new AIComponent({ state: fatZombieBoss.ai.startingValue }));
   boss.addComponent(
     new AttackComponent({
       damage: baseDamage,
       cooldown: attackProfile.cooldown,
     })
-  )
+  );
   boss.addComponent(
     new SpriteComponent({
       name: fatZombieBoss.sprite.name,
@@ -59,7 +59,7 @@ export function createBoss(x: number, y: number, level = 1) {
       scale: fatZombieBoss.sprite.scale ?? 1,
       padding: fatZombieBoss.sprite.padding,
     })
-  )
+  );
 
-  return boss
+  return boss;
 }

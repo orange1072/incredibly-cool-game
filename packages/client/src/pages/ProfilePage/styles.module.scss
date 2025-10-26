@@ -1,0 +1,407 @@
+.profileSection {
+  max-width: 895px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 90px 16px 0;
+
+  .top {
+    margin-bottom: 24px;
+
+    .title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: 'Courier New', monospace;
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 24px;
+      letter-spacing: 1.6px;
+      margin-bottom: 12px;
+
+      .icon {
+        background: transparent;
+        box-shadow: 0px 0px 8px 0px rgba(77, 212, 232, 0.3);
+        width: 20px;
+        height: 20px;
+        display: block;
+      }
+    }
+
+    .subtitle {
+      color: rgba(106, 122, 106, 1);
+      font-size: 14px;
+      text-transform: uppercase;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 20px;
+      letter-spacing: 0.35px;
+    }
+  }
+
+  .content {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+
+    .profilePreview {
+      width: 100%;
+      max-width: 280px;
+
+      .info {
+        border: 1px solid rgba(45, 58, 46, 1);
+        box-shadow: inset 0px 1px 0px 0px rgba(47, 184, 204, 0.1),
+          inset 0px -1px 0px 0px rgba(0, 0, 0, 0.5);
+        background: linear-gradient(
+          135deg,
+          rgba(26, 30, 28, 1),
+          rgba(26, 30, 28, 0.8) 100%
+        );
+        padding: 18px;
+        margin-bottom: 16px;
+
+        .avatar {
+          width: 100%;
+          aspect-ratio: 1/1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border: 1px solid rgba(47, 184, 204, 0.3);
+          box-shadow: 0px 0px 13.250499725341797px 0px rgba(77, 212, 232, 0.6),
+            0px 0px 26.501100540161133px 0px rgba(77, 212, 232, 0.6),
+            inset 0px 0px 13.250499725341797px 0px rgba(77, 212, 232, 0.6);
+          background: rgba(26, 30, 28, 1);
+          margin-bottom: 16px;
+          overflow: hidden;
+          position: relative;
+
+          .avatarImage {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+          }
+        }
+
+        .buttonsGroup {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        }
+      }
+
+      .stats {
+        border: 1px solid rgba(45, 58, 46, 1);
+        box-shadow: inset 0px 1px 0px 0px rgba(47, 184, 204, 0.1),
+          inset 0px -1px 0px 0px rgba(0, 0, 0, 0.5);
+        background: linear-gradient(
+          135deg,
+          rgba(26, 30, 28, 1),
+          rgba(26, 30, 28, 0.8) 100%
+        );
+        padding: 18px;
+
+        .statsHeader {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 12px;
+
+          .statsTitle {
+            color: rgba(106, 122, 106, 1);
+            font-size: 12px;
+            font-weight: 400;
+            line-height: 16px;
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+          }
+
+          .statsIcon {
+            width: 12px;
+            height: 12px;
+
+            path {
+              stroke: rgba(106, 122, 106, 1);
+            }
+          }
+        }
+
+        .stat {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 9px;
+          border: 1px solid rgba(45, 58, 46, 1);
+          background: rgba(26, 30, 28, 0.5);
+
+          .statIcon {
+            width: 20px;
+            height: 20px;
+          }
+
+          .statValueGroup {
+            .statLabel {
+              color: rgba(106, 122, 106, 1);
+              font-size: 9px;
+              font-weight: 400;
+              line-height: 13.5px;
+              letter-spacing: 0.8px;
+              text-align: left;
+              text-transform: uppercase;
+            }
+          }
+        }
+      }
+    }
+
+    .profileSettings {
+      width: 100%;
+      border: 1px solid rgba(45, 58, 46, 1);
+      box-shadow: inset 0px 1px 0px 0px rgba(47, 184, 204, 0.1),
+        inset 0px -1px 0px 0px rgba(0, 0, 0, 0.5);
+      background: linear-gradient(
+        135deg,
+        rgba(26, 30, 28, 1),
+        rgba(26, 30, 28, 0.8) 100%
+      );
+      padding: 24px;
+
+      .title {
+        font-family: 'Courier New', monospace;
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 24px;
+        letter-spacing: 1.6px;
+        margin-bottom: 28px;
+        text-transform: uppercase;
+      }
+
+      > div {
+        margin-bottom: 20px;
+      }
+
+      .changePasswordButton {
+        width: 40%;
+        height: 42px;
+      }
+    }
+  }
+}
+
+.inputsGroup {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  width: 100%;
+}
+
+.submitButton {
+  margin-top: 36px;
+}
+
+.hiddenInput {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  .profileSection {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .profileSection {
+    padding: 70px 16px 0;
+
+    .top {
+      margin-bottom: 20px;
+
+      .title {
+        font-size: 14px;
+        line-height: 20px;
+        letter-spacing: 1.4px;
+        gap: 8px;
+
+        .icon {
+          width: 16px;
+          height: 16px;
+        }
+      }
+
+      .subtitle {
+        font-size: 12px;
+        line-height: 18px;
+      }
+    }
+
+    .content {
+      flex-direction: column;
+      gap: 16px;
+
+      .profilePreview {
+        max-width: 100%;
+
+        .info {
+          padding: 16px;
+          margin-bottom: 12px;
+        }
+
+        .stats {
+          padding: 16px;
+        }
+      }
+
+      .profileSettings {
+        padding: 20px 16px;
+
+        .title {
+          font-size: 14px;
+          line-height: 20px;
+          letter-spacing: 1.4px;
+          margin-bottom: 20px;
+        }
+
+        > div {
+          margin-bottom: 16px;
+        }
+      }
+    }
+  }
+
+  .inputsGroup {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .submitButton {
+    margin-top: 24px;
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .profileSection {
+    padding: 60px 12px 0;
+
+    .top {
+      margin-bottom: 16px;
+    }
+
+    .content {
+      gap: 12px;
+
+      .profilePreview {
+        .info {
+          padding: 12px;
+
+          .buttonsGroup {
+            gap: 8px;
+          }
+        }
+
+        .stats {
+          padding: 12px;
+
+          .stat {
+            padding: 8px;
+            gap: 8px;
+          }
+        }
+      }
+
+      .profileSettings {
+        padding: 16px 12px;
+
+        .title {
+          margin-bottom: 16px;
+        }
+
+        > div {
+          margin-bottom: 12px;
+        }
+      }
+    }
+  }
+
+  .submitButton {
+    margin-top: 20px;
+  }
+}
+
+.passwordForm {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.passwordDescription {
+  margin: 0;
+  color: rgba(106, 122, 106, 1);
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  line-height: 18px;
+  padding: 12px;
+  background: rgba(47, 184, 204, 0.05);
+  border-left: 3px solid rgba(77, 212, 232, 1);
+  border-radius: 2px;
+}
+
+.passwordError {
+  padding: 12px;
+  background: rgba(196, 58, 49, 0.15);
+  border: 1px solid rgba(255, 82, 82, 1);
+  color: rgba(255, 82, 82, 1);
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  line-height: 18px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 0 10px rgba(196, 58, 49, 0.3);
+  animation: errorPulse 0.3s ease-in-out;
+}
+
+@keyframes errorPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+}
+
+.passwordInputsGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.passwordButtonsGroup {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+
+  button {
+    flex: 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .passwordButtonsGroup {
+    flex-direction: column;
+  }
+}
+
+.avatarError {
+  padding: 8px 12px;
+  background: rgba(196, 58, 49, 0.15);
+  border: 1px solid rgba(255, 82, 82, 1);
+  color: rgba(255, 82, 82, 1);
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  line-height: 16px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 0 8px rgba(196, 58, 49, 0.3);
+  animation: errorPulse 0.3s ease-in-out;
+  margin-bottom: 12px;
+  border-radius: 2px;
+}

@@ -1,4 +1,9 @@
-import { COMPONENT_TYPES, ISystem } from '../../types/engine.types';
+import {
+  COMPONENT_TYPES,
+  ISystem,
+  SYSTEM_TYPES,
+  SystemType,
+} from '../../types/engine.types';
 import { AI_STATES } from '../../types/component.types';
 import {
   AIComponent,
@@ -13,17 +18,19 @@ import World from '../core/World';
 import Entity from '../core/Entity';
 import Logger from '../infrastructure/Logger';
 import { getProximity, calculateUnitDirection } from './helpers/calculations';
+import {
+  DEFAULT_ATTACK_DISTANCE,
+  DEFAULT_CHASE_DISTANCE,
+  DEFAULT_MOVE_SPEED,
+  MIN_DISTANCE,
+  ZERO_COOLDOWN,
+  ZERO_DISTANCE,
+  ZERO_HEALTH,
+  ZERO_VELOCITY,
+} from './consts/ai';
 
-const DEFAULT_CHASE_DISTANCE = 600;
-const DEFAULT_ATTACK_DISTANCE = 40;
-const DEFAULT_MOVE_SPEED = 50;
-const ZERO_HEALTH = 0;
-const ZERO_VELOCITY = 0;
-const ZERO_DISTANCE = 0;
-const ZERO_COOLDOWN = 0;
-const MIN_DISTANCE = 0.0001;
-
-class AISystem implements ISystem {
+class AISystem implements ISystem<SystemType> {
+  type: SystemType = SYSTEM_TYPES.ai as SystemType;
   private logger = new Logger('AISystem', 'warn');
 
   update(world: World, dt: number): void {

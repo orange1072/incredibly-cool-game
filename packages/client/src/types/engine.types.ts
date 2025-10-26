@@ -30,6 +30,25 @@ export const COMPONENT_TYPES = {
   spawnPoint: 'spawnPoint',
 } as const;
 
+export const SYSTEM_TYPES = {
+  ai: 'ai',
+  animation: 'animation',
+  camera: 'camera',
+  collision: 'collision',
+  damage: 'damage',
+  effect: 'effect',
+  experience: 'experience',
+  generateMap: 'generateMap',
+  movement: 'movement',
+  playerControl: 'playerControl',
+  projectile: 'projectile',
+  render: 'render',
+  spriteLoader: 'spriteLoader',
+  spawn: 'spawn',
+};
+
+export type SystemType = keyof typeof SYSTEM_TYPES;
+
 export type ComponentDataType = keyof typeof COMPONENT_TYPES;
 
 export interface IPureDataComponent {
@@ -38,6 +57,7 @@ export interface IPureDataComponent {
 
 export interface IComponent extends IPureDataComponent {
   entity: IEntity;
+  onDestroy?(): void;
 }
 
 export interface IEntity {
@@ -47,10 +67,12 @@ export interface IEntity {
   removeComponent(type: string): void;
 }
 
-export interface ISystem {
+export interface ISystem<T extends SystemType | unknown> {
+  type: T;
   requiredComponents?: string[];
   initialize?(world: World): void;
   update(world: World, dt: number): void;
+  onDestroy?(): void;
 }
 
 export interface PositionComponentState {

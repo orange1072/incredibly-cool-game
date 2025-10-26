@@ -1,0 +1,13 @@
+const DEFAULT_PROJECTILE_DAMAGE = 10;
+const ZERO_DISTANCE = 0;
+const MIN_D_X = 1;
+const MIN_D_Y = 0;
+const MIN_DISTANCE = 0.0001;
+
+export {
+  DEFAULT_PROJECTILE_DAMAGE,
+  ZERO_DISTANCE,
+  MIN_D_X,
+  MIN_D_Y,
+  MIN_DISTANCE,
+};

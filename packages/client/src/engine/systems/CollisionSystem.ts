@@ -1,4 +1,9 @@
-import { COMPONENT_TYPES, ISystem } from '../../types/engine.types';
+import {
+  COMPONENT_TYPES,
+  ISystem,
+  SYSTEM_TYPES,
+  SystemType,
+} from '../../types/engine.types';
 import {
   PositionComponent,
   CollisionComponent,
@@ -20,16 +25,16 @@ import {
   checkWhoIsEnemy,
   isProperEntity,
 } from './helpers/utils';
+import {
+  DEFAULT_PROJECTILE_DAMAGE,
+  MIN_DISTANCE,
+  MIN_D_X,
+  MIN_D_Y,
+  ZERO_DISTANCE,
+} from './consts/collision';
 
-const DEFAULT_PROJECTILE_DAMAGE = 10;
-
-const ZERO_DISTANCE = 0;
-
-const MIN_D_X = 1;
-const MIN_D_Y = 0;
-const MIN_DISTANCE = 0.0001;
-
-class CollisionSystem implements ISystem {
+class CollisionSystem implements ISystem<SystemType> {
+  type: SystemType = SYSTEM_TYPES.collision as SystemType;
   private logger = new Logger('CollisionSystem', 'warn');
 
   update(world: World): void {

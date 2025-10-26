@@ -1,0 +1,3 @@
+const CAMERA_PADDING = 16;
+
+export { CAMERA_PADDING };

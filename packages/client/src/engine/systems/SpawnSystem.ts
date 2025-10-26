@@ -1,4 +1,9 @@
-import { COMPONENT_TYPES, ISystem } from '../../types/engine.types';
+import {
+  COMPONENT_TYPES,
+  ISystem,
+  SYSTEM_TYPES,
+  SystemType,
+} from '../../types/engine.types';
 import World from '../core/World';
 import EventBus from '../infrastructure/EventBus';
 import { PositionComponent, SpawnPointComponent } from '../components';
@@ -8,15 +13,21 @@ import { createBoss } from '../enteties/createBoss';
 import { setEnemyCount, setWave } from '../../slices/game';
 import type { StoreLike } from '../adapters/ReduxAdapter';
 import type { RootState } from '../../store';
-
-const DEFAULT_AREA_WIDTH = 400;
+import {
+  BOSS_WAVE_INTERVAL,
+  DEFAULT_AREA_WIDTH,
+  DEFAULT_BASE_WAVE_SIZE,
+  DEFAULT_SPAWN_BATCH_SIZE,
+  DEFAULT_WAVE_GROWTH_FACTOR,
+} from './consts/spawn';
 
 interface SpawnSystemOptions {
   eventBus: EventBus;
   store?: StoreLike<RootState>;
 }
 
-class SpawnSystem implements ISystem {
+class SpawnSystem implements ISystem<SystemType> {
+  type: SystemType = SYSTEM_TYPES.spawn as SystemType;
   private eventBus: EventBus;
   private logger = new Logger('SpawnSystem', 'info');
   private bossSpawned = false;
@@ -27,9 +38,9 @@ class SpawnSystem implements ISystem {
   private enemiesKilledThisWave = 0;
   private waveTarget = 0;
   private waveComplete = false;
-  private readonly spawnBatchSize = 2;
-  private readonly baseWaveSize = 16;
-  private readonly waveGrowthFactor = 1.35;
+  private readonly spawnBatchSize = DEFAULT_SPAWN_BATCH_SIZE;
+  private readonly baseWaveSize = DEFAULT_BASE_WAVE_SIZE;
+  private readonly waveGrowthFactor = DEFAULT_WAVE_GROWTH_FACTOR;
 
   constructor({ eventBus, store }: SpawnSystemOptions) {
     this.eventBus = eventBus;
@@ -169,7 +180,7 @@ class SpawnSystem implements ISystem {
         });
       }
 
-      if (this.waveNumber % 5 === 0 && !this.bossSpawned) {
+      if (this.waveNumber % BOSS_WAVE_INTERVAL === 0 && !this.bossSpawned) {
         const bossX = bounds ? bounds.width / 2 : this.areaWidth / 2;
         const boss = createBoss(bossX, 100);
         world.addEntity(boss);

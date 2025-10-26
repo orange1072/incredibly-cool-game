@@ -14,6 +14,11 @@ class InputManager {
     // при желании диспатчить события в Redux
     void dt;
   }
+
+  onDestroy() {
+    window.removeEventListener('keydown', (e) => this.keys.add(e.key));
+    window.removeEventListener('keydown', (e) => this.keys.delete(e.key));
+  }
 }
 
 export default InputManager;

@@ -1,19 +1,26 @@
-import { COMPONENT_TYPES, ISystem } from '../../types/engine.types';
+import {
+  COMPONENT_TYPES,
+  ISystem,
+  SYSTEM_TYPES,
+  SystemType,
+} from '../../types/engine.types';
 import { ExperienceComponent } from '../components';
 import World from '../core/World';
 import EventBus from '../infrastructure/EventBus';
 import Logger from '../infrastructure/Logger';
-
-const ZERO_XP = 0;
-const MIN_THRESHOLD = 1;
-const THRESHOLD_GROWTH_RATE = 1.25;
-const ANOTHER_ONE_LEVEL = 1;
+import {
+  LEVEL_INCREMENT,
+  MIN_THRESHOLD,
+  THRESHOLD_GROWTH_RATE,
+  ZERO_XP,
+} from './consts/experience';
 
 interface ExperienceSystemOptions {
   eventBus: EventBus;
 }
 
-class ExperienceSystem implements ISystem {
+class ExperienceSystem implements ISystem<SystemType> {
+  type: SystemType = SYSTEM_TYPES.experience as SystemType;
   private eventBus: EventBus;
   private world: World | null = null;
   private pendingRewards: EnemyKilledPayload[] = [];
@@ -98,7 +105,7 @@ class ExperienceSystem implements ISystem {
 
     while (exp.xp >= exp.xpToNext && exp.xpToNext > ZERO_XP) {
       exp.xp -= exp.xpToNext;
-      exp.level += ANOTHER_ONE_LEVEL;
+      exp.level += LEVEL_INCREMENT;
       exp.xpToNext = Math.max(
         MIN_THRESHOLD,
         Math.floor(exp.xpToNext * THRESHOLD_GROWTH_RATE)

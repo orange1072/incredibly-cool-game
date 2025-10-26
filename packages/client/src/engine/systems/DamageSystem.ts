@@ -1,4 +1,9 @@
-import { COMPONENT_TYPES, ISystem } from '../../types/engine.types';
+import {
+  COMPONENT_TYPES,
+  ISystem,
+  SYSTEM_TYPES,
+  SystemType,
+} from '../../types/engine.types';
 import {
   DamageComponent,
   HealthComponent,
@@ -6,13 +11,12 @@ import {
 } from '../components';
 import World from '../core/World';
 import EventBus from '../infrastructure/EventBus';
+import { ZERO_HP, ZERO_XP_REWARD } from './consts/damage';
 
 const bus = EventBus.instance;
 
-const ZERO_XP_REWARD = 0;
-const ZERO_HP = 0;
-
-class DamageSystem implements ISystem {
+class DamageSystem implements ISystem<SystemType> {
+  type: SystemType = SYSTEM_TYPES.damage as SystemType;
   update(world: World) {
     const entities = world.query(
       COMPONENT_TYPES.health,

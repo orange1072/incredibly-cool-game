@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { ReactAdapter } from '../../engine/adapters/ReactAdapter';
 import { createGameEngine } from '../../engine/setup/createGameEngine';
 import ReduxAdapter from '../../engine/adapters/ReduxAdapter';

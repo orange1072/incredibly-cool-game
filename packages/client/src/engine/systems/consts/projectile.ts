@@ -1,3 +1,3 @@
-const ZERO_LIFETIME = 0
+const ZERO_LIFETIME = 0;
 
-export { ZERO_LIFETIME }
+export { ZERO_LIFETIME };

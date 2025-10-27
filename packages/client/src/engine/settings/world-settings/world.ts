@@ -1,4 +1,4 @@
-import type { WorldSettings } from '../../../types/settings/world-settings.types'
+import type { WorldSettings } from '../../../types/settings/world-settings.types';
 
 const worldSettings: WorldSettings = {
   zoom: 1,
@@ -12,6 +12,6 @@ const worldSettings: WorldSettings = {
     width: 2000,
     height: 1200,
   },
-}
+};
 
-export default worldSettings
+export default worldSettings;

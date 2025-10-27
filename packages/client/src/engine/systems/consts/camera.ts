@@ -1,3 +1,3 @@
-const CAMERA_PADDING = 16
+const CAMERA_PADDING = 16;
 
-export { CAMERA_PADDING }
+export { CAMERA_PADDING };

@@ -1,52 +1,44 @@
-import React, { ReactNode, InputHTMLAttributes } from 'react'
-import styles from './Input.module.scss'
+import { ChangeEventHandler, InputHTMLAttributes, memo } from 'react';
+import styles from './styles.module.scss';
 
-interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
-  label?: string
-  icon?: ReactNode
-  error?: string
-  className?: string
-}
+type InputProps = {
+  type: 'text' | 'email' | 'password' | 'phone';
+  label?: string;
+  placeholder: string;
+  value?: string;
+  onChange?: ChangeEventHandler<HTMLInputElement>;
+  Icon?: React.ReactNode;
+} & InputHTMLAttributes<HTMLInputElement>;
 
-export function Input({
-  label,
-  icon,
-  error,
-  className = '',
-  ...props
-}: InputProps) {
-  return (
-    <div className={styles['terminal-input']}>
-      {label && <label className={styles['ti-label']}>{label}</label>}
-
-      <div
-        className={`${styles['ti-input-wrap']} ${
-          error ? styles['has-error'] : ''
-        }`}
-      >
-        {icon && (
-          <div className={styles['ti-icon']} aria-hidden>
-            {icon}
-          </div>
-        )}
-
-        <input
-          {...props}
-          className={`${styles['ti-field']} ${
-            icon ? styles['with-icon'] : ''
-          } ${className}`}
-        />
-
-        <div className={styles['ti-scanline']} />
-        <div className={styles['ti-top-glow']} />
-      </div>
-
-      {error && (
-        <div className={styles['ti-error-row']} role="alert">
-          <span className={styles['ti-error-icon']}>⚠</span>
-          <span className={styles['ti-error-text']}>{error}</span>
+export const Input = memo(
+  ({
+    label,
+    type = 'text',
+    placeholder,
+    value,
+    onChange,
+    Icon,
+    ...props
+  }: InputProps) => {
+    return (
+      <div className={styles.inputWrapper}>
+        {label && <p className={styles.label}>{label}</p>}
+        <div
+          className={`${styles.inputContainer} ${Icon ? styles.withIcon : ''}`}
+        >
+          {Icon && <span>{Icon}</span>}
+          <input
+            type={type}
+            placeholder={placeholder}
+            value={value}
+            onChange={onChange}
+            className={styles.input}
+            {...props}
+          />
         </div>
-      )}
-    </div>
-  )
-}
+      </div>
+    );
+  }
+);
+
+Input.displayName = 'Input';

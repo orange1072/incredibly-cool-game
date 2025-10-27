@@ -87,7 +87,7 @@ class ReduxAdapter<TState = RootState> {
 
   constructor({ engine, store, selectGameState }: ReduxAdapterOptions<TState>) {
     this.engine = engine;
-    this.eventBus = engine.getEventBus();
+    this.eventBus = engine.eventBus;
     this.externalStore = store;
     this.selectGameState = selectGameState;
 
@@ -139,7 +139,7 @@ class ReduxAdapter<TState = RootState> {
     this.addListener('playerLevelUp', this.handlePlayerLevelUp);
 
     this.syncEnemyCounts();
-    this.syncPlayerState(this.engine.getWorld());
+    this.syncPlayerState(this.engine.world);
   }
 
   disconnect() {
@@ -232,7 +232,7 @@ class ReduxAdapter<TState = RootState> {
   };
 
   private syncEnemyCounts() {
-    const world = this.engine.getWorld();
+    const world = this.engine.world;
     const enemies = world.query(COMPONENT_TYPES.enemy);
     const enemyCount = enemies.length;
     const gameState = this.getGameStateImpl();

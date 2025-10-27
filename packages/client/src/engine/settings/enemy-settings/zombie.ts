@@ -2,7 +2,7 @@ import type {
   EnemySettings,
   DamageProfile,
   HealthProfile,
-} from '../../../types/settings/enemy-settings.types'
+} from '../../../types/settings/enemy-settings.types';
 
 const regularZombie: EnemySettings = {
   name: 'zombie-walker',
@@ -16,7 +16,7 @@ const regularZombie: EnemySettings = {
     baseSpeed: 30,
     baseValue: 10,
     actualDamage(this: DamageProfile, bonus: number, multiplier = 1) {
-      return this.baseValue * multiplier + bonus
+      return this.baseValue * multiplier + bonus;
     },
   },
   xpReward: 20,
@@ -38,7 +38,7 @@ const regularZombie: EnemySettings = {
     baseValue: 300,
     levelBonus: 10,
     health(this: HealthProfile, level: number, multiplier = 1) {
-      return this.baseValue * multiplier + this.levelBonus * level
+      return this.baseValue * multiplier + this.levelBonus * level;
     },
   },
   movement: {
@@ -48,6 +48,6 @@ const regularZombie: EnemySettings = {
     range: 28,
     cooldown: 1.5,
   },
-}
+};
 
-export { regularZombie }
+export { regularZombie };

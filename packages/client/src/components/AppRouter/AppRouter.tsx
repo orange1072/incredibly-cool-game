@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { SigninPage } from '@/pages/LoginPage';
 import { SignupPage } from '@/pages/SignupPage';
 import { ForumPage } from '@/pages/ForumPage';
-import { ProfilePage } from '@/pages/ProflePage';
+import { ProfilePage } from '@/pages/ProfilePage';
 import { LeaderboardPage } from '@/pages/Leaderboard';
 import { Error404Page } from '@/pages/Error404Page';
 import { Error500Page } from '@/pages/Error500Page';
@@ -10,9 +10,8 @@ import { PrivateRoute } from '../PrivateRoute';
 import { DemoPage } from '@/pages/DemoPage';
 import { MainPage } from '@/pages/MainPage';
 import { NavBar } from '../Navbar';
-import { GameMenuPage } from '@/pages/GameMenuPage'
-import { GamePlayPage } from '@/pages/GamePlayPage'
-
+import { GameMenuPage } from '@/pages/GameMenuPage';
+import { GamePlayPage } from '@/pages/GamePlayPage';
 
 export const AppRouter = () => {
   return (

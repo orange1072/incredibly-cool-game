@@ -3,18 +3,18 @@ import {
   type IEntity,
   type IPureDataComponent,
   type HealthComponentState,
-} from '../../types/engine.types'
+} from '../../types/engine.types';
 
 class HealthComponent implements IPureDataComponent, HealthComponentState {
-  type = COMPONENT_TYPES.health
-  entity!: IEntity
-  hp: number
-  maxHp: number
+  type = COMPONENT_TYPES.health;
+  entity!: IEntity;
+  hp: number;
+  maxHp: number;
 
   constructor({ hp, maxHp }: HealthComponentState) {
-    this.hp = hp
-    this.maxHp = maxHp
+    this.hp = hp;
+    this.maxHp = maxHp;
   }
 }
 
-export default HealthComponent
+export default HealthComponent;

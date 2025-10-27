@@ -3,18 +3,18 @@ import {
   type IEntity,
   type IPureDataComponent,
   type PositionComponentState,
-} from '../../types/engine.types'
+} from '../../types/engine.types';
 
 class PositionComponent implements IPureDataComponent, PositionComponentState {
-  type = COMPONENT_TYPES.position
-  entity!: IEntity
-  x: number
-  y: number
+  type = COMPONENT_TYPES.position;
+  entity!: IEntity;
+  x: number;
+  y: number;
 
   constructor({ x, y }: PositionComponentState) {
-    this.x = x
-    this.y = y
+    this.x = x;
+    this.y = y;
   }
 }
 
-export default PositionComponent
+export default PositionComponent;

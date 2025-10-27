@@ -1,10 +1,14 @@
+import { useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { PageInitArgs } from '../routes';
 import { GameCanvas } from '../components/GameCanvas/GameCanvas';
 import { XpBar } from '../components/XpBar/XpBar';
+import { TestErrorComponent } from '../components/ErrorBoundary/TestErrorComponent';
 import '../App.scss';
 
 export const DemoPage = () => {
+  const [shouldThrow, setShouldThrow] = useState(false);
+
   return (
     <>
       <Helmet>
@@ -144,9 +148,26 @@ export const DemoPage = () => {
             </div>
           </section>
 
+          {/* Секция: Тест ErrorBoundary */}
+          <section className="demo-section">
+            <h2 className="demo-section-title">6. ErrorBoundary Test</h2>
+            <div className="demo-responsive metal-panel">
+              <p>
+                Click the button to trigger an error and test ErrorBoundary:
+              </p>
+              <button
+                className="stalker-button danger"
+                onClick={() => setShouldThrow(true)}
+              >
+                Trigger Error
+              </button>
+              {shouldThrow && <TestErrorComponent shouldThrow />}
+            </div>
+          </section>
+
           {/* Секция: Адаптивность */}
           <section className="demo-section">
-            <h2 className="demo-section-title">6. Адаптивная верстка</h2>
+            <h2 className="demo-section-title">7. Адаптивная верстка</h2>
             <div className="demo-responsive metal-panel">
               <p>
                 <strong>Попробуйте изменить размер окна!</strong>

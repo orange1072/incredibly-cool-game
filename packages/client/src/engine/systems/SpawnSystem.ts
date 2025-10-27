@@ -45,7 +45,6 @@ class SpawnSystem implements ISystem<SystemType> {
   constructor({ eventBus, store }: SpawnSystemOptions) {
     this.eventBus = eventBus;
     this.store = store;
-
     this.eventBus.on('enemyKilled', this.handleEnemyKilledEvent);
   }
 

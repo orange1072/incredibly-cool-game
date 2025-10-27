@@ -103,8 +103,8 @@
 .headshotsCard {
   text-align: center;
   padding: 1rem;
-  background: rgba(245, 166, 35, 0.1);
-  border: 2px solid rgba(245, 166, 35, 0.3);
+  background: rgba($stalker-orange, 0.1);
+  border: 2px solid rgba($stalker-orange, 0.3);
 
   @include respond-to('medium') {
     padding: 1.5rem;

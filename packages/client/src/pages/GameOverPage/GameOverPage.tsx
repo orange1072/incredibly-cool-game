@@ -2,30 +2,21 @@ import { Helmet } from 'react-helmet';
 import { Trophy, RotateCcw, Home, Share2, Skull } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { PixelButton } from '@/components/PixelButton';
-import { Particle } from '@/components/Particle';
+import { ParticleBackground } from '@/components/ParticleBackground';
 import { StatsSection } from './components/StatsSection';
+import { GameStats, DEFAULT_STATS } from './types';
 import styles from './GameOverPage.module.scss';
 
 export interface GameOverPageProps {
   victory?: boolean;
+  stats?: GameStats;
 }
 
-export const GameOverPage = ({ victory = false }: GameOverPageProps) => {
+export const GameOverPage = ({
+  victory = false,
+  stats = DEFAULT_STATS,
+}: GameOverPageProps) => {
   const navigate = useNavigate();
-  const stats = {
-    zombiesKilled: 47,
-    timeAlive: '05:32',
-    wave: 8,
-    accuracy: '73%',
-    headshots: 15,
-  };
-
-  const particles = Array.from({ length: 30 }, (_, i) => ({
-    id: i,
-    left: Math.random() * 100,
-    top: Math.random() * 100,
-    animationDelay: Math.random() * 4,
-  }));
 
   return (
     <>
@@ -39,19 +30,10 @@ export const GameOverPage = ({ victory = false }: GameOverPageProps) => {
       </Helmet>
       <div className={styles.container}>
         <div className={styles.background} aria-hidden="true">
-          <div className={`fog-overlay ${styles.fog}`} />
           {!victory && <div className={styles.redGradient} />}
         </div>
         <div className={styles.particles} aria-hidden="true">
-          {particles.map((particle) => (
-            <Particle
-              key={particle.id}
-              color={victory ? 'cyan' : 'red'}
-              left={particle.left}
-              top={particle.top}
-              animationDelay={particle.animationDelay}
-            />
-          ))}
+          <ParticleBackground particleCount={30} />
         </div>
         <main className={styles.content}>
           <div className={styles.innerContainer}>
@@ -95,7 +77,7 @@ export const GameOverPage = ({ victory = false }: GameOverPageProps) => {
             />
             {victory && (
               <aside className={`metal-panel ${styles.trophyPanel} cyan-glow`}>
-                <div className={styles.trophyIcon}>🏆</div>
+                <Trophy className={styles.trophyIcon} />
                 <div className={`stalker-text ${styles.trophyText}`}>
                   Achievement: Zone Master
                 </div>

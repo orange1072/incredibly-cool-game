@@ -1,12 +1,7 @@
 import styles from './StatsSection.module.scss';
+import { GameStats } from '../../types';
 
-interface StatsSectionProps {
-  zombiesKilled: number;
-  timeAlive: string;
-  wave: number;
-  accuracy: string;
-  headshots: number;
-}
+interface StatsSectionProps extends GameStats {}
 
 export const StatsSection = ({
   zombiesKilled,

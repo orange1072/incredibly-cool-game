@@ -161,12 +161,12 @@
 // Flex row mixin
 @mixin flex-row {
   display: flex;
-flex-direction: row;
+  flex-direction: row;
 }
 // Flex column mixin
 @mixin flex-column {
   display: flex;
-flex-direction: column;
+  flex-direction: column;
 }
 
 // Transition mixin
@@ -175,13 +175,13 @@ flex-direction: column;
 }
 
 //Styles mixin
-@mixin primary{
+@mixin primary {
   color: var(--primary);
   border: 1px solid var(--primary);
   @include cyan-glow;
 }
 
-@mixin secondary{
+@mixin secondary {
   border: 1px solid var(--secondary);
   color: var(--color-switch-background);
 }

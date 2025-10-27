@@ -2,6 +2,7 @@ import { Helmet } from 'react-helmet';
 import { PageInitArgs } from '../routes';
 import { GameCanvas } from '../components/GameCanvas/GameCanvas';
 import { XpBar } from '../components/XpBar/XpBar';
+import { ErrorBoundaryTestSection } from '../components/ErrorBoundary';
 import '../App.scss';
 
 export const DemoPage = () => {
@@ -144,9 +145,12 @@ export const DemoPage = () => {
             </div>
           </section>
 
+          {/* Секция: Тест ErrorBoundary */}
+          <ErrorBoundaryTestSection />
+
           {/* Секция: Адаптивность */}
           <section className="demo-section">
-            <h2 className="demo-section-title">6. Адаптивная верстка</h2>
+            <h2 className="demo-section-title">7. Адаптивная верстка</h2>
             <div className="demo-responsive metal-panel">
               <p>
                 <strong>Попробуйте изменить размер окна!</strong>

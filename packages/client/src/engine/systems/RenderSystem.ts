@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   PositionComponent,
   SpriteComponent,
@@ -25,6 +26,7 @@ import SpriteLoaderSystem from './SpriteLoaderSystem';
 import {
   DEFAULT_ENTITY_FILL_COLOR,
   DEFAULT_SCALE,
+  EXPERIENCE_COLOR,
   HEALTH_BAR_BACKGROUND,
   HEALTH_BAR_HEIGHT,
   HEALTH_BAR_OFFSET,
@@ -41,6 +43,7 @@ import {
   OBSTACLE_FILL_COLOR,
   ZERO_FRAMES,
 } from './consts/render';
+import LootComponent from '../components/LootComponent';
 
 class RendererSystem implements ISystem<SystemType> {
   type: SystemType = SYSTEM_TYPES.render as SystemType;
@@ -61,7 +64,6 @@ class RendererSystem implements ISystem<SystemType> {
   }
 
   update(_world: World, _dt: number) {
-    console.log({ _world }, { _dt });
     return;
   }
 
@@ -90,6 +92,7 @@ class RendererSystem implements ISystem<SystemType> {
 
       const sprite = e.getComponent<SpriteComponent>(COMPONENT_TYPES.sprite);
       const isEnemy = e.getComponent<EnemyComponent>(COMPONENT_TYPES.enemy);
+      const isLoot = e.getComponent<LootComponent>(COMPONENT_TYPES.loot);
       const isPlayer = e.getComponent<PlayerControlComponent>(
         COMPONENT_TYPES.playerControl
       );
@@ -108,6 +111,8 @@ class RendererSystem implements ISystem<SystemType> {
           this.ctx.fillStyle = regularZombie.skin.color;
         } else if (obstacle) {
           this.ctx.fillStyle = OBSTACLE_FILL_COLOR;
+        } else if (isLoot) {
+          this.ctx.fillStyle = EXPERIENCE_COLOR;
         } else {
           this.ctx.fillStyle = DEFAULT_ENTITY_FILL_COLOR;
         }

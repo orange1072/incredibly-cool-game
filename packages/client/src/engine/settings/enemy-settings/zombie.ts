@@ -9,11 +9,11 @@ const regularZombie: EnemySettings = {
   kind: 'zombie',
   ai: {
     startingValue: 'idle',
-    aggroRange: 700,
+    aggroRange: 1800,
   },
   damage: {
     radius: 5,
-    baseSpeed: 30,
+    baseSpeed: 40,
     baseValue: 10,
     actualDamage(this: DamageProfile, bonus: number, multiplier = 1) {
       return this.baseValue * multiplier + bonus;
@@ -45,8 +45,8 @@ const regularZombie: EnemySettings = {
     speed: 60,
   },
   attack: {
-    range: 28,
-    cooldown: 1.5,
+    range: 45,
+    cooldown: 1.2,
   },
 };
 

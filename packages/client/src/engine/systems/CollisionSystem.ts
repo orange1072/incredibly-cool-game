@@ -32,6 +32,10 @@ import {
   MIN_D_Y,
   ZERO_DISTANCE,
 } from './consts/collision';
+import LootComponent from '../components/LootComponent';
+import EventBus from '../infrastructure/EventBus';
+
+const bus = EventBus.instance;
 
 class CollisionSystem implements ISystem<SystemType> {
   type: SystemType = SYSTEM_TYPES.collision as SystemType;
@@ -77,12 +81,24 @@ class CollisionSystem implements ISystem<SystemType> {
     const aIsProjectile = isProperEntity(a, COMPONENT_TYPES.projectile);
     const bIsProjectile = isProperEntity(b, COMPONENT_TYPES.projectile);
 
+    const aIsLoot = isProperEntity(a, COMPONENT_TYPES.loot);
+
+    const bIsLoot = isProperEntity(b, COMPONENT_TYPES.loot);
+
     if (aIsProjectile) {
       this.processProjectileHit(a, b, world);
     }
 
     if (bIsProjectile) {
       this.processProjectileHit(b, a, world);
+    }
+
+    if (aIsLoot) {
+      this.processCollectingLoot(a, b, world);
+    }
+
+    if (bIsLoot) {
+      this.processCollectingLoot(b, a, world);
     }
 
     if (aIsProjectile || bIsProjectile) {
@@ -139,10 +155,11 @@ class CollisionSystem implements ISystem<SystemType> {
         passthrough: !hitsPlayer,
       });
 
-      //to-do: здесь будет проверка типа оружия. сейчас удары противника уничтожают снаряд, а игрока заставляют пролетать
       if (hitsPlayer) {
         world.removeEntity(projectileEntity.id);
       } else {
+        //to-do: здесь будет проверка типа оружия. сейчас удары противника уничтожают снаряд, а игрока заставляют пролетать
+        world.removeEntity(projectileEntity.id);
         return;
       }
 
@@ -157,7 +174,10 @@ class CollisionSystem implements ISystem<SystemType> {
       return;
     }
 
-    if (!isProperEntity(target, COMPONENT_TYPES.projectile)) {
+    if (
+      !isProperEntity(target, COMPONENT_TYPES.projectile) &&
+      !isProperEntity(target, COMPONENT_TYPES.loot)
+    ) {
       world.removeEntity(projectileEntity.id);
     }
   }
@@ -210,6 +230,33 @@ class CollisionSystem implements ISystem<SystemType> {
         velocity.dx -= pushBack * nx;
         velocity.dy -= pushBack * ny;
       }
+    }
+  }
+
+  private processCollectingLoot(
+    lootEntity: Entity,
+    target: Entity,
+    world: World
+  ) {
+    const loot = lootEntity.getComponent<LootComponent>(COMPONENT_TYPES.loot);
+    if (!loot) return;
+
+    const takenByPlayer = isProperEntity(target, COMPONENT_TYPES.playerControl);
+
+    if (takenByPlayer) {
+      if (loot.lootType === 'xp') {
+        const xpReward = loot.amount;
+        bus.emit('xpCollected', {
+          xpReward,
+        });
+      }
+      world.removeEntity(lootEntity.id);
+    } else {
+      return;
+    }
+
+    if (!isProperEntity(target, COMPONENT_TYPES.loot)) {
+      world.removeEntity(lootEntity.id);
     }
   }
 

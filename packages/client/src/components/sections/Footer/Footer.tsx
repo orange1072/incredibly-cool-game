@@ -1,11 +1,11 @@
-import { memo } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { Github } from 'lucide-react'
+import { memo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Github } from 'lucide-react';
 
-import styles from './Footer.module.scss'
+import styles from './Footer.module.scss';
 
 export const Footer = memo(() => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const demoNavigationItems = [
     { page: '', label: 'Main' },
@@ -13,11 +13,13 @@ export const Footer = memo(() => {
     { page: 'signup', label: 'Register' },
     { page: 'profile', label: 'Profile' },
     { page: 'demo', label: 'Demo' },
+    { page: 'game-menu', label: 'Game Menu' },
+    { page: 'game-over', label: 'Game Over' },
     { page: 'leaderboard', label: 'Leaderboard' },
     { page: 'forum', label: 'Forum' },
     { page: 'error404', label: '404 Error' },
     { page: 'error500', label: '500 Error' },
-  ]
+  ];
 
   return (
     <footer className={styles.footer}>
@@ -70,7 +72,7 @@ export const Footer = memo(() => {
         </div>
       </div>
     </footer>
-  )
-})
+  );
+});
 
-Footer.displayName = 'Footer'
+Footer.displayName = 'Footer';

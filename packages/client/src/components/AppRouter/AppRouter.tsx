@@ -12,6 +12,7 @@ import { MainPage } from '@/pages/MainPage';
 import { NavBar } from '../Navbar';
 import { GameMenuPage } from '@/pages/GameMenuPage';
 import { GamePlayPage } from '@/pages/GamePlayPage';
+import { GameOverPage } from '@/pages/GameOverPage';
 
 export const AppRouter = () => {
   return (
@@ -44,6 +45,14 @@ export const AppRouter = () => {
           element={
             <PrivateRoute>
               <GamePlayPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/game-over"
+          element={
+            <PrivateRoute>
+              <GameOverPage victory={false} />
             </PrivateRoute>
           }
         />

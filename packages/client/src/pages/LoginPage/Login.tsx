@@ -1,49 +1,49 @@
-import React, { useCallback, useState } from 'react'
-import { Input } from '@/components/Input/Input'
-import styles from './Login.module.scss'
-import { ParticleBackground } from '@/components/ParticleBackground'
-import { Logo } from '@/components/ui'
-import { PixelButton } from '@/components/PixelButton'
-import { ArrowRight, Radiation, User, Lock, AlertTriangle } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import React, { useCallback, useState } from 'react';
+import { Input } from '@/components/Input/Input';
+import styles from './Login.module.scss';
+import { ParticleBackground } from '@/components/ParticleBackground';
+import { Logo } from '@/components/ui';
+import { PixelButton } from '@/components/PixelButton';
+import { ArrowRight, Radiation, User, Lock, AlertTriangle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
-type Errors = Partial<Record<'username' | 'password', string>>
+type Errors = Partial<Record<'username' | 'password', string>>;
 
 export function SigninPage() {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [errors, setErrors] = useState<Errors>({})
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [errors, setErrors] = useState<Errors>({});
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const validate = useCallback(() => {
-    const newErrors: Errors = {}
-    if (!username.trim()) newErrors.username = 'Required'
-    if (!password) newErrors.password = 'Required'
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }, [username, password])
+    const newErrors: Errors = {};
+    if (!username.trim()) newErrors.username = 'Required';
+    if (!password) newErrors.password = 'Required';
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  }, [username, password]);
 
   const handleSubmit = useCallback(
     (e: React.FormEvent) => {
-      e.preventDefault()
+      e.preventDefault();
       if (!validate()) {
-        return
+        return;
       }
 
-      navigate('/profile')
+      navigate('/profile');
     },
     [validate, navigate]
-  )
+  );
 
   const handleGuestLogin = useCallback(
     (e?: React.MouseEvent) => {
-      e?.preventDefault()
-      setErrors({})
-      navigate('/profile')
+      e?.preventDefault();
+      setErrors({});
+      navigate('/profile');
     },
     [navigate]
-  )
+  );
 
   return (
     <main className={styles['login-page']}>
@@ -51,7 +51,7 @@ export function SigninPage() {
 
       <div className={styles.content}>
         <div className={styles.container}>
-          <header className={styles.header}>
+          <div className={styles.header}>
             <div
               className={`${styles['logo-wrap']} ${styles['anomaly-pulse']}`}
             >
@@ -77,7 +77,7 @@ export function SigninPage() {
                 className={`${styles.icon} ${styles.small} ${styles.pulse}`}
               />
             </div>
-          </header>
+          </div>
 
           <section
             className={`${styles['metal-panel']} ${styles['grunge-texture']}`}
@@ -95,10 +95,11 @@ export function SigninPage() {
 
               <form onSubmit={handleSubmit} className={styles['panel-inner']}>
                 <Input
+                  type="text"
                   name="username"
                   label="Call Sign"
                   placeholder="marked_one"
-                  icon={<User className={styles.icon} />}
+                  Icon={<User className={styles.icon} />}
                   value={username}
                   error={errors.username}
                   onChange={(e) => setUsername(e.target.value)}
@@ -109,7 +110,7 @@ export function SigninPage() {
                   label="Access Code"
                   type="password"
                   placeholder="••••••••"
-                  icon={<Lock className={styles.icon} />}
+                  Icon={<Lock className={styles.icon} />}
                   value={password}
                   error={errors.password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -181,5 +182,5 @@ export function SigninPage() {
         </div>
       </div>
     </main>
-  )
+  );
 }

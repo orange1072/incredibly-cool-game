@@ -1,3 +1,7 @@
+.inputContainer {
+  position: relative;
+}
+
 .input {
   padding: 8px 12px;
   box-sizing: border-box;
@@ -22,8 +26,20 @@
   }
 
   &.withIcon {
-    padding-left: 40px;
+    padding-left: 2.5rem;
   }
+}
+
+.inputIcon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  color: rgba(47,184,204,0.9);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .label {
@@ -38,4 +54,29 @@
 
 .inputWrapper {
   width: 100%;
+}
+
+.hasError {
+  .input {
+    border-color: #c43a31;
+    box-shadow: 0 0 10px rgba(196,58,49,0.18);
+  }
+}
+
+.errorWrapper {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  align-items: center;
+  color: #c43a31;
+  font-size: 0.75rem;
+
+  .errorIcon {
+    font-size: 0.9rem;
+    line-height: 1;
+  }
+
+  .errorText {
+    letter-spacing: 0.04em;
+  }
 }

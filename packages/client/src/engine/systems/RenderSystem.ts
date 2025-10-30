@@ -27,7 +27,6 @@ import SpriteLoaderSystem from './SpriteLoaderSystem';
 import {
   DEFAULT_ENTITY_FILL_COLOR,
   DEFAULT_SCALE,
-  EXPERIENCE_COLOR,
   HEALTH_BAR_BACKGROUND,
   HEALTH_BAR_HEIGHT,
   HEALTH_BAR_OFFSET,
@@ -50,6 +49,7 @@ import { PROJECTILE_RADIUS } from './consts/player-control';
 class RendererSystem implements ISystem<SystemType> {
   type: SystemType = SYSTEM_TYPES.render as SystemType;
   private ctx: CanvasRenderingContext2D;
+  private elapsedTime = 0;
 
   constructor(
     canvas: HTMLCanvasElement,
@@ -65,8 +65,8 @@ class RendererSystem implements ISystem<SystemType> {
     }
   }
 
-  update(_world: World, _dt: number) {
-    return;
+  update(_world: World, dt: number) {
+    this.elapsedTime = (this.elapsedTime + dt) % 1000;
   }
 
   render(world: World) {
@@ -111,6 +111,11 @@ class RendererSystem implements ISystem<SystemType> {
         continue;
       }
 
+      if (isLoot) {
+        this.drawLoot(pos);
+        continue;
+      }
+
       let renderedWidth =
         sprite && sprite.source ? this.drawSprite(sprite, pos) : 0;
 
@@ -121,8 +126,6 @@ class RendererSystem implements ISystem<SystemType> {
           this.ctx.fillStyle = regularZombie.skin.color;
         } else if (obstacle) {
           this.ctx.fillStyle = OBSTACLE_FILL_COLOR;
-        } else if (isLoot) {
-          this.ctx.fillStyle = EXPERIENCE_COLOR;
         } else {
           this.ctx.fillStyle = DEFAULT_ENTITY_FILL_COLOR;
         }
@@ -149,6 +152,42 @@ class RendererSystem implements ISystem<SystemType> {
     this.ctx.fillStyle = '#e6eb8cff';
     this.ctx.beginPath();
     this.ctx.arc(position.x, position.y, PROJECTILE_RADIUS, 0, Math.PI * 2);
+    this.ctx.fill();
+  }
+
+  private drawLoot(position: PositionComponent) {
+    const baseRadius = PROJECTILE_RADIUS * 1.15;
+    const pulseAmplitude = PROJECTILE_RADIUS * 0.85;
+    const pulse = (Math.sin(this.elapsedTime * 4) + 1) * 0.5;
+    const radius = baseRadius + pulseAmplitude * pulse;
+    const glowRadius = radius * 1.75;
+
+    const glow = this.ctx.createRadialGradient(
+      position.x,
+      position.y,
+      Math.max(radius * 0.3, 1),
+      position.x,
+      position.y,
+      glowRadius
+    );
+
+    glow.addColorStop(0, 'rgba(210, 200, 255, 0.9)');
+    glow.addColorStop(0.55, 'rgba(168, 147, 255, 0.55)');
+    glow.addColorStop(1, 'rgba(129, 107, 239, 0)');
+
+    this.ctx.fillStyle = glow;
+    this.ctx.beginPath();
+    this.ctx.arc(position.x, position.y, glowRadius, 0, Math.PI * 2);
+    this.ctx.fill();
+
+    this.ctx.fillStyle = 'rgba(190, 173, 255, 0.95)';
+    this.ctx.beginPath();
+    this.ctx.arc(position.x, position.y, radius, 0, Math.PI * 2);
+    this.ctx.fill();
+
+    this.ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+    this.ctx.beginPath();
+    this.ctx.arc(position.x, position.y, radius * 0.45, 0, Math.PI * 2);
     this.ctx.fill();
   }
 

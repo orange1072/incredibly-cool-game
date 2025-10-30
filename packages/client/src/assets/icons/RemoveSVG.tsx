@@ -59,4 +59,4 @@ export const RemoveSVG = () => (
       strokeWidth="1"
     />
   </svg>
-)
+);

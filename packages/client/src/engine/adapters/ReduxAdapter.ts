@@ -11,7 +11,11 @@ import gameReducer, {
   setPlayerXp,
 } from '../../slices/game';
 import type { RootState } from '../../store';
-import { COMPONENT_TYPES, type ISystem } from '../../types/engine.types';
+import {
+  COMPONENT_TYPES,
+  SystemType,
+  type ISystem,
+} from '../../types/engine.types';
 import GameEngine from '../core/GameEngine';
 import type World from '../core/World';
 import type Entity from '../core/Entity';
@@ -62,7 +66,7 @@ class ReduxAdapter<TState = RootState> {
   private readonly getGameStateImpl: () => GameSliceState;
   private readonly subscribeImpl?: (listener: () => void) => () => void;
   private readonly cleanupListeners: Array<() => void> = [];
-  private readonly syncSystem: ISystem;
+  private readonly syncSystem: ISystem<SystemType>;
 
   private isActive = false;
   private syncSystemRegistered = false;
@@ -83,7 +87,7 @@ class ReduxAdapter<TState = RootState> {
 
   constructor({ engine, store, selectGameState }: ReduxAdapterOptions<TState>) {
     this.engine = engine;
-    this.eventBus = engine.getEventBus();
+    this.eventBus = engine.eventBus;
     this.externalStore = store;
     this.selectGameState = selectGameState;
 
@@ -111,6 +115,7 @@ class ReduxAdapter<TState = RootState> {
     }
 
     this.syncSystem = {
+      type: 'sync',
       update: (world: World) => {
         if (!this.isActive) return;
         this.syncPlayerState(world);
@@ -124,7 +129,7 @@ class ReduxAdapter<TState = RootState> {
 
     this.initializeSnapshots();
     if (!this.syncSystemRegistered) {
-      this.engine.addSystem(this.syncSystem);
+      this.engine.addSystem(this.syncSystem, 'sync');
       this.syncSystemRegistered = true;
     }
 
@@ -134,7 +139,7 @@ class ReduxAdapter<TState = RootState> {
     this.addListener('playerLevelUp', this.handlePlayerLevelUp);
 
     this.syncEnemyCounts();
-    this.syncPlayerState(this.engine.getWorld());
+    this.syncPlayerState(this.engine.world);
   }
 
   disconnect() {
@@ -227,7 +232,7 @@ class ReduxAdapter<TState = RootState> {
   };
 
   private syncEnemyCounts() {
-    const world = this.engine.getWorld();
+    const world = this.engine.world;
     const enemies = world.query(COMPONENT_TYPES.enemy);
     const enemyCount = enemies.length;
     const gameState = this.getGameStateImpl();

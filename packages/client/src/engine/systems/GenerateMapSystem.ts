@@ -34,7 +34,7 @@ class GenerateMapSystem implements ISystem<SystemType> {
   private cellSize = DEFAULT_CELL_SIZE;
 
   initialize(world: World) {
-    const bounds = world.getBounds?.();
+    const bounds = world.bounds;
     if (bounds) {
       this.mapWidth = bounds.width;
       this.mapHeight = bounds.height;

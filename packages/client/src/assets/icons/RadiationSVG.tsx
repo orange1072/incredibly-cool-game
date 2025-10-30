@@ -50,4 +50,4 @@ export const RadiationSVG = () => (
       strokeWidth="1.66666663"
     />
   </svg>
-)
+);

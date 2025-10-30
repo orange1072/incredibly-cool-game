@@ -1,6 +1,6 @@
-import { AnalyticSVG } from '@/assets/icons'
-import styles from '../../styles.module.scss'
-import { PROFILE_STATS } from '@/constants'
+import { AnalyticSVG } from '@/assets/icons';
+import styles from '../../styles.module.scss';
+import { PROFILE_STATS } from '@/constants';
 
 export const ProfileStats = () => {
   return (
@@ -21,5 +21,5 @@ export const ProfileStats = () => {
         ))}
       </ul>
     </div>
-  )
-}
+  );
+};

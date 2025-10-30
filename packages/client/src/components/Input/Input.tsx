@@ -6,7 +6,6 @@ type InputProps = {
   label?: string;
   placeholder: string;
   value?: string;
-  error?: string;
   onChange?: ChangeEventHandler<HTMLInputElement>;
   Icon?: React.ReactNode;
   autocomplete?: string;

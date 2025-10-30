@@ -6,4 +6,4 @@ export const API_ENDPOINTS = {
       PASSWORD: '/user/profile/password',
     },
   },
-} as const
+} as const;

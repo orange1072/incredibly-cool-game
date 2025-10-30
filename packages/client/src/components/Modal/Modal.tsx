@@ -1,11 +1,11 @@
-import { useEffect, useCallback, memo, ReactNode } from 'react'
-import styles from './styles.module.scss'
+import { useEffect, useCallback, memo, ReactNode } from 'react';
+import styles from './styles.module.scss';
 
 interface ModalProps {
-  isOpen: boolean
-  onClose: () => void
-  title?: string
-  children: ReactNode
+  isOpen: boolean;
+  onClose: () => void;
+  title?: string;
+  children: ReactNode;
 }
 
 export const Modal = memo(
@@ -13,31 +13,31 @@ export const Modal = memo(
     const handleEscape = useCallback(
       (e: KeyboardEvent) => {
         if (e.key === 'Escape') {
-          onClose()
+          onClose();
         }
       },
       [onClose]
-    )
+    );
 
     useEffect(() => {
       if (isOpen) {
-        document.addEventListener('keydown', handleEscape)
-        document.body.style.overflow = 'hidden'
+        document.addEventListener('keydown', handleEscape);
+        document.body.style.overflow = 'hidden';
       }
 
       return () => {
-        document.removeEventListener('keydown', handleEscape)
-        document.body.style.overflow = 'unset'
-      }
-    }, [isOpen, handleEscape])
+        document.removeEventListener('keydown', handleEscape);
+        document.body.style.overflow = 'unset';
+      };
+    }, [isOpen, handleEscape]);
 
-    if (!isOpen) return null
+    if (!isOpen) return null;
 
     const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
       if (e.target === e.currentTarget) {
-        onClose()
+        onClose();
       }
-    }
+    };
 
     return (
       <div className={styles.overlay} onClick={handleBackdropClick}>
@@ -51,8 +51,8 @@ export const Modal = memo(
           <div className={styles.content}>{children}</div>
         </div>
       </div>
-    )
+    );
   }
-)
+);
 
-Modal.displayName = 'Modal'
+Modal.displayName = 'Modal';

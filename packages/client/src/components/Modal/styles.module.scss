@@ -1,4 +1,4 @@
-@import '@/styles/variables.scss';
+@use '@/styles/variables' as *;
 
 .overlay {
   position: fixed;
@@ -27,9 +27,7 @@
 .modal {
   background: $stalker-panel;
   border: 2px solid $stalker-cyan;
-  box-shadow:
-    0 0 20px rgba(47, 184, 204, 0.3),
-    0 0 40px rgba(47, 184, 204, 0.1),
+  box-shadow: 0 0 20px rgba(47, 184, 204, 0.3), 0 0 40px rgba(47, 184, 204, 0.1),
     inset 0 0 60px rgba(0, 0, 0, 0.5);
   max-width: 500px;
   width: 90%;
@@ -129,4 +127,3 @@
     background: $stalker-cyan-bright;
   }
 }
-

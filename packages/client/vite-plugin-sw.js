@@ -9,7 +9,6 @@ const __dirname = dirname(__filename);
 /**
  * Vite плагин для автоматической генерации Service Worker
  * с динамическим списком статических файлов после сборки.
- * Добавлены: версия кеша, защита от отсутствия плейсхолдера и очистка старых кешей.
  */
 export function vitePluginServiceWorker() {
   return {
@@ -20,18 +19,7 @@ export function vitePluginServiceWorker() {
       const outDir = options.dir || join(process.cwd(), 'dist/client');
 
       try {
-        const bundleFiles = Object.keys(bundle)
-          .map((fileName) => {
-            const fileInfo = bundle[fileName];
-            const filePath = fileInfo.fileName || fileName;
-            const relativePath = '/' + filePath.replace(/\\/g, '/');
-            return relativePath;
-          })
-          .filter((path) =>
-            path.match(
-              /\.(html|js|css|png|jpg|jpeg|gif|svg|ico|woff2?|ttf|eot)$/i
-            )
-          );
+        const bundleFiles = extractBundleFiles(bundle);
 
         const publicFiles = await getPublicFiles(outDir);
 
@@ -80,6 +68,19 @@ export function vitePluginServiceWorker() {
       }
     },
   };
+}
+
+function extractBundleFiles(bundle) {
+  return Object.keys(bundle)
+    .map((fileName) => {
+      const fileInfo = bundle[fileName];
+      const filePath = fileInfo.fileName || fileName;
+      const relativePath = '/' + filePath.replace(/\\/g, '/');
+      return relativePath;
+    })
+    .filter((path) =>
+      path.match(/\.(html|js|css|png|jpg|jpeg|gif|svg|ico|woff2?|ttf|eot)$/i)
+    );
 }
 
 /**

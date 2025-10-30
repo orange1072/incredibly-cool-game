@@ -1,16 +1,16 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { SERVER_HOST } from '@/constants'
-import { getAuthToken } from '@/utils/auth'
-import { API_ENDPOINTS } from './endpoints'
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { SERVER_HOST } from '@/constants';
+import { getAuthToken } from '@/utils/auth';
+import { API_ENDPOINTS } from './endpoints';
 
 interface User {
-  name: string
-  secondName: string
-  avatar?: string
+  name: string;
+  secondName: string;
+  avatar?: string;
 }
 
 interface UpdateAvatarResponse {
-  avatar: string
+  avatar: string;
 }
 
 export const userApi = createApi({
@@ -18,11 +18,11 @@ export const userApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: SERVER_HOST,
     prepareHeaders: (headers) => {
-      const token = getAuthToken()
+      const token = getAuthToken();
       if (token) {
-        headers.set('Authorization', `Bearer ${token}`)
+        headers.set('Authorization', `Bearer ${token}`);
       }
-      return headers
+      return headers;
     },
   }),
   tagTypes: ['User'],
@@ -33,13 +33,13 @@ export const userApi = createApi({
     }),
     updateUserAvatar: builder.mutation<UpdateAvatarResponse, File>({
       query: (avatar) => {
-        const formData = new FormData()
-        formData.append('avatar', avatar)
+        const formData = new FormData();
+        formData.append('avatar', avatar);
         return {
           url: API_ENDPOINTS.USER.PROFILE.AVATAR,
           method: 'PUT',
           body: formData,
-        }
+        };
       },
       invalidatesTags: ['User'],
     }),
@@ -57,10 +57,10 @@ export const userApi = createApi({
       }),
     }),
   }),
-})
+});
 
 export const {
   useGetUserQuery,
   useUpdateUserAvatarMutation,
   useChangePasswordMutation,
-} = userApi
+} = userApi;

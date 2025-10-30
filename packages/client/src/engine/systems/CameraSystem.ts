@@ -41,10 +41,7 @@ class CameraSystem implements ISystem<SystemType> {
 
   update(world: World, dt: number) {
     const { width, height } = this.canvas;
-    const bounds =
-      typeof world.getBounds === 'function'
-        ? world.getBounds()
-        : { width, height };
+    const bounds = world.bounds ?? { width, height };
 
     const visibleWidth = width / worldSettings.zoom;
     const visibleHeight = height / worldSettings.zoom;

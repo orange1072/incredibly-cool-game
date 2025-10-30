@@ -1,4 +1,4 @@
-import { SVGProps } from 'react'
+import { SVGProps } from 'react';
 
 export const ProfileSVG = (props: SVGProps<SVGSVGElement>) => (
   <svg
@@ -35,4 +35,4 @@ export const ProfileSVG = (props: SVGProps<SVGSVGElement>) => (
       strokeWidth="6.66666651"
     />
   </svg>
-)
+);

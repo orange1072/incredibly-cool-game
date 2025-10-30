@@ -1,14 +1,14 @@
-import { ChangeEventHandler, InputHTMLAttributes, memo } from 'react'
-import styles from './styles.module.scss'
+import { ChangeEventHandler, InputHTMLAttributes, memo } from 'react';
+import styles from './styles.module.scss';
 
 type InputProps = {
-  type: 'text' | 'email' | 'password' | 'phone'
-  label?: string
-  placeholder: string
-  value?: string
-  onChange?: ChangeEventHandler<HTMLInputElement>
-  Icon?: React.ReactNode
-} & InputHTMLAttributes<HTMLInputElement>
+  type: 'text' | 'email' | 'password' | 'phone';
+  label?: string;
+  placeholder: string;
+  value?: string;
+  onChange?: ChangeEventHandler<HTMLInputElement>;
+  Icon?: React.ReactNode;
+} & InputHTMLAttributes<HTMLInputElement>;
 
 export const Input = memo(
   ({
@@ -37,8 +37,8 @@ export const Input = memo(
           />
         </div>
       </div>
-    )
+    );
   }
-)
+);
 
-Input.displayName = 'Input'
+Input.displayName = 'Input';

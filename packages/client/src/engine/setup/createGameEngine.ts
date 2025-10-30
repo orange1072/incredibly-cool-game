@@ -34,12 +34,12 @@ export function createGameEngine(
   const cameraSystem = new CameraSystem(canvas);
   const spriteLoaderSystem = new SpriteLoaderSystem();
   const renderer = new Renderer(canvas, cameraSystem, spriteLoaderSystem);
-  const world = createWorld();
-  const engine = new GameEngine(renderer, world);
+  const world = createWorld(renderer);
+  const engine = new GameEngine(world);
 
-  const eventBus = engine.getEventBus();
-  const input = engine.getInputManager();
-  const worldBounds = world.getBounds();
+  const eventBus = engine.eventBus;
+  const input = engine.inputManager;
+  const worldBounds = world.bounds;
 
   engine.addSystem(
     new GenerateMapSystem(),

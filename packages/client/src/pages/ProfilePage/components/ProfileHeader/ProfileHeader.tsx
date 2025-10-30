@@ -1,5 +1,5 @@
-import { AnalyticSVG } from '@/assets/icons'
-import styles from '../../styles.module.scss'
+import { AnalyticSVG } from '@/assets/icons';
+import styles from '../../styles.module.scss';
 
 export const ProfileHeader = () => (
   <div className={styles.top}>
@@ -11,4 +11,4 @@ export const ProfileHeader = () => (
     </h3>
     <p className={styles.subtitle}>Stalker Profile Management</p>
   </div>
-)
+);

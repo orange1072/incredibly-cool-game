@@ -1,24 +1,24 @@
-import { GuardSVG } from '@/assets/icons'
-import styles from './styles.module.scss'
-import { Button } from '@/components/Button'
-import { ParticleBackground } from '@/components/ParticleBackground'
-import { useState, useCallback } from 'react'
-import { Input } from '@/components/Input'
-import { ProfileHeader } from './components/ProfileHeader'
-import { ProfileInfo } from './components/ProfileInfo'
-import { ProfileStats } from './components/ProfileStats'
-import { ChangePasswordModal } from './components/ChangePasswordModal'
+import { GuardSVG } from '@/assets/icons';
+import styles from './styles.module.scss';
+import { Button } from '@/components/Button';
+import { ParticleBackground } from '@/components/ParticleBackground';
+import { useState, useCallback } from 'react';
+import { Input } from '@/components/Input';
+import { ProfileHeader } from './components/ProfileHeader';
+import { ProfileInfo } from './components/ProfileInfo';
+import { ProfileStats } from './components/ProfileStats';
+import { ChangePasswordModal } from './components/ChangePasswordModal';
 
 export const ProfilePage = () => {
-  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false)
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
 
   const handleOpenPasswordModal = useCallback(() => {
-    setIsPasswordModalOpen(true)
-  }, [])
+    setIsPasswordModalOpen(true);
+  }, []);
 
   const handleClosePasswordModal = useCallback(() => {
-    setIsPasswordModalOpen(false)
-  }, [])
+    setIsPasswordModalOpen(false);
+  }, []);
 
   return (
     <main>
@@ -94,5 +94,5 @@ export const ProfilePage = () => {
         onClose={handleClosePasswordModal}
       />
     </main>
-  )
-}
+  );
+};

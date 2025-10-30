@@ -11,7 +11,7 @@ import {
 import Entity from '../../core/Entity';
 import { player as playerSettings } from '../../settings/player-settings/player';
 
-export class PlayerEntity extends Entity {
+class PlayerEntity extends Entity {
   constructor(worldBoundsWidth: number, worldBoundsHeight: number) {
     super();
 
@@ -31,37 +31,36 @@ export class PlayerEntity extends Entity {
         x: worldBoundsWidth / 2,
         y: worldBoundsHeight / 2,
       })
-    );
-
-    this.addComponent(new VelocityComponent({ dx: 0, dy: 0 }));
-    this.addComponent(new PlayerControlComponent());
-    this.addComponent(
-      new AttackComponent({
-        damage: baseDamage,
-        cooldown: 0.35,
-      })
-    );
-    this.addComponent(
-      new HealthComponent({
-        hp: baseHp,
-        maxHp: baseHp,
-      })
-    );
-    this.addComponent(new CollisionComponent({ radius: 12 }));
-    this.addComponent(new ExperienceComponent({ level: baseLevel }));
-    this.addComponent(
-      new SpriteComponent({
-        name: playerSettings.sprite.name,
-        width: playerSettings.sprite.width,
-        height: playerSettings.sprite.height,
-        source: playerSettings.sprite.source,
-        scale: playerSettings.sprite.scale ?? 1,
-        frameDuration: playerSettings.sprite.frameDuration ?? 100,
-        columns: playerSettings.sprite.columns ?? 1,
-        rows: playerSettings.sprite.rows ?? 1,
-        padding: playerSettings.sprite.padding,
-      })
-    );
+    )
+      .addComponent(new VelocityComponent({ dx: 0, dy: 0 }))
+      .addComponent(new PlayerControlComponent())
+      .addComponent(
+        new AttackComponent({
+          damage: baseDamage,
+          cooldown: 0.35,
+        })
+      )
+      .addComponent(
+        new HealthComponent({
+          hp: baseHp,
+          maxHp: baseHp,
+        })
+      )
+      .addComponent(new CollisionComponent({ radius: 12 }))
+      .addComponent(new ExperienceComponent({ level: baseLevel }))
+      .addComponent(
+        new SpriteComponent({
+          name: playerSettings.sprite.name,
+          width: playerSettings.sprite.width,
+          height: playerSettings.sprite.height,
+          source: playerSettings.sprite.source,
+          scale: playerSettings.sprite.scale ?? 1,
+          frameDuration: playerSettings.sprite.frameDuration ?? 100,
+          columns: playerSettings.sprite.columns ?? 1,
+          rows: playerSettings.sprite.rows ?? 1,
+          padding: playerSettings.sprite.padding,
+        })
+      );
   }
 }
 

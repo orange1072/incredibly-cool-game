@@ -11,7 +11,7 @@ import {
 import Entity from '../../core/Entity';
 import { regularZombie } from '../../settings/enemy-settings/zombie';
 
-export class ZombieEntity extends Entity {
+class ZombieEntity extends Entity {
   constructor(x: number, y: number, level = 1) {
     super();
 

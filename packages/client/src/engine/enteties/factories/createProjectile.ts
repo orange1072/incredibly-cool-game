@@ -7,7 +7,7 @@ export function createProjectile(
   sourceId: string,
   damage: number
 ) {
-  return ProjectileEntity.create(targetPos, sourcePos, sourceId, damage);
+  return new ProjectileEntity(targetPos, sourcePos, sourceId, damage);
 }
 
 export default createProjectile;

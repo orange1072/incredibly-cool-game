@@ -3,7 +3,7 @@ import EventBus from '../../infrastructure/EventBus';
 import worldSettings from '../../settings/world-settings/world';
 import RendererSystem from '@/engine/systems/RenderSystem';
 
-export class GameWorld extends World {
+class GameWorld extends World {
   constructor(renderer: RendererSystem) {
     super(EventBus.instance, renderer);
     this.setBounds(worldSettings.bounds);

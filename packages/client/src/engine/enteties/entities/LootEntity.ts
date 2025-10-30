@@ -12,7 +12,7 @@ import {
   PROJECTILE_RADIUS,
 } from '../../systems/consts/player-control';
 
-export class LootEntity extends Entity {
+class LootEntity extends Entity {
   constructor(
     targetPos: PositionComponent,
     lootType: LootType,
@@ -20,19 +20,17 @@ export class LootEntity extends Entity {
   ) {
     super();
 
-    this.addComponent(
-      new PositionComponent({ x: targetPos.x, y: targetPos.y })
-    );
-    this.addComponent(new CollisionComponent({ radius: PROJECTILE_RADIUS }));
-    this.addComponent(
-      new SpriteComponent({
-        name: 'loot',
-        width: DEFAULT_XP_BOX_WIDTH,
-        height: DEFAULT_XP_BOX_HEIGHT,
-        source: lootType,
-      })
-    );
-    this.addComponent(new LootComponent({ lootType, amount }));
+    this.addComponent(new PositionComponent({ x: targetPos.x, y: targetPos.y }))
+      .addComponent(new CollisionComponent({ radius: PROJECTILE_RADIUS }))
+      .addComponent(
+        new SpriteComponent({
+          name: 'loot',
+          width: DEFAULT_XP_BOX_WIDTH,
+          height: DEFAULT_XP_BOX_HEIGHT,
+          source: lootType,
+        })
+      )
+      .addComponent(new LootComponent({ lootType, amount }));
   }
 }
 

@@ -21,7 +21,7 @@ import {
   STOP_FLAG,
   ZERO_COOLDOWN,
 } from './consts/player-control';
-import { createProjectile } from '../enteties/createProjectile';
+import { createProjectile } from '../enteties/factories/createProjectile';
 
 class PlayerControlSystem implements ISystem<SystemType> {
   type: SystemType = SYSTEM_TYPES.playerControl as SystemType;

@@ -1,5 +1,6 @@
 import {
   COMPONENT_TYPES,
+  ComponentDataType,
   ISystem,
   SYSTEM_TYPES,
   SystemType,
@@ -78,30 +79,23 @@ class CollisionSystem implements ISystem<SystemType> {
   }
 
   private handleCollision(a: Entity, b: Entity, world: World) {
-    const aIsProjectile = isProperEntity(a, COMPONENT_TYPES.projectile);
-    const bIsProjectile = isProperEntity(b, COMPONENT_TYPES.projectile);
+    const hasProjectileCollision = this.processComponentCollision(
+      a,
+      b,
+      world,
+      COMPONENT_TYPES.projectile,
+      this.processProjectileHit
+    );
 
-    const aIsLoot = isProperEntity(a, COMPONENT_TYPES.loot);
+    this.processComponentCollision(
+      a,
+      b,
+      world,
+      COMPONENT_TYPES.loot,
+      this.processCollectingLoot
+    );
 
-    const bIsLoot = isProperEntity(b, COMPONENT_TYPES.loot);
-
-    if (aIsProjectile) {
-      this.processProjectileHit(a, b, world);
-    }
-
-    if (bIsProjectile) {
-      this.processProjectileHit(b, a, world);
-    }
-
-    if (aIsLoot) {
-      this.processCollectingLoot(a, b, world);
-    }
-
-    if (bIsLoot) {
-      this.processCollectingLoot(b, a, world);
-    }
-
-    if (aIsProjectile || bIsProjectile) {
+    if (hasProjectileCollision) {
       return;
     }
 
@@ -258,6 +252,28 @@ class CollisionSystem implements ISystem<SystemType> {
     if (!isProperEntity(target, COMPONENT_TYPES.loot)) {
       world.removeEntity(lootEntity.id);
     }
+  }
+
+  private processComponentCollision(
+    entity: Entity,
+    other: Entity,
+    world: World,
+    componentType: ComponentDataType,
+    handler: (primary: Entity, secondary: Entity, world: World) => void
+  ): boolean {
+    let processed = false;
+
+    if (isProperEntity(entity, componentType)) {
+      handler.call(this, entity, other, world);
+      processed = true;
+    }
+
+    if (isProperEntity(other, componentType)) {
+      handler.call(this, other, entity, world);
+      processed = true;
+    }
+
+    return processed;
   }
 
   private getCollisionComponents(entity: Entity) {

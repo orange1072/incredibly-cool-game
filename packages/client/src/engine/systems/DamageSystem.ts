@@ -11,7 +11,7 @@ import {
   PositionComponent,
 } from '../components';
 import World from '../core/World';
-import { createLoot } from '../enteties/createLoot';
+import { createLoot } from '../enteties/factories/createLoot';
 import EventBus from '../infrastructure/EventBus';
 import Logger from '../infrastructure/Logger';
 import { ZERO_HP, ZERO_XP_REWARD } from './consts/damage';

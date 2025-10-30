@@ -6,6 +6,7 @@ import {
   ObstacleComponent,
   PlayerControlComponent,
   HealthComponent,
+  ProjectileComponent,
 } from '../components';
 import Entity from '../core/Entity';
 import World from '../core/World';
@@ -44,6 +45,7 @@ import {
   ZERO_FRAMES,
 } from './consts/render';
 import LootComponent from '../components/LootComponent';
+import { PROJECTILE_RADIUS } from './consts/player-control';
 
 class RendererSystem implements ISystem<SystemType> {
   type: SystemType = SYSTEM_TYPES.render as SystemType;
@@ -100,6 +102,14 @@ class RendererSystem implements ISystem<SystemType> {
         COMPONENT_TYPES.obstacle
       );
       const health = e.getComponent<HealthComponent>(COMPONENT_TYPES.health);
+      const projectile = e.getComponent<ProjectileComponent>(
+        COMPONENT_TYPES.projectile
+      );
+
+      if (projectile) {
+        this.drawProjectile(pos);
+        continue;
+      }
 
       let renderedWidth =
         sprite && sprite.source ? this.drawSprite(sprite, pos) : 0;
@@ -133,6 +143,13 @@ class RendererSystem implements ISystem<SystemType> {
         );
       }
     }
+  }
+
+  private drawProjectile(position: PositionComponent) {
+    this.ctx.fillStyle = '#e6eb8cff';
+    this.ctx.beginPath();
+    this.ctx.arc(position.x, position.y, PROJECTILE_RADIUS, 0, Math.PI * 2);
+    this.ctx.fill();
   }
 
   private drawSprite(

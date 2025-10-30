@@ -4,6 +4,8 @@ import type {
   HealthProfile,
 } from '../../../types/settings/enemy-settings.types';
 
+import defaultZombieRunSprite from '../../../assets/enemies/default-zombie/zombie-walk-sprite.png';
+
 const regularZombie: EnemySettings = {
   name: 'zombie-walker',
   kind: 'zombie',
@@ -22,10 +24,18 @@ const regularZombie: EnemySettings = {
   xpReward: 20,
   sprite: {
     defaultColor: 'rgba(255, 75, 75, 0.95)',
-    width: 32,
-    height: 32,
+    width: 128,
+    height: 128,
     name: 'zombie-walker',
-    source: '',
+    source: defaultZombieRunSprite,
+    columns: 8,
+    rows: 15,
+    frameDuration: 80,
+    scale: 0.5,
+    padding: {
+      x: 20,
+      y: 20,
+    },
   },
   skin: {
     color: 'rgba(255, 75, 75, 0.95)',

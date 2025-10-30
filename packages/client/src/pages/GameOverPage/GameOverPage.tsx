@@ -1,10 +1,12 @@
 import { Helmet } from 'react-helmet';
-import { Trophy, RotateCcw, Home, Share2, Skull } from 'lucide-react';
+import { Trophy, RotateCcw, Home, Share2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { PixelButton } from '@/components/PixelButton';
 import { ParticleBackground } from '@/components/ParticleBackground';
 import { StatsSection } from './components/StatsSection';
 import { GameStats, DEFAULT_STATS } from './types';
+import { VictoryHeader, DeathHeader } from './components';
+
 import styles from './GameOverPage.module.scss';
 
 export interface GameOverPageProps {
@@ -38,35 +40,7 @@ export const GameOverPage = ({
         <main className={styles.content}>
           <div className={styles.innerContainer}>
             <header className={styles.titleSection}>
-              {victory ? (
-                <>
-                  <div className={styles.iconWrapper}>
-                    <Trophy
-                      className={`${styles.icon} ${styles.trophyIcon} cyan-glow anomaly-shimmer`}
-                    />
-                  </div>
-                  <h1
-                    className={`${styles.mainTitle} stalker-text glitch ${styles.victoryTitle}`}
-                  >
-                    ZONE CLEARED
-                  </h1>
-                  <p className={styles.subtitle}>Mission Accomplished</p>
-                </>
-              ) : (
-                <>
-                  <div className={styles.iconWrapper}>
-                    <Skull
-                      className={`${styles.icon} ${styles.skullIcon} zombie-pulse`}
-                    />
-                  </div>
-                  <h1
-                    className={`${styles.mainTitle} stalker-text glitch ${styles.deathTitle}`}
-                  >
-                    INFECTED
-                  </h1>
-                  <p className={styles.subtitle}>Zone Claimed Another Victim</p>
-                </>
-              )}
+              {victory ? <VictoryHeader /> : <DeathHeader />}
             </header>
             <StatsSection
               zombiesKilled={stats.zombiesKilled}

@@ -46,6 +46,7 @@ export const SYSTEM_TYPES = {
   render: 'render',
   spriteLoader: 'spriteLoader',
   spawn: 'spawn',
+  sync: 'sync',
 };
 
 export type LootType = 'xp' | 'hp' | 'gd';

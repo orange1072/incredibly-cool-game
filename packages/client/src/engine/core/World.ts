@@ -1,21 +1,24 @@
 import EventBus from '../infrastructure/EventBus';
 import Entity from './Entity';
+import type RendererSystem from '../systems/RenderSystem';
 
 class World {
   private entities = new Map<string, Entity>();
   private eventBus: EventBus;
-  private bounds = { width: 1600, height: 1200 };
+  private _bounds = { width: 1600, height: 1200 };
+  private renderer: RendererSystem;
 
-  constructor(eventBus: EventBus) {
+  constructor(eventBus: EventBus, render: RendererSystem) {
     this.eventBus = eventBus;
+    this.renderer = render;
   }
 
   setBounds(bounds: { width: number; height: number }) {
-    this.bounds = { ...bounds };
+    this._bounds = { ...bounds };
   }
 
-  getBounds() {
-    return this.bounds;
+  get bounds() {
+    return this._bounds;
   }
 
   addEntity(entity: Entity) {
@@ -42,6 +45,11 @@ class World {
     return Array.from(this.entities.values()).filter((e) =>
       componentTypes.every((t) => e.hasComponent(t))
     );
+  }
+
+  render(dt: number) {
+    this.renderer.update(this, dt);
+    this.renderer.render(this);
   }
 }
 

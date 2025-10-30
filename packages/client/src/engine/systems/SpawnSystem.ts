@@ -121,7 +121,7 @@ class SpawnSystem implements ISystem<SystemType> {
   }
 
   update(world: World, dt: number) {
-    const bounds = world.getBounds?.();
+    const bounds = world.bounds;
     if (bounds) {
       this.areaWidth = bounds.width;
     }

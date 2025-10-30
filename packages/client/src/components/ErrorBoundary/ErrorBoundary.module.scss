@@ -1,0 +1,145 @@
+@use '@/styles/mixins' as *;
+@use '@/styles/variables' as *;
+
+.container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: $stalker-dark;
+  padding: 20px;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.1) 0px,
+      transparent 1px,
+      transparent 2px,
+      rgba(0, 0, 0, 0.1) 3px
+    );
+    pointer-events: none;
+    opacity: 0.3;
+  }
+}
+
+.content {
+  max-width: 600px;
+  background: linear-gradient(
+    135deg,
+    $stalker-panel 0%,
+    rgba(26, 30, 28, 0.8) 100%
+  );
+  padding: 40px;
+  border: 2px solid $stalker-danger;
+  box-shadow: 0 0 30px rgba(196, 58, 49, 0.3), 0 0 60px rgba(196, 58, 49, 0.1),
+    inset 0 0 60px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  position: relative;
+  animation: slideIn 0.3s ease-out;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      $stalker-danger 20%,
+      $stalker-danger 80%,
+      transparent
+    );
+    opacity: 0.6;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.title {
+  font-size: $font-size-2xl;
+  color: $stalker-danger;
+  margin-bottom: 16px;
+  font-family: $font-family-headings;
+  font-weight: $font-weight-bold;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 0 0 10px rgba(196, 58, 49, 0.5), 0 0 20px rgba(196, 58, 49, 0.3);
+  animation: pulse-error 2s ease-in-out infinite;
+}
+
+@keyframes pulse-error {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+.message {
+  font-size: $font-size-base;
+  color: $stalker-text;
+  margin-bottom: 24px;
+  line-height: $line-height-normal;
+  font-family: $font-family-base;
+}
+
+.details {
+  margin-top: 20px;
+  text-align: left;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 16px;
+  border: 1px solid rgba(196, 58, 49, 0.3);
+  border-radius: 4px;
+  font-family: $font-family-mono;
+}
+
+.summary {
+  cursor: pointer;
+  font-weight: $font-weight-bold;
+  margin-bottom: 12px;
+  color: $stalker-text;
+  text-transform: uppercase;
+  font-size: $font-size-sm;
+  letter-spacing: 1px;
+
+  &:hover {
+    color: $stalker-danger;
+    transition: color 0.3s ease;
+  }
+}
+
+.errorText {
+  font-size: $font-size-xs;
+  color: $stalker-danger;
+  white-space: pre-wrap;
+  word-break: break-word;
+  line-height: $line-height-relaxed;
+  font-family: $font-family-mono;
+}
+
+.buttonContainer {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 24px;
+}

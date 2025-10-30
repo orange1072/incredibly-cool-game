@@ -1,1 +1,1 @@
-export { ChangePasswordModal } from './ChangePasswordModal'
+export { ChangePasswordModal } from './ChangePasswordModal';

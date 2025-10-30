@@ -1,65 +1,65 @@
-import { GuardSVG } from '@/assets/icons'
-import styles from '../../styles.module.scss'
-import { Button } from '@/components/Button'
-import { Input } from '@/components/Input'
-import { Modal } from '@/components/Modal'
-import { useState, useCallback, FormEvent } from 'react'
-import { ERROR_MESSAGES } from '@/messages'
-import { useChangePasswordMutation } from '@/api'
+import { GuardSVG } from '@/assets/icons';
+import styles from '../../styles.module.scss';
+import { Button } from '@/components/Button';
+import { Input } from '@/components/Input';
+import { Modal } from '@/components/Modal';
+import { useState, useCallback, FormEvent } from 'react';
+import { ERROR_MESSAGES } from '@/messages';
+import { useChangePasswordMutation } from '@/api';
 
 interface ChangePasswordModalProps {
-  isOpen: boolean
-  onClose: () => void
+  isOpen: boolean;
+  onClose: () => void;
 }
 
 export const ChangePasswordModal = ({
   isOpen,
   onClose,
 }: ChangePasswordModalProps) => {
-  const [oldPassword, setOldPassword] = useState('')
-  const [newPassword, setNewPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
-  const [error, setError] = useState('')
+  const [oldPassword, setOldPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState('');
   const [changePassword, { isLoading: passwordChanging }] =
-    useChangePasswordMutation()
+    useChangePasswordMutation();
 
   const handleClose = useCallback(() => {
-    setOldPassword('')
-    setNewPassword('')
-    setConfirmPassword('')
-    setError('')
-    onClose()
-  }, [onClose])
+    setOldPassword('');
+    setNewPassword('');
+    setConfirmPassword('');
+    setError('');
+    onClose();
+  }, [onClose]);
 
   const handlePasswordSubmit = useCallback(
     async (e: FormEvent) => {
-      e.preventDefault()
-      setError('')
+      e.preventDefault();
+      setError('');
 
       if (!oldPassword || !newPassword || !confirmPassword) {
-        setError(ERROR_MESSAGES.PASSWORD.ALL_FIELDS_REQUIRED)
-        return
+        setError(ERROR_MESSAGES.PASSWORD.ALL_FIELDS_REQUIRED);
+        return;
       }
 
       if (newPassword.length < 6) {
-        setError(ERROR_MESSAGES.PASSWORD.PASSWORD_TOO_SHORT)
-        return
+        setError(ERROR_MESSAGES.PASSWORD.PASSWORD_TOO_SHORT);
+        return;
       }
 
       if (newPassword !== confirmPassword) {
-        setError(ERROR_MESSAGES.PASSWORD.PASSWORDS_DO_NOT_MATCH)
-        return
+        setError(ERROR_MESSAGES.PASSWORD.PASSWORDS_DO_NOT_MATCH);
+        return;
       }
 
       try {
-        await changePassword({ oldPassword, newPassword }).unwrap()
-        handleClose()
+        await changePassword({ oldPassword, newPassword }).unwrap();
+        handleClose();
       } catch (err) {
-        setError(ERROR_MESSAGES.PASSWORD.CHANGE_FAILED)
+        setError(ERROR_MESSAGES.PASSWORD.CHANGE_FAILED);
       }
     },
     [oldPassword, newPassword, confirmPassword, changePassword, handleClose]
-  )
+  );
 
   return (
     <Modal isOpen={isOpen} onClose={handleClose} title="CHANGE ACCESS CODE">
@@ -124,5 +124,5 @@ export const ChangePasswordModal = ({
         </div>
       </form>
     </Modal>
-  )
-}
+  );
+};

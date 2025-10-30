@@ -1,16 +1,14 @@
 import { ISystem, SystemType } from '../../types/engine.types';
 import EventBus from '../infrastructure/EventBus';
 import InputManager from '../infrastructure/InputManager';
-import RendererSystem from '../systems/RenderSystem';
 import World from './World';
 
 class GameEngine {
   private destroyed: boolean;
-  private world: World;
+  private readonly _world: World;
   private systems = new Map<SystemType, ISystem<SystemType>>();
-  private eventBus = EventBus.instance;
-  private input = new InputManager();
-  private renderer: RendererSystem;
+  private readonly _eventBus = EventBus.instance;
+  private readonly _input = new InputManager();
   private lastTime = 0;
   private isRunning = false;
   private paused = false;
@@ -26,9 +24,8 @@ class GameEngine {
     this.hardPause();
   };
 
-  constructor(renderer: RendererSystem, world?: World) {
-    this.world = world ?? new World(this.eventBus);
-    this.renderer = renderer;
+  constructor(world: World) {
+    this._world = world;
     this.destroyed = false;
     if (typeof window !== 'undefined') {
       window.addEventListener('keydown', this.handleKeyDown);
@@ -36,16 +33,16 @@ class GameEngine {
     this.eventBus.on('playerKilled', this.handlePlayerKilled);
   }
 
-  getWorld() {
-    return this.world;
+  get world() {
+    return this._world;
   }
 
-  getEventBus() {
-    return this.eventBus;
+  get eventBus() {
+    return this._eventBus;
   }
 
-  getInputManager() {
-    return this.input;
+  get inputManager() {
+    return this._input;
   }
 
   addSystem(system: ISystem<SystemType>, type: SystemType) {
@@ -88,7 +85,7 @@ class GameEngine {
         }
       }
     }
-    this.input.onDestroy();
+    this._input.onDestroy();
     if (typeof window !== 'undefined') {
       window.removeEventListener('keydown', this.handleKeyDown);
     }
@@ -132,14 +129,13 @@ class GameEngine {
       return;
     }
 
-    this.input.update(dt);
+    this._input.update(dt);
 
     for (const system of this.systems.values()) {
       system.update(this.world, dt);
     }
 
-    this.renderer.update(this.world, dt);
-    this.renderer.render(this.world);
+    this.world.render(dt);
 
     if (this.isRunning) requestAnimationFrame(this.loop);
   };

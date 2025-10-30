@@ -24,4 +24,4 @@ export const GuardSVG = () => (
       strokeWidth="1.66666663"
     />
   </svg>
-)
+);

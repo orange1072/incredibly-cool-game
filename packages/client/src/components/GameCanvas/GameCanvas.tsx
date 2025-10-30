@@ -42,7 +42,7 @@ export const GameCanvas = () => {
     adapterRef.current = adapter;
     reduxAdapterRef.current = reduxAdapter;
 
-    const eventBus = engine.getEventBus();
+    const eventBus = engine.eventBus;
     eventBus.on('playerKilled', handlePlayerKilled);
 
     reduxAdapter.connect();

@@ -42,4 +42,4 @@ export const UploadSVG = () => (
       strokeWidth="1"
     />
   </svg>
-)
+);

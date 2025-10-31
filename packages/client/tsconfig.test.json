@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "composite": true,
     "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "node",
@@ -10,5 +9,5 @@
     "jsx": "react-jsx",
     "types": ["jest", "@testing-library/jest-dom"]
   },
-  "include": ["**/*.test.tsx", "**/*.test.ts", "./jest.config.js", "src"]
+  "include": ["**/*.test.tsx", "**/*.test.ts", "src"]
 }

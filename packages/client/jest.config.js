@@ -9,7 +9,7 @@ export default {
   globals: {
     __SERVER_PORT__: process.env.SERVER_PORT,
   },
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   transform: {
     '^.+\\.(ts|tsx)$': [
       'ts-jest',

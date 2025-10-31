@@ -1,5 +1,4 @@
-import '@testing-library/jest-dom';
-// import { TextEncoder, TextDecoder } from 'util';
-
-// global.TextEncoder = TextEncoder as typeof global.TextEncoder;
-// global.TextDecoder = TextDecoder as typeof global.TextDecoder;
+require('@testing-library/jest-dom');
+// const { TextEncoder, TextDecoder } = require('util')
+// globalThis.TextEncoder = TextEncoder
+// globalThis.TextDecoder = TextDecoder

@@ -1,8 +1,11 @@
 import { Helmet } from 'react-helmet';
 import { PageInitArgs } from '../routes';
 import { GameCanvas } from '../components/GameCanvas/GameCanvas';
+import withFullscreen from '../components/hoc/withFullscreen';
 import { XpBar } from '../components/XpBar/XpBar';
 import '../App.scss';
+
+const GameCanvasWithFullscreen = withFullscreen(GameCanvas);
 
 export const DemoPage = () => {
   return (
@@ -18,7 +21,7 @@ export const DemoPage = () => {
 
       <div className="app">
         <section className="game-section">
-          <GameCanvas />
+          <GameCanvasWithFullscreen />
           <div className="game-section__overlay">
             <XpBar />
           </div>

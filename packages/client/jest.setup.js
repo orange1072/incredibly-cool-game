@@ -1,4 +1,8 @@
 require('@testing-library/jest-dom');
-// const { TextEncoder, TextDecoder } = require('util')
-// globalThis.TextEncoder = TextEncoder
-// globalThis.TextDecoder = TextDecoder
+require('jest-canvas-mock');
+const nodeCrypto = require('crypto');
+Object.defineProperty(globalThis, 'crypto', {
+  value: {
+    randomUUID: () => nodeCrypto.randomUUID(),
+  },
+});

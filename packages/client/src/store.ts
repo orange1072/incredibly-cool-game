@@ -12,6 +12,7 @@ import ssrReducer from './slices/ssrSlice';
 import userReducer from './slices/userSlice';
 import { userApi } from './api';
 import gameReducer from './slices/game';
+import { authAPI } from '@/slices/authSlice';
 
 // Глобально декларируем в window наш ключик
 // и задаем ему тип такой же как у стейта в сторе
@@ -26,13 +27,16 @@ export const reducer = combineReducers({
   ssr: ssrReducer,
   user: userReducer,
   userApi: userApi.reducer,
+  [authAPI.reducerPath]: authAPI.reducer,
   game: gameReducer,
 });
 
 export const store = configureStore({
   reducer,
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(userApi.middleware),
+    getDefaultMiddleware()
+      .concat(userApi.middleware)
+      .concat(authAPI.middleware),
   preloadedState:
     typeof window === 'undefined' ? undefined : window.APP_INITIAL_STATE,
 });

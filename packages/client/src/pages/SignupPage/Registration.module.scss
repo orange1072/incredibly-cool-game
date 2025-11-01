@@ -32,6 +32,7 @@ $cyan-20: rgba(47,184,204,0.2);
 }
 
 .header {
+  flex-direction: column;
   margin-bottom: 1.5rem;
   text-align: center;
 }

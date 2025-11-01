@@ -11,4 +11,4 @@ export const ERROR_MESSAGES = {
     CHANGE_FAILED:
       'Failed to change password. Please check your current password.',
   },
-}
+};

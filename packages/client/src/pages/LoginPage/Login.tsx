@@ -6,10 +6,17 @@ import { Logo } from '@/components/ui';
 import { PixelButton } from '@/components/PixelButton';
 import { ArrowRight, Radiation, User, Lock, AlertTriangle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useSignInMutation, useGetUserMutation } from '@/slices/authSlice';
+import { useDispatch } from '@/store';
+import { setUser } from '@/slices/userSlice';
 
 type Errors = Partial<Record<'username' | 'password', string>>;
 
 export function SigninPage() {
+  const [signIn] = useSignInMutation();
+  const [getUser] = useGetUserMutation();
+
+  const dispatch = useDispatch();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState<Errors>({});
@@ -25,13 +32,25 @@ export function SigninPage() {
   }, [username, password]);
 
   const handleSubmit = useCallback(
-    (e: React.FormEvent) => {
+    async (e: React.FormEvent) => {
       e.preventDefault();
       if (!validate()) {
         return;
       }
 
-      navigate('/profile');
+      try {
+        await signIn({
+          login: username,
+          password: password,
+        });
+        const user = await getUser().unwrap();
+        if (user) {
+          dispatch(setUser(user));
+          navigate('/profile');
+        }
+      } catch (err) {
+        console.error('Login failed:', err);
+      }
     },
     [validate, navigate]
   );

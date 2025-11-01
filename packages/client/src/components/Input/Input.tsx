@@ -8,6 +8,7 @@ type InputProps = {
   value?: string;
   onChange?: ChangeEventHandler<HTMLInputElement>;
   Icon?: React.ReactNode;
+  error?: string;
   autocomplete?: string;
 } & InputHTMLAttributes<HTMLInputElement>;
 

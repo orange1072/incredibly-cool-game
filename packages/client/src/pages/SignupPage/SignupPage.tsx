@@ -13,26 +13,32 @@ import { PixelButton } from '@/components/PixelButton';
 import styles from './Registration.module.scss';
 import { useNavigate } from 'react-router-dom';
 import { ParticleBackground } from '@/components/ParticleBackground';
+import { useGetUserMutation, useSignUpMutation } from '@/slices/authSlice';
+import { useDispatch } from '@/store';
+import { setUser } from '@/slices/userSlice';
 
 type FormData = {
-  firstName: string;
-  lastName: string;
+  first_name: string;
+  second_name: string;
   email: string;
   phone: string;
-  username: string;
+  login: string;
   password: string;
   confirmPassword: string;
 };
 
 export const SignupPage = () => {
+  const [signUp] = useSignUpMutation();
+  const [getUser] = useGetUserMutation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState<FormData>({
-    firstName: '',
-    lastName: '',
+    first_name: '',
+    second_name: '',
     email: '',
     phone: '',
-    username: '',
+    login: '',
     password: '',
     confirmPassword: '',
   });
@@ -43,13 +49,13 @@ export const SignupPage = () => {
     const newErrors: Record<string, string> = {};
 
     if (currentStep === 1) {
-      if (!formData.firstName) newErrors.firstName = 'Required';
-      if (!formData.lastName) newErrors.lastName = 'Required';
+      if (!formData.first_name) newErrors.first_name = 'Required';
+      if (!formData.second_name) newErrors.second_name = 'Required';
     } else if (currentStep === 2) {
       if (!formData.email) newErrors.email = 'Required';
       if (!formData.phone) newErrors.phone = 'Required';
     } else if (currentStep === 3) {
-      if (!formData.username) newErrors.username = 'Required';
+      if (!formData.login) newErrors.login = 'Required';
       if (!formData.password) newErrors.password = 'Required';
       if (formData.password !== formData.confirmPassword) {
         newErrors.confirmPassword = 'Passwords do not match';
@@ -60,13 +66,22 @@ export const SignupPage = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (validateStep(step)) {
       if (step < 3) {
         setStep(step + 1);
       } else {
-        navigate('/profile');
+        try {
+          await signUp(formData);
+          const user = await getUser().unwrap();
+          if (user) {
+            dispatch(setUser(user));
+            navigate('/profile');
+          }
+        } catch (error) {
+          console.error('Registration failed:', error);
+        }
       }
     }
   };
@@ -146,24 +161,24 @@ export const SignupPage = () => {
 
                     <Input
                       type="text"
-                      name={'firstName'}
+                      name={'first_name'}
                       label="First Name"
                       placeholder="Alex"
                       Icon={<User className={styles['input-icon']} />}
-                      value={formData.firstName}
+                      value={formData.first_name}
                       onChange={handleChange}
-                      error={errors.firstName}
+                      error={errors.first_name}
                     />
 
                     <Input
                       type="text"
-                      name={'lastName'}
+                      name={'second_name'}
                       label="Last Name"
                       placeholder="Degtyarev"
                       Icon={<User className={styles['input-icon']} />}
-                      value={formData.lastName}
+                      value={formData.second_name}
                       onChange={handleChange}
-                      error={errors.lastName}
+                      error={errors.second_name}
                     />
                   </fieldset>
                 )}
@@ -202,13 +217,13 @@ export const SignupPage = () => {
 
                     <Input
                       type="text"
-                      name={'username'}
+                      name={'login'}
                       label="Call Sign"
                       placeholder="marked_one"
                       Icon={<User className={styles['input-icon']} />}
-                      value={formData.username}
+                      value={formData.login}
                       onChange={handleChange}
-                      error={errors.username}
+                      error={errors.login}
                     />
 
                     <Input

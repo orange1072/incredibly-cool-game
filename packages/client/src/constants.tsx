@@ -1,6 +1,8 @@
 import './client.d';
 import { HeartSVG, RadiationSVG, GuardSVG } from '@/assets/icons';
 
+export const API_URL = 'https://ya-praktikum.tech/api/v2';
+
 export const SERVER_HOST =
   typeof window === 'undefined'
     ? __INTERNAL_SERVER_URL__

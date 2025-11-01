@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { Play, Trophy, Skull } from 'lucide-react';
 
 import { PixelButton } from '@/components/PixelButton';
-import { ROUTES } from '@/constants';
 
 import styles from './CTASection.module.scss';
 
@@ -24,7 +23,7 @@ export const CTASection = memo(() => {
             variant="primary"
             size="lg"
             icon={<Play />}
-            onClick={() => navigate(ROUTES.SIGNIN)}
+            onClick={() => navigate('/signin')}
             className={styles.ctaButton}
           >
             Start Mission
@@ -33,13 +32,14 @@ export const CTASection = memo(() => {
             variant="success"
             size="lg"
             icon={<Trophy />}
-            onClick={() => navigate(ROUTES.LEADERBOARD)}
+            onClick={() => navigate('/leaderboard')}
             className={styles.ctaButton}
           >
             View Rankings
           </PixelButton>
         </div>
 
+        {/* Warning */}
         <div className={styles.freeToPlayBadge}>
           <Skull className={styles.freeToPlayIcon} />
           <span className={styles.freeToPlayText}>

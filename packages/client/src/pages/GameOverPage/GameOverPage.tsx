@@ -6,7 +6,6 @@ import { ParticleBackground } from '@/components/ParticleBackground';
 import { StatsSection } from './components/StatsSection';
 import { GameStats, DEFAULT_STATS } from './types';
 import { VictoryHeader, DeathHeader } from './components';
-import { ROUTES } from '@/constants';
 
 import styles from './GameOverPage.module.scss';
 
@@ -63,7 +62,7 @@ export const GameOverPage = ({
                 variant="primary"
                 size="lg"
                 icon={<RotateCcw className={styles.buttonIcon} />}
-                onClick={() => navigate(ROUTES.GAME_PLAY)}
+                onClick={() => navigate('/game-play')}
                 className={styles.retryButton}
               >
                 Retry Mission
@@ -72,7 +71,7 @@ export const GameOverPage = ({
                 variant="secondary"
                 size="lg"
                 icon={<Home className={styles.buttonIcon} />}
-                onClick={() => navigate(ROUTES.GAME_MENU)}
+                onClick={() => navigate('/game-menu')}
                 className={styles.menuButton}
               >
                 Main Menu
@@ -82,7 +81,7 @@ export const GameOverPage = ({
                 size="md"
                 icon={<Share2 className={styles.buttonIconSmall} />}
                 className={styles.shareButton}
-                onClick={() => navigate(ROUTES.FORUM)}
+                onClick={() => navigate('/forum')}
               >
                 Share on Communication Channel
               </PixelButton>

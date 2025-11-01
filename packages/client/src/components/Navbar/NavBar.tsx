@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
 import { Brand } from './components/Brand';
-import { ROUTES } from '@/constants';
 import styles from './Nav.module.scss';
 
 export const NavBar = () => {
@@ -8,28 +7,28 @@ export const NavBar = () => {
     <nav className={styles.nav}>
       <Brand />
       <div className={styles.main}>
-        <Link className="stalker-button secondary" to={ROUTES.HOME}>
+        <Link className="stalker-button secondary" to="/">
           Main
         </Link>
-        <Link className="stalker-button secondary" to={ROUTES.PROFILE}>
+        <Link className="stalker-button secondary" to="/profile">
           Profile
         </Link>
-        <Link className="stalker-button secondary" to={ROUTES.LEADERBOARD}>
+        <Link className="stalker-button secondary" to="/leaderboard">
           Leaderboard
         </Link>
-        <Link className="stalker-button secondary" to={ROUTES.FORUM}>
+        <Link className="stalker-button secondary" to="/forum">
           Forum
         </Link>
-        <Link className="stalker-button secondary" to={ROUTES.SIGNIN}>
+        <Link className="stalker-button secondary" to="/signin">
           Signin
         </Link>
-        <Link className="stalker-button secondary" to={ROUTES.SIGNUP}>
+        <Link className="stalker-button secondary" to="/signup">
           Signup
         </Link>
-        <Link className="stalker-button secondary" to={ROUTES.ERROR_404}>
+        <Link className="stalker-button secondary" to="/error404">
           Error404
         </Link>
-        <Link className="stalker-button secondary" to={ROUTES.ERROR_500}>
+        <Link className="stalker-button secondary" to="/error500">
           Error500
         </Link>
       </div>

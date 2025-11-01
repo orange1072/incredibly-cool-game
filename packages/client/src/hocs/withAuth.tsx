@@ -8,7 +8,6 @@ export const withAuth = <P extends Record<string, never>>(
 ) => {
   const WithAuthComponent: React.FC<P> = (props) => {
     const user = useSelector(selectUser);
-    console.log(444, user);
 
     if (!user) {
       return <Navigate to="/signin" replace />;

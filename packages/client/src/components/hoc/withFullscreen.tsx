@@ -10,6 +10,27 @@ import {
 import { Expand, Shrink } from 'lucide-react';
 import styles from './styles.module.scss';
 
+interface WebkitDocument extends Document {
+  webkitFullscreenElement?: Element | null;
+  webkitExitFullscreen?: () => Promise<void>;
+}
+
+interface MsDocument extends Document {
+  msFullscreenElement?: Element | null;
+  msExitFullscreen?: () => Promise<void>;
+}
+
+interface WebkitHTMLElement extends HTMLElement {
+  webkitRequestFullscreen?: () => Promise<void>;
+}
+
+interface MsHTMLElement extends HTMLElement {
+  msRequestFullscreen?: () => Promise<void>;
+}
+
+type ExtendedDocument = Document & WebkitDocument & MsDocument;
+type ExtendedHTMLElement = HTMLElement & WebkitHTMLElement & MsHTMLElement;
+
 type WithFullscreenOptions = {
   buttonLabelEnter?: ReactNode;
   buttonLabelExit?: ReactNode;
@@ -27,10 +48,11 @@ export function withFullscreen<P extends object>(
     const [isFullscreen, setIsFullscreen] = useState(false);
 
     const onFsChange = useCallback(() => {
+      const doc = document as ExtendedDocument;
       const isFs = Boolean(
-        document.fullscreenElement ||
-          (document as any).webkitFullscreenElement ||
-          (document as any).msFullscreenElement
+        doc.fullscreenElement ||
+          doc.webkitFullscreenElement ||
+          doc.msFullscreenElement
       );
       setIsFullscreen(isFs);
     }, []);
@@ -43,7 +65,7 @@ export function withFullscreen<P extends object>(
     }, [onFsChange]);
 
     const requestFs = useCallback(() => {
-      const el = containerRef.current as any;
+      const el = containerRef.current as ExtendedHTMLElement | null;
       if (!el) return;
       if (typeof el.requestFullscreen === 'function') {
         el.requestFullscreen();
@@ -59,7 +81,7 @@ export function withFullscreen<P extends object>(
     }, []);
 
     const exitFs = useCallback(() => {
-      const doc = document as any;
+      const doc = document as ExtendedDocument;
       if (typeof document.exitFullscreen === 'function') {
         document.exitFullscreen();
         return;

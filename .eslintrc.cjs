@@ -39,5 +39,8 @@ module.exports = {
     'packages/client/jest.config.js',
     'packages/client/src/App.tsx',
     'packages/client/src/App.test.tsx',
+    'packages/client/jest.setup.js',
+    'packages/client/mocks/**/*',
+    'packages/client/src/**/*.test.ts',
   ],
 }

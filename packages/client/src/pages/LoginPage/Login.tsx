@@ -7,8 +7,8 @@ import { PixelButton } from '@/components/PixelButton';
 import { ArrowRight, Radiation, User, Lock, AlertTriangle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useSignInMutation, useGetUserMutation } from '@/slices/authApi';
-import { setUser } from '@/slices/userSlice';
 import { useDispatch } from '@/store/store';
+import { setUser } from '@/store/slices/userSlice';
 
 type Errors = Partial<Record<'username' | 'password', string>>;
 

@@ -183,7 +183,3 @@ export const DemoPage = () => {
     </>
   );
 };
-
-export const initDemoPage = async (_args: PageInitArgs) => {
-  // Здесь можно добавить загрузку данных для главной страницы
-};

@@ -6,7 +6,7 @@ import { useSelector } from '@/store/store';
 import { MAX_AVATAR_SIZE } from '@/constants';
 import { ERROR_MESSAGES } from '@/messages';
 import { useUpdateUserAvatarMutation } from '@/api';
-import { selectUser } from '@/slices/userSlice';
+import { selectUser } from '@/store/slices/userSlice';
 
 export const ProfileInfo = () => {
   const user = useSelector(selectUser);

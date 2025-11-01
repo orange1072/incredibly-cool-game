@@ -14,8 +14,8 @@ import styles from './Registration.module.scss';
 import { useNavigate } from 'react-router-dom';
 import { ParticleBackground } from '@/components/ParticleBackground';
 import { useGetUserMutation, useSignUpMutation } from '@/slices/authApi';
-import { setUser } from '@/slices/userSlice';
 import { useDispatch } from '@/store/store';
+import { setUser } from '@/store/slices/userSlice';
 
 type FormData = {
   first_name: string;

@@ -1,13 +1,13 @@
-import { memo } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { Play, Trophy, Skull } from 'lucide-react'
+import { memo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Play, Trophy, Skull } from 'lucide-react';
 
-import { PixelButton } from '@/components/PixelButton'
+import { PixelButton } from '@/components/PixelButton';
 
-import styles from './CTASection.module.scss'
+import styles from './CTASection.module.scss';
 
 export const CTASection = memo(() => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   return (
     <section className={styles.ctaSection}>
@@ -48,7 +48,7 @@ export const CTASection = memo(() => {
         </div>
       </div>
     </section>
-  )
-})
+  );
+});
 
-CTASection.displayName = 'CTASection'
+CTASection.displayName = 'CTASection';

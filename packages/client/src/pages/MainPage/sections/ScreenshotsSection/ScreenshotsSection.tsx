@@ -1,17 +1,17 @@
-import { memo } from 'react'
-import { SectionTitle } from '@/components/ui'
-import styles from './ScreenshotsSection.module.scss'
+import { memo } from 'react';
+import { SectionTitle } from '@/components/ui';
+import styles from './ScreenshotsSection.module.scss';
 
 interface Screenshot {
-  title: string
-  emoji: string
+  title: string;
+  emoji: string;
 }
 
 const screenshots: Screenshot[] = [
   { title: 'City Ruins', emoji: '🏚️' },
   { title: 'Exclusion Zone', emoji: '☢️' },
   { title: 'Ground Zero', emoji: '💀' },
-]
+];
 
 export const ScreenshotsSection = memo(() => {
   return (
@@ -43,7 +43,7 @@ export const ScreenshotsSection = memo(() => {
         </div>
       </div>
     </section>
-  )
-})
+  );
+});
 
-ScreenshotsSection.displayName = 'ScreenshotsSection'
+ScreenshotsSection.displayName = 'ScreenshotsSection';

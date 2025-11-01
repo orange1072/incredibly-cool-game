@@ -1,1 +1,0 @@
-export { ScreenshotsSection } from './ScreenshotsSection'

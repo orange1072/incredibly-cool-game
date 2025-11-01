@@ -1,13 +1,13 @@
-import { memo } from 'react'
-import { Zap, Skull, Radiation, Trophy } from 'lucide-react'
-import { SectionTitle } from '@/components/ui'
-import styles from './FeaturesSection.module.scss'
+import { memo } from 'react';
+import { Zap, Skull, Radiation, Trophy } from 'lucide-react';
+import { SectionTitle } from '@/components/ui';
+import styles from './FeaturesSection.module.scss';
 
 interface Feature {
-  icon: React.ComponentType<{ className?: string }>
-  title: string
-  description: string
-  colorClass: string
+  icon: React.ComponentType<{ className?: string }>;
+  title: string;
+  description: string;
+  colorClass: string;
 }
 
 const features: Feature[] = [
@@ -35,7 +35,7 @@ const features: Feature[] = [
     description: 'Compete globally and prove you are the ultimate stalker',
     colorClass: styles.lightCyan,
   },
-]
+];
 
 export const FeaturesSection = memo(() => {
   return (
@@ -45,7 +45,7 @@ export const FeaturesSection = memo(() => {
 
         <div className={styles.featuresGrid}>
           {features.map((feature, index) => {
-            const Icon = feature.icon
+            const Icon = feature.icon;
             return (
               <div key={index} className={styles.featureCard}>
                 <div className={styles.featureTopLine} />
@@ -60,12 +60,12 @@ export const FeaturesSection = memo(() => {
                   </p>
                 </div>
               </div>
-            )
+            );
           })}
         </div>
       </div>
     </section>
-  )
-})
+  );
+});
 
-FeaturesSection.displayName = 'FeaturesSection'
+FeaturesSection.displayName = 'FeaturesSection';

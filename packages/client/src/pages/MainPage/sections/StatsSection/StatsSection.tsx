@@ -1,10 +1,10 @@
-import { memo } from 'react'
-import styles from './StatsSection.module.scss'
+import { memo } from 'react';
+import styles from './StatsSection.module.scss';
 
 interface Stat {
-  number: string
-  label: string
-  colorClass: string
+  number: string;
+  label: string;
+  colorClass: string;
 }
 
 const stats: Stat[] = [
@@ -23,7 +23,7 @@ const stats: Stat[] = [
     label: 'Zone Access',
     colorClass: styles.lightCyan,
   },
-]
+];
 
 export const StatsSection = memo(() => {
   return (
@@ -48,7 +48,7 @@ export const StatsSection = memo(() => {
         </div>
       </div>
     </section>
-  )
-})
+  );
+});
 
-StatsSection.displayName = 'StatsSection'
+StatsSection.displayName = 'StatsSection';

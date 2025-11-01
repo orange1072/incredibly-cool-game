@@ -8,6 +8,8 @@ type InputProps = {
   value?: string;
   onChange?: ChangeEventHandler<HTMLInputElement>;
   Icon?: React.ReactNode;
+  error?: string;
+  autocomplete?: string;
 } & InputHTMLAttributes<HTMLInputElement>;
 
 export const Input = memo(
@@ -18,24 +20,38 @@ export const Input = memo(
     value,
     onChange,
     Icon,
+    error,
     ...props
   }: InputProps) => {
     return (
       <div className={styles.inputWrapper}>
         {label && <p className={styles.label}>{label}</p>}
         <div
-          className={`${styles.inputContainer} ${Icon ? styles.withIcon : ''}`}
+          className={`${styles.inputContainer} ${error ? styles.hasError : ''}`}
         >
-          {Icon && <span>{Icon}</span>}
+          {Icon && (
+            <div className={styles.inputIcon} aria-hidden>
+              {Icon}
+            </div>
+          )}
+
           <input
             type={type}
             placeholder={placeholder}
             value={value}
             onChange={onChange}
-            className={styles.input}
+            autoComplete="new-password"
+            className={`${styles.input}  ${Icon ? styles.withIcon : ''}`}
             {...props}
           />
         </div>
+
+        {error && (
+          <div className={styles.errorWrapper} role="alert">
+            <span className={styles.errorIcon}>⚠</span>
+            <span className={styles.errorText}>{error}</span>
+          </div>
+        )}
       </div>
     );
   }

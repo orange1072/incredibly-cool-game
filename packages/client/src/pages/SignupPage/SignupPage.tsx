@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useState } from 'react';
 import {
   User,
   Mail,
@@ -7,82 +7,97 @@ import {
   CheckCircle,
   Shield,
   Activity,
-} from 'lucide-react'
-import { Input } from '@/components/Input/Input'
-import { PixelButton } from '@/components/PixelButton'
-import styles from './Registration.module.scss'
-import { useNavigate } from 'react-router-dom'
-import { ParticleBackground } from '@/components/ParticleBackground'
+} from 'lucide-react';
+import { Input } from '@/components/Input/Input';
+import { PixelButton } from '@/components/PixelButton';
+import styles from './Registration.module.scss';
+import { useNavigate } from 'react-router-dom';
+import { ParticleBackground } from '@/components/ParticleBackground';
+import { useGetUserMutation, useSignUpMutation } from '@/slices/authSlice';
+import { useDispatch } from '@/store';
+import { setUser } from '@/slices/userSlice';
 
 type FormData = {
-  firstName: string
-  lastName: string
-  email: string
-  phone: string
-  username: string
-  password: string
-  confirmPassword: string
-}
+  first_name: string;
+  second_name: string;
+  email: string;
+  phone: string;
+  login: string;
+  password: string;
+  confirmPassword: string;
+};
 
 export const SignupPage = () => {
-  const navigate = useNavigate()
-  const [step, setStep] = useState(1)
+  const [signUp] = useSignUpMutation();
+  const [getUser] = useGetUserMutation();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [step, setStep] = useState(1);
   const [formData, setFormData] = useState<FormData>({
-    firstName: '',
-    lastName: '',
+    first_name: '',
+    second_name: '',
     email: '',
     phone: '',
-    username: '',
+    login: '',
     password: '',
     confirmPassword: '',
-  })
+  });
 
-  const [errors, setErrors] = useState<Record<string, string>>({})
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const validateStep = (currentStep: number) => {
-    const newErrors: Record<string, string> = {}
+    const newErrors: Record<string, string> = {};
 
     if (currentStep === 1) {
-      if (!formData.firstName) newErrors.firstName = 'Required'
-      if (!formData.lastName) newErrors.lastName = 'Required'
+      if (!formData.first_name) newErrors.first_name = 'Required';
+      if (!formData.second_name) newErrors.second_name = 'Required';
     } else if (currentStep === 2) {
-      if (!formData.email) newErrors.email = 'Required'
-      if (!formData.phone) newErrors.phone = 'Required'
+      if (!formData.email) newErrors.email = 'Required';
+      if (!formData.phone) newErrors.phone = 'Required';
     } else if (currentStep === 3) {
-      if (!formData.username) newErrors.username = 'Required'
-      if (!formData.password) newErrors.password = 'Required'
+      if (!formData.login) newErrors.login = 'Required';
+      if (!formData.password) newErrors.password = 'Required';
       if (formData.password !== formData.confirmPassword) {
-        newErrors.confirmPassword = 'Passwords do not match'
+        newErrors.confirmPassword = 'Passwords do not match';
       }
     }
 
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     if (validateStep(step)) {
       if (step < 3) {
-        setStep(step + 1)
+        setStep(step + 1);
       } else {
-        navigate('/profile')
+        try {
+          await signUp(formData);
+          const user = await getUser().unwrap();
+          if (user) {
+            dispatch(setUser(user));
+            navigate('/profile');
+          }
+        } catch (error) {
+          console.error('Registration failed:', error);
+        }
       }
     }
-  }
+  };
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      const { name, value } = e.target
-      setFormData((prev) => ({ ...prev, [name]: value }))
+      const { name, value } = e.target;
+      setFormData((prev) => ({ ...prev, [name]: value }));
     },
     []
-  )
+  );
 
-  const steps = ['Personal Data', 'Contacts', 'Access ID']
+  const steps = ['Personal Data', 'Contacts', 'Access ID'];
 
   const combineClassNames = (...names: Array<string | undefined | false>) =>
-    names.filter(Boolean).join(' ')
+    names.filter(Boolean).join(' ');
 
   return (
     <main className={styles['registration-page']}>
@@ -90,7 +105,7 @@ export const SignupPage = () => {
 
       <div className={styles['registration-page__content']}>
         <div className={styles.container}>
-          <header className={styles.header}>
+          <div className={styles.header}>
             <div className={styles['logo-wrap']}>
               <div className={`${styles.glow}`} />
               <Shield className={`${styles.icon} ${styles.shield}`} />
@@ -99,9 +114,9 @@ export const SignupPage = () => {
             <h1 className={styles['stalker-text']}>STALKER REGISTRATION</h1>
 
             <p className={styles.subtitle}>Join the Z.O.N.E. Expedition</p>
-          </header>
+          </div>
 
-          <nav className={styles.progress}>
+          <div className={styles.progress}>
             {steps.map((stepName, index) => (
               <div key={index} className={styles['progress__segment']}>
                 <div className={styles['progress__inner']}>
@@ -127,7 +142,7 @@ export const SignupPage = () => {
                 <div className={styles['progress__label']}>{stepName}</div>
               </div>
             ))}
-          </nav>
+          </div>
 
           <section className={styles['metal-panel']}>
             <div className={styles['top-line']} />
@@ -145,23 +160,25 @@ export const SignupPage = () => {
                     <legend style={{ display: 'none' }}>Personal data</legend>
 
                     <Input
-                      name={'firstName'}
+                      type="text"
+                      name={'first_name'}
                       label="First Name"
                       placeholder="Alex"
-                      icon={<User className={styles['input-icon']} />}
-                      value={formData.firstName}
+                      Icon={<User className={styles['input-icon']} />}
+                      value={formData.first_name}
                       onChange={handleChange}
-                      error={errors.firstName}
+                      error={errors.first_name}
                     />
 
                     <Input
-                      name={'lastName'}
+                      type="text"
+                      name={'second_name'}
                       label="Last Name"
                       placeholder="Degtyarev"
-                      icon={<User className={styles['input-icon']} />}
-                      value={formData.lastName}
+                      Icon={<User className={styles['input-icon']} />}
+                      value={formData.second_name}
                       onChange={handleChange}
-                      error={errors.lastName}
+                      error={errors.second_name}
                     />
                   </fieldset>
                 )}
@@ -175,7 +192,7 @@ export const SignupPage = () => {
                       label="Email"
                       type="email"
                       placeholder="stalker@zone.net"
-                      icon={<Mail className={styles['input-icon']} />}
+                      Icon={<Mail className={styles['input-icon']} />}
                       value={formData.email}
                       onChange={handleChange}
                       error={errors.email}
@@ -184,9 +201,9 @@ export const SignupPage = () => {
                     <Input
                       name={'phone'}
                       label="Phone"
-                      type="tel"
+                      type="phone"
                       placeholder="+1 (555) 000-0000"
-                      icon={<Phone className={styles['input-icon']} />}
+                      Icon={<Phone className={styles['input-icon']} />}
                       value={formData.phone}
                       onChange={handleChange}
                       error={errors.phone}
@@ -199,13 +216,14 @@ export const SignupPage = () => {
                     <legend style={{ display: 'none' }}>Access</legend>
 
                     <Input
-                      name={'username'}
+                      type="text"
+                      name={'login'}
                       label="Call Sign"
                       placeholder="marked_one"
-                      icon={<User className={styles['input-icon']} />}
-                      value={formData.username}
+                      Icon={<User className={styles['input-icon']} />}
+                      value={formData.login}
                       onChange={handleChange}
-                      error={errors.username}
+                      error={errors.login}
                     />
 
                     <Input
@@ -213,7 +231,7 @@ export const SignupPage = () => {
                       label="Access Code"
                       type="password"
                       placeholder="••••••••"
-                      icon={<Lock className={styles['input-icon']} />}
+                      Icon={<Lock className={styles['input-icon']} />}
                       value={formData.password}
                       onChange={handleChange}
                       error={errors.password}
@@ -224,7 +242,7 @@ export const SignupPage = () => {
                       label="Confirm Code"
                       type="password"
                       placeholder="••••••••"
-                      icon={
+                      Icon={
                         formData.password === formData.confirmPassword &&
                         formData.confirmPassword ? (
                           <CheckCircle className={styles['input-icon']} />
@@ -277,5 +295,5 @@ export const SignupPage = () => {
         </div>
       </div>
     </main>
-  )
-}
+  );
+};

@@ -6,14 +6,38 @@ import { ProfilePage } from '@/pages/ProfilePage';
 import { LeaderboardPage } from '@/pages/Leaderboard';
 import { Error404Page } from '@/pages/Error404Page';
 import { Error500Page } from '@/pages/Error500Page';
-import { PrivateRoute } from '../PrivateRoute';
 import { DemoPage } from '@/pages/DemoPage';
 import { MainPage } from '@/pages/MainPage';
 import { NavBar } from '../Navbar';
 import { GameMenuPage } from '@/pages/GameMenuPage';
 import { GamePlayPage } from '@/pages/GamePlayPage';
+import { withAuth } from '@/hocs/withAuth';
+import { useGetUserMutation } from '@/slices/authSlice';
+import { useEffect } from 'react';
+import { setUser } from '@/slices/userSlice';
+import { useDispatch } from '@/store';
+
+const GameMenuWithAuth = withAuth(GameMenuPage);
+const GamePlayWithAuth = withAuth(GamePlayPage);
+const ProfileWithAuth = withAuth(ProfilePage);
+const LeaderboardWithAuth = withAuth(LeaderboardPage);
+const ForumWithAuth = withAuth(ForumPage);
 
 export const AppRouter = () => {
+  const [getUser] = useGetUserMutation();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    async function fetchUser() {
+      const user = await getUser().unwrap();
+      if (user) {
+        dispatch(setUser(user));
+      }
+    }
+
+    fetchUser();
+  }, []);
+
   return (
     <Router
       future={{
@@ -31,46 +55,11 @@ export const AppRouter = () => {
         <Route path="/error404" Component={Error404Page} />
         <Route path="/error500" Component={Error500Page} />
         //Приватные роуты
-        <Route
-          path="/game-menu"
-          element={
-            <PrivateRoute>
-              <GameMenuPage />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/game-play"
-          element={
-            <PrivateRoute>
-              <GamePlayPage />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/profile"
-          element={
-            <PrivateRoute>
-              <ProfilePage />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/leaderboard"
-          element={
-            <PrivateRoute>
-              <LeaderboardPage />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/forum"
-          element={
-            <PrivateRoute>
-              <ForumPage />
-            </PrivateRoute>
-          }
-        />
+        <Route path="/game-menu" Component={GameMenuWithAuth} />
+        <Route path="/game-play" Component={GamePlayWithAuth} />
+        <Route path="/profile" Component={ProfileWithAuth} />
+        <Route path="/leaderboard" Component={LeaderboardWithAuth} />
+        <Route path="/forum" Component={ForumWithAuth} />
         //Последний роут на 404
         <Route path="*" Component={Error404Page} />
       </Routes>

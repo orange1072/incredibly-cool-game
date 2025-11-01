@@ -1,16 +1,11 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { RootState } from '../store';
-import { SERVER_HOST } from '../constants';
-import { userApi } from '../api';
-
-interface User {
-  name: string;
-  secondName: string;
-  avatar?: string;
-}
+import { RootState } from '@/store';
+import { SERVER_HOST } from '@/constants';
+import { userApi } from '@/api';
+import { authAPI, UserProfile } from '@/slices/authSlice';
 
 export interface UserState {
-  data: User | null;
+  data: UserProfile | null;
   isLoading: boolean;
 }
 
@@ -30,7 +25,14 @@ export const fetchUserThunk = createAsyncThunk(
 export const userSlice = createSlice({
   name: 'user',
   initialState,
-  reducers: {},
+  reducers: {
+    setUser: (state, action: PayloadAction<UserProfile | null>) => {
+      state.data = action.payload;
+    },
+    clearUser: (state) => {
+      state.data = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchUserThunk.pending.type, (state) => {
@@ -39,7 +41,7 @@ export const userSlice = createSlice({
       })
       .addCase(
         fetchUserThunk.fulfilled.type,
-        (state, { payload }: PayloadAction<User>) => {
+        (state, { payload }: PayloadAction<UserProfile>) => {
           state.data = payload;
           state.isLoading = false;
         }
@@ -47,6 +49,13 @@ export const userSlice = createSlice({
       .addCase(fetchUserThunk.rejected.type, (state) => {
         state.isLoading = false;
       })
+      .addMatcher(
+        authAPI.endpoints.getUser.matchFulfilled,
+        (state, { payload }) => {
+          state.data = payload;
+          state.isLoading = false;
+        }
+      )
       .addMatcher(
         userApi.endpoints.updateUserAvatar.matchFulfilled,
         (state, { payload }) => {
@@ -57,6 +66,8 @@ export const userSlice = createSlice({
       );
   },
 });
+
+export const { setUser, clearUser } = userSlice.actions;
 
 export const selectUser = (state: RootState) => state.user.data;
 

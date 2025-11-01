@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useState } from 'react';
 import {
   User,
   Mail,
@@ -7,26 +7,27 @@ import {
   CheckCircle,
   Shield,
   Activity,
-} from 'lucide-react'
-import { Input } from '@/components/Input/Input'
-import { PixelButton } from '@/components/PixelButton'
-import styles from './Registration.module.scss'
-import { useNavigate } from 'react-router-dom'
-import { ParticleBackground } from '@/components/ParticleBackground'
+} from 'lucide-react';
+import { Input } from '@/components/Input/Input';
+import { PixelButton } from '@/components/PixelButton';
+import styles from './Registration.module.scss';
+import { useNavigate } from 'react-router-dom';
+import { ParticleBackground } from '@/components/ParticleBackground';
+import { ROUTES } from '@/constants';
 
 type FormData = {
-  firstName: string
-  lastName: string
-  email: string
-  phone: string
-  username: string
-  password: string
-  confirmPassword: string
-}
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  username: string;
+  password: string;
+  confirmPassword: string;
+};
 
 export const SignupPage = () => {
-  const navigate = useNavigate()
-  const [step, setStep] = useState(1)
+  const navigate = useNavigate();
+  const [step, setStep] = useState(1);
   const [formData, setFormData] = useState<FormData>({
     firstName: '',
     lastName: '',
@@ -35,54 +36,54 @@ export const SignupPage = () => {
     username: '',
     password: '',
     confirmPassword: '',
-  })
+  });
 
-  const [errors, setErrors] = useState<Record<string, string>>({})
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const validateStep = (currentStep: number) => {
-    const newErrors: Record<string, string> = {}
+    const newErrors: Record<string, string> = {};
 
     if (currentStep === 1) {
-      if (!formData.firstName) newErrors.firstName = 'Required'
-      if (!formData.lastName) newErrors.lastName = 'Required'
+      if (!formData.firstName) newErrors.firstName = 'Required';
+      if (!formData.lastName) newErrors.lastName = 'Required';
     } else if (currentStep === 2) {
-      if (!formData.email) newErrors.email = 'Required'
-      if (!formData.phone) newErrors.phone = 'Required'
+      if (!formData.email) newErrors.email = 'Required';
+      if (!formData.phone) newErrors.phone = 'Required';
     } else if (currentStep === 3) {
-      if (!formData.username) newErrors.username = 'Required'
-      if (!formData.password) newErrors.password = 'Required'
+      if (!formData.username) newErrors.username = 'Required';
+      if (!formData.password) newErrors.password = 'Required';
       if (formData.password !== formData.confirmPassword) {
-        newErrors.confirmPassword = 'Passwords do not match'
+        newErrors.confirmPassword = 'Passwords do not match';
       }
     }
 
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     if (validateStep(step)) {
       if (step < 3) {
-        setStep(step + 1)
+        setStep(step + 1);
       } else {
-        navigate('/profile')
+        navigate(ROUTES.PROFILE);
       }
     }
-  }
+  };
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      const { name, value } = e.target
-      setFormData((prev) => ({ ...prev, [name]: value }))
+      const { name, value } = e.target;
+      setFormData((prev) => ({ ...prev, [name]: value }));
     },
     []
-  )
+  );
 
-  const steps = ['Personal Data', 'Contacts', 'Access ID']
+  const steps = ['Personal Data', 'Contacts', 'Access ID'];
 
   const combineClassNames = (...names: Array<string | undefined | false>) =>
-    names.filter(Boolean).join(' ')
+    names.filter(Boolean).join(' ');
 
   return (
     <main className={styles['registration-page']}>
@@ -264,7 +265,7 @@ export const SignupPage = () => {
 
               <div className={styles['footer-link']}>
                 <button
-                  onClick={() => navigate('/signin')}
+                  onClick={() => navigate(ROUTES.SIGNIN)}
                   className={styles['sign-in-link']}
                 >
                   Already Registered? Sign In
@@ -277,5 +278,5 @@ export const SignupPage = () => {
         </div>
       </div>
     </main>
-  )
-}
+  );
+};

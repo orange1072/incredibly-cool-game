@@ -1,6 +1,7 @@
 import { memo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Github } from 'lucide-react';
+import { ROUTES } from '@/constants';
 
 import styles from './Footer.module.scss';
 
@@ -8,17 +9,17 @@ export const Footer = memo(() => {
   const navigate = useNavigate();
 
   const demoNavigationItems = [
-    { page: '', label: 'Main' },
-    { page: 'signin', label: 'Login' },
-    { page: 'signup', label: 'Register' },
-    { page: 'profile', label: 'Profile' },
-    { page: 'demo', label: 'Demo' },
-    { page: 'game-menu', label: 'Game Menu' },
-    { page: 'game-over', label: 'Game Over' },
-    { page: 'leaderboard', label: 'Leaderboard' },
-    { page: 'forum', label: 'Forum' },
-    { page: 'error404', label: '404 Error' },
-    { page: 'error500', label: '500 Error' },
+    { page: ROUTES.HOME, label: 'Main' },
+    { page: ROUTES.SIGNIN, label: 'Login' },
+    { page: ROUTES.SIGNUP, label: 'Register' },
+    { page: ROUTES.PROFILE, label: 'Profile' },
+    { page: ROUTES.DEMO, label: 'Demo' },
+    { page: ROUTES.GAME_MENU, label: 'Game Menu' },
+    { page: ROUTES.GAME_OVER, label: 'Game Over' },
+    { page: ROUTES.LEADERBOARD, label: 'Leaderboard' },
+    { page: ROUTES.FORUM, label: 'Forum' },
+    { page: ROUTES.ERROR_404, label: '404 Error' },
+    { page: ROUTES.ERROR_500, label: '500 Error' },
   ];
 
   return (
@@ -35,7 +36,7 @@ export const Footer = memo(() => {
               {demoNavigationItems.map((item) => (
                 <button
                   key={item.page}
-                  onClick={() => navigate(`/${item.page}`)}
+                  onClick={() => navigate(item.page)}
                   className={styles.demoNavigationButton}
                 >
                   {item.label}
@@ -58,7 +59,7 @@ export const Footer = memo(() => {
               <Github />
             </button>
             <button
-              onClick={() => navigate('/forum')}
+              onClick={() => navigate(ROUTES.FORUM)}
               className={styles.footerLink}
             >
               Community

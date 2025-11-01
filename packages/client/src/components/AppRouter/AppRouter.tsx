@@ -13,6 +13,7 @@ import { NavBar } from '../Navbar';
 import { GameMenuPage } from '@/pages/GameMenuPage';
 import { GamePlayPage } from '@/pages/GamePlayPage';
 import { GameOverPage } from '@/pages/GameOverPage';
+import { ROUTES } from '@/constants';
 
 export const AppRouter = () => {
   return (
@@ -25,15 +26,15 @@ export const AppRouter = () => {
       <NavBar />
       <Routes>
         //Публичные роуты
-        <Route path="/" Component={MainPage} />
-        <Route path="/demo" Component={DemoPage} />
-        <Route path="/signin" Component={SigninPage} />
-        <Route path="/signup" Component={SignupPage} />
-        <Route path="/error404" Component={Error404Page} />
-        <Route path="/error500" Component={Error500Page} />
+        <Route path={ROUTES.HOME} Component={MainPage} />
+        <Route path={ROUTES.DEMO} Component={DemoPage} />
+        <Route path={ROUTES.SIGNIN} Component={SigninPage} />
+        <Route path={ROUTES.SIGNUP} Component={SignupPage} />
+        <Route path={ROUTES.ERROR_404} Component={Error404Page} />
+        <Route path={ROUTES.ERROR_500} Component={Error500Page} />
         //Приватные роуты
         <Route
-          path="/game-menu"
+          path={ROUTES.GAME_MENU}
           element={
             <PrivateRoute>
               <GameMenuPage />
@@ -41,7 +42,7 @@ export const AppRouter = () => {
           }
         />
         <Route
-          path="/game-play"
+          path={ROUTES.GAME_PLAY}
           element={
             <PrivateRoute>
               <GamePlayPage />
@@ -49,7 +50,7 @@ export const AppRouter = () => {
           }
         />
         <Route
-          path="/game-over"
+          path={ROUTES.GAME_OVER}
           element={
             <PrivateRoute>
               <GameOverPage victory={false} />
@@ -57,7 +58,7 @@ export const AppRouter = () => {
           }
         />
         <Route
-          path="/profile"
+          path={ROUTES.PROFILE}
           element={
             <PrivateRoute>
               <ProfilePage />
@@ -65,7 +66,7 @@ export const AppRouter = () => {
           }
         />
         <Route
-          path="/leaderboard"
+          path={ROUTES.LEADERBOARD}
           element={
             <PrivateRoute>
               <LeaderboardPage />
@@ -73,7 +74,7 @@ export const AppRouter = () => {
           }
         />
         <Route
-          path="/forum"
+          path={ROUTES.FORUM}
           element={
             <PrivateRoute>
               <ForumPage />

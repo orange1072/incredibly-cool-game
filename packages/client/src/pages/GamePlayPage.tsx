@@ -1,11 +1,12 @@
-import { Helmet } from 'react-helmet'
-import { useNavigate } from 'react-router-dom'
-import { PixelButton } from '@/components/PixelButton'
-import '../App.scss'
-import styles from './GamePlayPage.module.scss'
+import { Helmet } from 'react-helmet';
+import { useNavigate } from 'react-router-dom';
+import { PixelButton } from '@/components/PixelButton';
+import { ROUTES } from '@/constants';
+import '../App.scss';
+import styles from './GamePlayPage.module.scss';
 
 export const GamePlayPage = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   //Это просто заглушка для игрового экрана который будет реализован позже
 
   return (
@@ -23,11 +24,14 @@ export const GamePlayPage = () => {
           implemented here.
         </p>
         <nav aria-label="Game navigation">
-          <PixelButton variant="primary" onClick={() => navigate('/game-menu')}>
+          <PixelButton
+            variant="primary"
+            onClick={() => navigate(ROUTES.GAME_MENU)}
+          >
             Back to Mission Briefing
           </PixelButton>
         </nav>
       </main>
     </>
-  )
-}
+  );
+};

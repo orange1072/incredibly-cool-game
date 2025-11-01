@@ -8,9 +8,9 @@ import { combineReducers } from 'redux';
 import { configureStore } from '@reduxjs/toolkit';
 import ssrReducer from './slices/ssrSlice';
 import userReducer from './slices/userSlice';
+import authReducer from './slices/authSlice';
 import gameReducer from './slices/game';
 import { authAPI } from '@/slices/authApi';
-import authReducer from '@/store/slices/authSlice';
 import { userApi } from '@/api';
 
 // Глобально декларируем в window наш ключик
@@ -24,10 +24,10 @@ declare global {
 export const reducer = combineReducers({
   ssr: ssrReducer,
   user: userReducer,
+  auth: authReducer,
   userApi: userApi.reducer,
   [authAPI.reducerPath]: authAPI.reducer,
   game: gameReducer,
-  auth: authReducer,
 });
 
 export const store = configureStore({

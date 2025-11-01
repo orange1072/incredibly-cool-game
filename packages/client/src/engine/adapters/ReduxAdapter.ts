@@ -9,13 +9,13 @@ import gameReducer, {
   setEnemyCount,
   setPlayerHealth,
   setPlayerXp,
-} from '../../slices/game';
-import type { RootState } from '../../store';
+} from '../../store/slices/game';
+import type { RootState } from '@/store/store';
 import {
   COMPONENT_TYPES,
   SystemType,
   type ISystem,
-} from '../../types/engine.types';
+} from '@/types/engine.types';
 import GameEngine from '../core/GameEngine';
 import type World from '../core/World';
 import type Entity from '../core/Entity';

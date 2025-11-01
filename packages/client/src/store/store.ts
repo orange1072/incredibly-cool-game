@@ -6,13 +6,12 @@ import {
 } from 'react-redux';
 import { combineReducers } from 'redux';
 import { configureStore } from '@reduxjs/toolkit';
-
-import friendsReducer from './slices/friendsSlice';
 import ssrReducer from './slices/ssrSlice';
 import userReducer from './slices/userSlice';
-import { userApi } from './api';
 import gameReducer from './slices/game';
-import { authAPI } from '@/slices/authSlice';
+import { authAPI } from '@/slices/authApi';
+import authReducer from '@/store/slices/authSlice';
+import { userApi } from '@/api';
 
 // Глобально декларируем в window наш ключик
 // и задаем ему тип такой же как у стейта в сторе
@@ -23,12 +22,12 @@ declare global {
 }
 
 export const reducer = combineReducers({
-  friends: friendsReducer,
   ssr: ssrReducer,
   user: userReducer,
   userApi: userApi.reducer,
   [authAPI.reducerPath]: authAPI.reducer,
   game: gameReducer,
+  auth: authReducer,
 });
 
 export const store = configureStore({

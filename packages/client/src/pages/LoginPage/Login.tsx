@@ -6,9 +6,9 @@ import { Logo } from '@/components/ui';
 import { PixelButton } from '@/components/PixelButton';
 import { ArrowRight, Radiation, User, Lock, AlertTriangle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useSignInMutation, useGetUserMutation } from '@/slices/authSlice';
-import { useDispatch } from '@/store';
+import { useSignInMutation, useGetUserMutation } from '@/slices/authApi';
 import { setUser } from '@/slices/userSlice';
+import { useDispatch } from '@/store/store';
 
 type Errors = Partial<Record<'username' | 'password', string>>;
 

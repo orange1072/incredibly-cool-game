@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import type GameStats from '../../types/game-stats.types';
+import type GameStats from '@/types/game-stats.types';
 
 const initialState: GameStats['missionProgress'] = {
   wave: 0,

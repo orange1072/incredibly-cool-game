@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { getPlayerState } from '../../slices/game';
+import { getPlayerState } from '@/store/slices/game';
 import { XpStatsRow } from './XpStatsRow';
 
 export const XpBar = () => {

@@ -1,0 +1,27 @@
+.fullscreenContainer {
+  position: relative;
+}
+
+.fullscreenButton {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 10;
+  padding: 6px 10px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #0ff;
+  border: 1px solid rgba(0, 255, 255, 0.4);
+  border-radius: 4px;
+  cursor: pointer;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fullscreenButton:hover {
+  background: rgba(0, 0, 0, 0.75);
+  border-color: rgba(0, 255, 255, 0.6);
+}
+
+

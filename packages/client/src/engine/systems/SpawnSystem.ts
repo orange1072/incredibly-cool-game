@@ -3,16 +3,14 @@ import {
   ISystem,
   SYSTEM_TYPES,
   SystemType,
-} from '../../types/engine.types';
+} from '@/types/engine.types';
 import World from '../core/World';
 import EventBus from '../infrastructure/EventBus';
 import { PositionComponent, SpawnPointComponent } from '../components';
 import Logger from '../infrastructure/Logger';
 import { createZombie } from '../enteties/factories/createZombie';
 import { createBoss } from '../enteties/factories/createBoss';
-import { setEnemyCount, setWave } from '../../slices/game';
 import type { StoreLike } from '../adapters/ReduxAdapter';
-import type { RootState } from '../../store';
 import {
   BOSS_WAVE_INTERVAL,
   DEFAULT_AREA_WIDTH,
@@ -23,6 +21,8 @@ import {
   DEFAULT_SPAWN_BURST_SIZE,
 } from './consts/spawn';
 import Entity from '../core/Entity';
+import { type RootState } from '@/store/store';
+import { setEnemyCount, setWave } from '@/store/slices/game';
 
 interface SpawnSystemOptions {
   eventBus: EventBus;

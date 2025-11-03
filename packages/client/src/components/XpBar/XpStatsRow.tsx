@@ -4,7 +4,7 @@ import {
   getMissionProgress,
   getPlayerState,
   getWorldStats,
-} from '../../slices/game';
+} from '@/store/slices/game';
 
 export const XpStatsRow = () => {
   const player = useSelector(getPlayerState);

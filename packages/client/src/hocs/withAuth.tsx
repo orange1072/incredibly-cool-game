@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { selectUser } from '@/slices/userSlice';
 import { Navigate } from 'react-router-dom';
+import { selectUser } from '@/store/slices/userSlice';
 
 export const withAuth = <P extends Record<string, never>>(
   WrappedComponent: React.ComponentType<P>

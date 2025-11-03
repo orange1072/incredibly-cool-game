@@ -3,10 +3,10 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { ReactAdapter } from '../../engine/adapters/ReactAdapter';
 import { createGameEngine } from '../../engine/setup/createGameEngine';
 import ReduxAdapter from '../../engine/adapters/ReduxAdapter';
-import { useStore, type RootState } from '../../store';
 import GameEngine from '../../engine/core/GameEngine';
 import styles from './GameCanvas.module.scss';
 import { GameOverPopup } from './GameOverPopup';
+import { type RootState, useStore } from '@/store/store';
 
 export const GameCanvas = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);

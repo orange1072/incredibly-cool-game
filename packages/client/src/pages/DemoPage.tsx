@@ -1,9 +1,8 @@
 import { Helmet } from 'react-helmet';
-import { PageInitArgs } from '../routes';
-import { GameCanvas } from '../components/GameCanvas/GameCanvas';
+import { GameCanvas } from '@/components/GameCanvas/GameCanvas';
 import withFullscreen from '../components/hoc/withFullscreen';
-import { XpBar } from '../components/XpBar/XpBar';
-import { ErrorBoundaryTestSection } from '../components/ErrorBoundary';
+import { XpBar } from '@/components/XpBar/XpBar';
+import { ErrorBoundaryTestSection } from '@/components/ErrorBoundary';
 import '../App.scss';
 
 const GameCanvasWithFullscreen = withFullscreen(GameCanvas);
@@ -182,8 +181,4 @@ export const DemoPage = () => {
       </div>
     </>
   );
-};
-
-export const initDemoPage = async (_args: PageInitArgs) => {
-  // Здесь можно добавить загрузку данных для главной страницы
 };

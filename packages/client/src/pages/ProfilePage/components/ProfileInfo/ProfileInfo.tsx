@@ -2,11 +2,11 @@ import { ProfileSVG, RemoveSVG, UploadSVG } from '@/assets/icons';
 import styles from '../../styles.module.scss';
 import { Button } from '@/components/Button';
 import { useRef, useCallback, useState } from 'react';
-import { useSelector } from '@/store';
-import { selectUser } from '@/slices/userSlice';
+import { useSelector } from '@/store/store';
 import { MAX_AVATAR_SIZE } from '@/constants';
 import { ERROR_MESSAGES } from '@/messages';
 import { useUpdateUserAvatarMutation } from '@/api';
+import { selectUser } from '@/store/slices/userSlice';
 
 export const ProfileInfo = () => {
   const user = useSelector(selectUser);

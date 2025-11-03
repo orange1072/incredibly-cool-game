@@ -16,7 +16,7 @@ import ProjectileSystem from '../systems/ProjectileSystem';
 import { createPlayer } from '../enteties/factories/createPlayer';
 import { createWorld } from '../enteties/factories/createWorld';
 import type { StoreLike } from '../adapters/ReduxAdapter';
-import type { RootState } from '../../store';
+import type { RootState } from '@/store/store';
 import { SYSTEM_TYPES, SystemType } from '@/types/engine.types';
 
 export function createGameEngine(

@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import type GameStats from '../../types/game-stats.types';
-import type { inventoryItem } from '../../types/game-stats.types';
-import type { ProjectileKind } from '../../types/component.types';
+import type GameStats from '@/types/game-stats.types';
+import type { inventoryItem } from '@/types/game-stats.types';
+import type { ProjectileKind } from '@/types/component.types';
 
 type AmmoDeltaPayload = {
   kind: ProjectileKind;

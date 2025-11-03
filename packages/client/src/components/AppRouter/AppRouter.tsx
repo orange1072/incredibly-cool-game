@@ -12,10 +12,10 @@ import { NavBar } from '../Navbar';
 import { GameMenuPage } from '@/pages/GameMenuPage';
 import { GamePlayPage } from '@/pages/GamePlayPage';
 import { withAuth } from '@/hocs/withAuth';
-import { useGetUserMutation } from '@/slices/authSlice';
+import { useGetUserMutation } from '@/slices/authApi';
 import { useEffect } from 'react';
-import { setUser } from '@/slices/userSlice';
-import { useDispatch } from '@/store';
+import { useDispatch } from '@/store/store';
+import { setUser } from '@/store/slices/userSlice';
 
 const GameMenuWithAuth = withAuth(GameMenuPage);
 const GamePlayWithAuth = withAuth(GamePlayPage);

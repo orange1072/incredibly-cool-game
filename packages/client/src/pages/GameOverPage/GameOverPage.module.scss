@@ -1,0 +1,198 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.container {
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+  @include vignette;
+}
+
+.background {
+  position: absolute;
+  inset: 0;
+  background: $stalker-dark;
+  @include fog-overlay;
+}
+
+.redGradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(196, 58, 49, 0.1), transparent);
+}
+
+.particles {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.content {
+  position: relative;
+  z-index: 10;
+  padding: 2rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.innerContainer {
+  width: 100%;
+  max-width: 42rem;
+}
+
+.titleSection {
+  @include flex-column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 2rem;
+
+  @include respond-to('medium') {
+    margin-bottom: 2.5rem;
+  }
+}
+
+.iconWrapper {
+  margin-bottom: 1rem;
+}
+
+.icon {
+  width: 6rem;
+  height: 6rem;
+}
+
+.trophyIcon {
+  color: $stalker-cyan;
+  width: 4rem;
+  height: 4rem;
+  margin: 0 auto 0.5rem;
+
+  @include respond-to('medium') {
+    width: 5rem;
+    height: 5rem;
+  }
+}
+
+.skullIcon {
+  color: $stalker-danger;
+  animation: zombie-pulse 2s ease-in-out infinite;
+}
+
+.mainTitle {
+  font-size: $font-size-4xl;
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.3em;
+
+  @include respond-to('medium') {
+    font-size: 3rem;
+  }
+
+  @include respond-to('large') {
+    font-size: 3.5rem;
+  }
+
+  @include respond-to('xlarge') {
+    font-size: 4rem;
+  }
+}
+
+.victoryTitle {
+  color: $stalker-cyan;
+}
+
+.deathTitle {
+  color: $stalker-danger;
+}
+
+.subtitle {
+  font-family: $font-family-mono;
+  color: $stalker-text-dim;
+  text-transform: uppercase;
+  letter-spacing: $letter-spacing-wider;
+  font-size: $font-size-sm;
+  margin: 0;
+
+  @include respond-to('medium') {
+    font-size: $font-size-md;
+  }
+}
+
+.trophyPanel {
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  border: 2px solid rgba($stalker-cyan, 0.5);
+
+  @include respond-to('medium') {
+    padding: 2rem;
+  }
+}
+
+.trophyText {
+  color: $stalker-cyan;
+  letter-spacing: $letter-spacing-wider;
+  text-transform: uppercase;
+  font-size: $font-size-lg;
+
+  @include respond-to('medium') {
+    font-size: $font-size-xl;
+  }
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+
+  @include respond-to('medium') {
+    gap: 1.25rem;
+  }
+}
+
+.retryButton,
+.menuButton {
+  width: 100%;
+}
+
+.shareButton {
+  grid-column: 1 / -1;
+  width: 100%;
+}
+
+.buttonIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.buttonIconSmall {
+  width: 1rem;
+  height: 1rem;
+}
+
+.quote {
+  margin-top: 1.5rem;
+  text-align: center;
+
+  @include respond-to('medium') {
+    margin-top: 2rem;
+  }
+}
+
+.quoteText {
+  color: $stalker-text-dim;
+  font-family: $font-family-mono;
+  font-size: $font-size-sm;
+  font-style: italic;
+  line-height: $line-height-relaxed;
+  margin-bottom: 0.25rem;
+}
+
+.quoteAuthor {
+  color: rgba($stalker-text-dim, 0.7);
+  font-size: $font-size-xs;
+  font-family: $font-family-mono;
+  text-transform: uppercase;
+  margin: 0;
+}

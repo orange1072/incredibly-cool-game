@@ -29,6 +29,7 @@ module.exports = {
     'react/react-in-jsx-scope': 'off', // Не нужно в React 17+
   },
   ignorePatterns: [
+    'packages/client/public/**/*',
     'node_modules',
     'dist',
     'packages/client/server/**/*',

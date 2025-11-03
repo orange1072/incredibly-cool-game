@@ -1,47 +1,32 @@
-import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { ParticleBackground } from '@/components/ParticleBackground'
-import { HeroSection } from '@/components/sections/HeroSection'
-import { FeaturesSection } from '@/components/sections/FeaturesSection'
-import { ScreenshotsSection } from '@/components/sections/ScreenshotsSection'
-import { StatsSection } from '@/components/sections/StatsSection'
-import { CTASection } from '@/components/sections/CTASection'
-import { Footer } from '@/components/sections/Footer'
+import { useNavigate } from 'react-router-dom';
+import { useScrollY } from '@/hooks/useScrollY';
+import { ParticleBackground } from '@/components/ParticleBackground/ParticleBackground';
+import { HeroSection } from '@/pages/MainPage/sections/HeroSection';
+import { FeaturesSection } from '@/pages/MainPage/sections/FeaturesSection';
+import { ScreenshotsSection } from '@/pages/MainPage/sections/ScreenshotsSection';
+import { StatsSection } from '@/pages/MainPage/sections/StatsSection';
+import { CTASection } from '@/pages/MainPage/sections/CTASection';
+import { Footer } from '@/pages/MainPage/sections/Footer';
 
-import styles from './MainPage.module.scss'
+import styles from './MainPage.module.scss';
 
 export const MainPage = () => {
-  const navigate = useNavigate()
-  const [scrollY, setScrollY] = useState(0)
-
-  useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY)
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+  const navigate = useNavigate();
+  const scrollY = useScrollY();
 
   return (
     <div className={styles.container}>
-      {/* Animated Background Particles */}
-      <ParticleBackground particleCount={50} />
-
-      {/* Hero Section */}
-      <HeroSection scrollY={scrollY} />
-
-      {/* Features Section */}
-      <FeaturesSection />
-
-      {/* Screenshots Section */}
-      <ScreenshotsSection />
-
-      {/* Stats Section */}
-      <StatsSection />
-
-      {/* CTA Section */}
-      <CTASection />
-
-      {/* Footer */}
+      <div aria-hidden="true">
+        <ParticleBackground particleCount={50} />
+      </div>
+      <main>
+        <HeroSection scrollY={scrollY} />
+        <FeaturesSection />
+        <ScreenshotsSection />
+        <StatsSection />
+        <CTASection />
+      </main>
       <Footer />
     </div>
-  )
-}
+  );
+};

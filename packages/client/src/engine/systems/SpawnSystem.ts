@@ -8,8 +8,8 @@ import World from '../core/World';
 import EventBus from '../infrastructure/EventBus';
 import { PositionComponent, SpawnPointComponent } from '../components';
 import Logger from '../infrastructure/Logger';
-import { createZombie } from '../enteties/createZombie';
-import { createBoss } from '../enteties/createBoss';
+import { createZombie } from '../enteties/factories/createZombie';
+import { createBoss } from '../enteties/factories/createBoss';
 import { setEnemyCount, setWave } from '../../slices/game';
 import type { StoreLike } from '../adapters/ReduxAdapter';
 import type { RootState } from '../../store';
@@ -19,7 +19,10 @@ import {
   DEFAULT_BASE_WAVE_SIZE,
   DEFAULT_SPAWN_BATCH_SIZE,
   DEFAULT_WAVE_GROWTH_FACTOR,
+  DEFAULT_SPAWN_BURST_INTERVAL,
+  DEFAULT_SPAWN_BURST_SIZE,
 } from './consts/spawn';
+import Entity from '../core/Entity';
 
 interface SpawnSystemOptions {
   eventBus: EventBus;
@@ -41,11 +44,13 @@ class SpawnSystem implements ISystem<SystemType> {
   private readonly spawnBatchSize = DEFAULT_SPAWN_BATCH_SIZE;
   private readonly baseWaveSize = DEFAULT_BASE_WAVE_SIZE;
   private readonly waveGrowthFactor = DEFAULT_WAVE_GROWTH_FACTOR;
+  private extraBatchTimer = 0;
+  private readonly extraBatchInterval = DEFAULT_SPAWN_BURST_INTERVAL;
+  private readonly extraBatchSize = DEFAULT_SPAWN_BURST_SIZE;
 
   constructor({ eventBus, store }: SpawnSystemOptions) {
     this.eventBus = eventBus;
     this.store = store;
-
     this.eventBus.on('enemyKilled', this.handleEnemyKilledEvent);
   }
 
@@ -59,6 +64,8 @@ class SpawnSystem implements ISystem<SystemType> {
       this.enemiesKilledThisWave + 1
     );
     const remaining = Math.max(this.waveTarget - this.enemiesKilledThisWave, 0);
+    const progressedRatio =
+      this.waveTarget === 0 ? 0 : this.enemiesKilledThisWave / this.waveTarget;
 
     this.store?.dispatch(
       setEnemyCount({
@@ -69,6 +76,15 @@ class SpawnSystem implements ISystem<SystemType> {
 
     if (remaining === 0) {
       this.waveComplete = true;
+    } else if (progressedRatio >= 1 / 3 && !this.waveComplete) {
+      const remainingEnemies = this.waveTarget - this.enemiesKilledThisWave;
+      this.waveComplete = true;
+      this.logger.info('Triggering next wave early (one-third cleared)', {
+        wave: this.waveNumber,
+        killed: this.enemiesKilledThisWave,
+        total: this.waveTarget,
+        remaining: remainingEnemies,
+      });
     }
   };
 
@@ -86,6 +102,7 @@ class SpawnSystem implements ISystem<SystemType> {
     this.waveTarget = this.calculateWaveSize(this.waveNumber);
     this.waveComplete = false;
     this.bossSpawned = false;
+    this.extraBatchTimer = 0;
 
     this.logger.info('Starting wave', {
       wave: this.waveNumber,
@@ -112,10 +129,7 @@ class SpawnSystem implements ISystem<SystemType> {
     if (this.waveTarget === 0) {
       this.startNextWave();
     } else if (this.waveComplete) {
-      const remainingEnemies = world.query(COMPONENT_TYPES.enemy).length;
-      if (remainingEnemies === 0) {
-        this.startNextWave();
-      }
+      this.startNextWave();
     }
 
     const spawns = world.query(
@@ -127,6 +141,15 @@ class SpawnSystem implements ISystem<SystemType> {
       COMPONENT_TYPES.enemy,
       COMPONENT_TYPES.health
     ).length;
+
+    if (this.waveTarget > 0) {
+      this.extraBatchTimer += dt;
+      if (this.extraBatchTimer >= this.extraBatchInterval) {
+        const spawnedExtra = this.spawnBurst(world, spawns, currentEnemyCount);
+        currentEnemyCount += spawnedExtra;
+        this.extraBatchTimer = 0;
+      }
+    }
 
     for (const sp of spawns) {
       const spawn = sp.getComponent<SpawnPointComponent>(
@@ -188,6 +211,81 @@ class SpawnSystem implements ISystem<SystemType> {
         this.bossSpawned = true;
       }
     }
+  }
+
+  private spawnBurst(
+    world: World,
+    spawns: Entity[],
+    currentEnemyCount: number
+  ) {
+    if (
+      this.enemiesSpawnedThisWave >= this.waveTarget ||
+      this.extraBatchSize <= 0
+    ) {
+      return 0;
+    }
+
+    const remainingToSpawn = this.waveTarget - this.enemiesSpawnedThisWave;
+    if (remainingToSpawn <= 0) {
+      return 0;
+    }
+
+    const candidates = spawns
+      .map((entity) => ({
+        entity,
+        spawn: entity.getComponent<SpawnPointComponent>(
+          COMPONENT_TYPES.spawnPoint
+        ),
+        pos: entity.getComponent<PositionComponent>(COMPONENT_TYPES.position),
+      }))
+      .filter(
+        ({ spawn, pos }) => Boolean(spawn?.autoSpawn) && Boolean(pos)
+      ) as Array<{
+      entity: Entity;
+      spawn: SpawnPointComponent;
+      pos: PositionComponent;
+    }>;
+
+    if (candidates.length === 0) {
+      return 0;
+    }
+
+    const targetCount = Math.min(this.extraBatchSize, remainingToSpawn);
+    let spawned = 0;
+
+    while (spawned < targetCount && candidates.length > 0) {
+      const idx = Math.floor(Math.random() * candidates.length);
+      const { spawn, pos } = candidates[idx];
+      const populationCap = (spawn.maxEntities ?? 10) * 2;
+      if (currentEnemyCount >= populationCap) {
+        candidates.splice(idx, 1);
+        continue;
+      }
+
+      const spawnX = pos.x + (Math.random() - 0.5) * spawn.radius * 2;
+      const spawnY = pos.y + (Math.random() - 0.5) * spawn.radius * 2;
+      const zombie = createZombie(spawnX, spawnY);
+
+      world.addEntity(zombie);
+      this.enemiesSpawnedThisWave += 1;
+      spawned += 1;
+      currentEnemyCount += 1;
+
+      this.logger.debug(
+        `Burst spawned enemy at (${spawnX.toFixed(1)}, ${spawnY.toFixed(1)})`
+      );
+      this.eventBus.emit('enemySpawned', {
+        id: zombie.id,
+        x: spawnX,
+        y: spawnY,
+      });
+
+      if (this.enemiesSpawnedThisWave >= this.waveTarget) {
+        break;
+      }
+    }
+
+    return spawned;
   }
 }
 

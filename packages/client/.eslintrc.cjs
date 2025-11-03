@@ -1,4 +1,3 @@
-// .eslintrc.js
 module.exports = {
   env: {
     browser: true,
@@ -32,6 +31,8 @@ module.exports = {
   ignorePatterns: [
     'node_modules',
     'dist',
+    'public/**/*',
+    '**/*.cjs',
     'server/**/*',
     'src/slices/**/*',
     'src/pages/**/*',
@@ -39,8 +40,9 @@ module.exports = {
     'src/entry-server.tsx',
     'src/entry-server.utils.ts',
     'vite.config.ts',
+    'vite-plugin-sw.js',
     'jest.config.js',
     'src/App.tsx',
     'src/App.test.tsx',
   ],
-}
+};

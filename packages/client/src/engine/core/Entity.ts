@@ -12,6 +12,7 @@ class Entity {
 
   addComponent(component: IComponent) {
     this.components.set(component.type, component);
+    return this;
   }
 
   getComponent<T extends IComponent>(type: string): T | undefined {

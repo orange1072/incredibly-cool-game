@@ -2,6 +2,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import dotenv from 'dotenv';
 import path from 'path';
+import { vitePluginServiceWorker } from './vite-plugin-sw.js';
 dotenv.config();
 
 // https://vitejs.dev/config/
@@ -19,7 +20,7 @@ export default defineConfig({
   ssr: {
     format: 'cjs',
   },
-  plugins: [react()],
+  plugins: [react(), vitePluginServiceWorker()],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),

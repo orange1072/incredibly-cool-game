@@ -28,6 +28,7 @@ export const COMPONENT_TYPES = {
   sprite: 'sprite',
   obstacle: 'obstacle',
   spawnPoint: 'spawnPoint',
+  loot: 'loot',
 } as const;
 
 export const SYSTEM_TYPES = {
@@ -47,6 +48,8 @@ export const SYSTEM_TYPES = {
   spawn: 'spawn',
   sync: 'sync',
 };
+
+export type LootType = 'xp' | 'hp' | 'gd';
 
 export type SystemType = keyof typeof SYSTEM_TYPES;
 
@@ -89,6 +92,11 @@ export interface VelocityComponentState {
 export interface HealthComponentState {
   hp: number;
   maxHp: number;
+}
+
+export interface LootComponentState {
+  lootType: LootType;
+  amount: number;
 }
 
 export interface AttackComponentState {

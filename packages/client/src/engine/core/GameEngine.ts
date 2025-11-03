@@ -11,10 +11,26 @@ class GameEngine {
   private readonly _input = new InputManager();
   private lastTime = 0;
   private isRunning = false;
+  private paused = false;
+  private hardPaused = false;
+
+  private handleKeyDown = (event: KeyboardEvent) => {
+    if (event.key === 'Enter') {
+      this.togglePause();
+    }
+  };
+
+  private handlePlayerKilled = () => {
+    this.hardPause();
+  };
 
   constructor(world: World) {
     this._world = world;
     this.destroyed = false;
+    if (typeof window !== 'undefined') {
+      window.addEventListener('keydown', this.handleKeyDown);
+    }
+    this.eventBus.on('playerKilled', this.handlePlayerKilled);
   }
 
   get world() {
@@ -50,6 +66,8 @@ class GameEngine {
 
   start() {
     this.isRunning = true;
+    this.paused = false;
+    this.hardPaused = false;
     this.lastTime = performance.now();
     requestAnimationFrame(this.loop);
   }
@@ -68,13 +86,48 @@ class GameEngine {
       }
     }
     this._input.onDestroy();
+    if (typeof window !== 'undefined') {
+      window.removeEventListener('keydown', this.handleKeyDown);
+    }
+    this.eventBus.off('playerKilled', this.handlePlayerKilled);
+    this.isRunning = false;
     this.systems.clear();
     this.destroyed = true;
+  }
+
+  private pause() {
+    if (this.paused) return;
+    this.paused = true;
+  }
+
+  private resume() {
+    if (!this.paused || this.hardPaused) return;
+    this.paused = false;
+    this.lastTime = performance.now();
+  }
+
+  private togglePause() {
+    if (this.hardPaused) return;
+    if (this.paused) {
+      this.resume();
+    } else {
+      this.pause();
+    }
+  }
+
+  private hardPause() {
+    this.paused = true;
+    this.hardPaused = true;
   }
 
   private loop = (timestamp: number) => {
     const dt = (timestamp - this.lastTime) / 1000;
     this.lastTime = timestamp;
+
+    if (this.paused) {
+      if (this.isRunning) requestAnimationFrame(this.loop);
+      return;
+    }
 
     this._input.update(dt);
 

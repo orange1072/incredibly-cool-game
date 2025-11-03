@@ -9,32 +9,22 @@ import {
   PositionComponent,
   VelocityComponent,
   AttackComponent,
-  CollisionComponent,
-  ProjectileComponent,
-  SpriteComponent,
 } from '../components';
 import World from '../core/World';
 import InputManager from '../infrastructure/InputManager';
 import Entity from '../core/Entity';
-import { getProximity, calculateUnitDirection } from './helpers/calculations';
+import { getProximity } from './helpers/calculations';
 import {
   DEFAULT_AUTO_FIRE_RANGE,
-  DEFAULT_BULLET_HEIGHT,
-  DEFAULT_BULLET_SPEED,
-  DEFAULT_BULLET_WIDTH,
   DEFAULT_PLAYER_SPEED,
   MOVE_FLAG,
-  PROJECTILE_LIFETIME,
-  PROJECTILE_RADIUS,
   STOP_FLAG,
   ZERO_COOLDOWN,
-  ZERO_DISTANCE,
 } from './consts/player-control';
+import { createProjectile } from '../enteties/factories/createProjectile';
 
 class PlayerControlSystem implements ISystem<SystemType> {
   type: SystemType = SYSTEM_TYPES.playerControl as SystemType;
-  private bulletSpeed = DEFAULT_BULLET_SPEED;
-  private autoFireRange = DEFAULT_AUTO_FIRE_RANGE;
 
   constructor(
     private input: InputManager,
@@ -84,7 +74,7 @@ class PlayerControlSystem implements ISystem<SystemType> {
       vel.dx = horizontal * this.speed;
       vel.dy = vertical * this.speed;
 
-      const target = this.findNearestEnemy(world, pos, this.autoFireRange);
+      const target = this.findNearestEnemy(world, pos, DEFAULT_AUTO_FIRE_RANGE);
       control.shooting = Boolean(target);
 
       if (target && attack && attack.cooldownTimer <= ZERO_COOLDOWN) {
@@ -108,45 +98,7 @@ class PlayerControlSystem implements ISystem<SystemType> {
     );
     if (!targetPos) return null;
 
-    const dx = getProximity(targetPos.x, sourcePos.x);
-    const dy = getProximity(targetPos.y, sourcePos.y);
-    const dist = Math.hypot(dx, dy);
-    if (dist === ZERO_DISTANCE) return null;
-
-    const dirX = calculateUnitDirection(dx, dist);
-    const dirY = calculateUnitDirection(dy, dist);
-
-    const projectile = new Entity();
-    projectile.addComponent(
-      new PositionComponent({ x: sourcePos.x, y: sourcePos.y })
-    );
-    projectile.addComponent(
-      new VelocityComponent({
-        dx: dirX * this.bulletSpeed,
-        dy: dirY * this.bulletSpeed,
-      })
-    );
-    projectile.addComponent(
-      new ProjectileComponent({
-        damage: attack.damage,
-        sourceId: source.id,
-        speed: this.bulletSpeed,
-        lifetime: PROJECTILE_LIFETIME,
-      })
-    );
-    projectile.addComponent(
-      new CollisionComponent({ radius: PROJECTILE_RADIUS })
-    );
-    projectile.addComponent(
-      new SpriteComponent({
-        name: 'bullet',
-        width: DEFAULT_BULLET_WIDTH,
-        height: DEFAULT_BULLET_HEIGHT,
-        source: 'bullet',
-      })
-    );
-
-    return projectile;
+    return createProjectile(targetPos, sourcePos, source.id, attack.damage);
   }
 
   private findNearestEnemy(

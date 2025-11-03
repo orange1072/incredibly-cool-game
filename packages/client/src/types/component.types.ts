@@ -26,4 +26,12 @@ export interface EffectEntry {
   tickTimer?: number;
 }
 
+export interface EnemyKilledPayload {
+  killerId: string;
+}
+
+export interface XpLootPayload {
+  xpReward: number;
+}
+
 export type SpawnType = 'player' | 'enemy' | 'item' | 'boss';

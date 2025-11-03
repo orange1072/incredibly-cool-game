@@ -1,5 +1,6 @@
 import {
   COMPONENT_TYPES,
+  ComponentDataType,
   ISystem,
   SYSTEM_TYPES,
   SystemType,
@@ -32,6 +33,10 @@ import {
   MIN_D_Y,
   ZERO_DISTANCE,
 } from './consts/collision';
+import LootComponent from '../components/LootComponent';
+import EventBus from '../infrastructure/EventBus';
+
+const bus = EventBus.instance;
 
 class CollisionSystem implements ISystem<SystemType> {
   type: SystemType = SYSTEM_TYPES.collision as SystemType;
@@ -74,18 +79,23 @@ class CollisionSystem implements ISystem<SystemType> {
   }
 
   private handleCollision(a: Entity, b: Entity, world: World) {
-    const aIsProjectile = isProperEntity(a, COMPONENT_TYPES.projectile);
-    const bIsProjectile = isProperEntity(b, COMPONENT_TYPES.projectile);
+    const hasProjectileCollision = this.processComponentCollision(
+      a,
+      b,
+      world,
+      COMPONENT_TYPES.projectile,
+      this.processProjectileHit
+    );
 
-    if (aIsProjectile) {
-      this.processProjectileHit(a, b, world);
-    }
+    this.processComponentCollision(
+      a,
+      b,
+      world,
+      COMPONENT_TYPES.loot,
+      this.processCollectingLoot
+    );
 
-    if (bIsProjectile) {
-      this.processProjectileHit(b, a, world);
-    }
-
-    if (aIsProjectile || bIsProjectile) {
+    if (hasProjectileCollision) {
       return;
     }
 
@@ -139,10 +149,11 @@ class CollisionSystem implements ISystem<SystemType> {
         passthrough: !hitsPlayer,
       });
 
-      //to-do: здесь будет проверка типа оружия. сейчас удары противника уничтожают снаряд, а игрока заставляют пролетать
       if (hitsPlayer) {
         world.removeEntity(projectileEntity.id);
       } else {
+        //to-do: здесь будет проверка типа оружия. сейчас удары противника уничтожают снаряд, а игрока заставляют пролетать
+        world.removeEntity(projectileEntity.id);
         return;
       }
 
@@ -157,7 +168,10 @@ class CollisionSystem implements ISystem<SystemType> {
       return;
     }
 
-    if (!isProperEntity(target, COMPONENT_TYPES.projectile)) {
+    if (
+      !isProperEntity(target, COMPONENT_TYPES.projectile) &&
+      !isProperEntity(target, COMPONENT_TYPES.loot)
+    ) {
       world.removeEntity(projectileEntity.id);
     }
   }
@@ -211,6 +225,55 @@ class CollisionSystem implements ISystem<SystemType> {
         velocity.dy -= pushBack * ny;
       }
     }
+  }
+
+  private processCollectingLoot(
+    lootEntity: Entity,
+    target: Entity,
+    world: World
+  ) {
+    const loot = lootEntity.getComponent<LootComponent>(COMPONENT_TYPES.loot);
+    if (!loot) return;
+
+    const takenByPlayer = isProperEntity(target, COMPONENT_TYPES.playerControl);
+
+    if (takenByPlayer) {
+      if (loot.lootType === 'xp') {
+        const xpReward = loot.amount;
+        bus.emit('xpCollected', {
+          xpReward,
+        });
+      }
+      world.removeEntity(lootEntity.id);
+    } else {
+      return;
+    }
+
+    if (!isProperEntity(target, COMPONENT_TYPES.loot)) {
+      world.removeEntity(lootEntity.id);
+    }
+  }
+
+  private processComponentCollision(
+    entity: Entity,
+    other: Entity,
+    world: World,
+    componentType: ComponentDataType,
+    handler: (primary: Entity, secondary: Entity, world: World) => void
+  ): boolean {
+    let processed = false;
+
+    if (isProperEntity(entity, componentType)) {
+      handler.call(this, entity, other, world);
+      processed = true;
+    }
+
+    if (isProperEntity(other, componentType)) {
+      handler.call(this, other, entity, world);
+      processed = true;
+    }
+
+    return processed;
   }
 
   private getCollisionComponents(entity: Entity) {

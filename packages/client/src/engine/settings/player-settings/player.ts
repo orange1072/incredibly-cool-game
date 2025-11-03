@@ -1,4 +1,4 @@
-import playerRunSprite from '../../../assets/player/Run.png';
+import playerRunSprite from '../../../assets/player/ player-run-sprite.png';
 import type {
   PlayerSettings,
   DamageSettings,

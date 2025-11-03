@@ -1,3 +1,4 @@
+import { XpLootPayload } from '@/types/component.types';
 import {
   COMPONENT_TYPES,
   ISystem,
@@ -23,30 +24,29 @@ class ExperienceSystem implements ISystem<SystemType> {
   type: SystemType = SYSTEM_TYPES.experience as SystemType;
   private eventBus: EventBus;
   private world: World | null = null;
-  private pendingRewards: EnemyKilledPayload[] = [];
+  private pendingRewards: XpLootPayload[] = [];
   private logger = new Logger('ExperienceSystem', 'info');
 
-  private handleEnemyKilled = (rawData: unknown) => {
-    const data = rawData as Partial<EnemyKilledPayload> | undefined;
-    if (!data?.killerId) return;
+  private handleXpCollected = (rawData: unknown) => {
+    const data = rawData as Partial<XpLootPayload> | undefined;
 
-    const xpReward = Number(data.xpReward ?? ZERO_XP);
+    const xpReward = Number(data?.xpReward ?? ZERO_XP);
     if (!Number.isFinite(xpReward) || xpReward <= ZERO_XP) {
       this.logger.debug('Ignoring non-positive XP reward', data);
       return;
     }
 
     if (!this.world) {
-      this.pendingRewards.push({ killerId: data.killerId, xpReward });
+      this.pendingRewards.push({ xpReward });
       return;
     }
 
-    this.grantExperience(data.killerId, xpReward);
+    this.grantExperience(xpReward);
   };
 
   constructor({ eventBus }: ExperienceSystemOptions) {
     this.eventBus = eventBus;
-    this.eventBus.on('enemyKilled', this.handleEnemyKilled);
+    this.eventBus.on('xpCollected', this.handleXpCollected);
   }
 
   initialize(world: World): void {
@@ -69,26 +69,20 @@ class ExperienceSystem implements ISystem<SystemType> {
     }
   }
 
-  private grantExperience(killerId: string, xpReward: number) {
+  private grantExperience(xpReward: number) {
     if (!this.world) return;
-    const killer = this.world.getEntity(killerId);
-    const exp = killer?.getComponent<ExperienceComponent>(
+    const player = this.world.query(COMPONENT_TYPES.experience)[0];
+    const exp = player?.getComponent<ExperienceComponent>(
       COMPONENT_TYPES.experience
     );
     if (!exp) {
       this.logger.debug('Entity without experience component received XP', {
-        killerId,
+        player,
       });
       return;
     }
 
     exp.xp += xpReward;
-
-    this.logger.debug('Experience awarded', {
-      killerId,
-      xpReward,
-      total: exp.xp,
-    });
   }
 
   private flushPendingRewards() {
@@ -96,7 +90,7 @@ class ExperienceSystem implements ISystem<SystemType> {
 
     const rewards = this.pendingRewards.splice(0);
     for (const reward of rewards) {
-      this.grantExperience(reward.killerId, reward.xpReward);
+      this.grantExperience(reward.xpReward);
     }
   }
 
@@ -127,11 +121,6 @@ class ExperienceSystem implements ISystem<SystemType> {
       });
     }
   }
-}
-
-interface EnemyKilledPayload {
-  killerId: string;
-  xpReward: number;
 }
 
 export default ExperienceSystem;

@@ -1,37 +1,65 @@
-import { Link } from 'react-router-dom';
-import { Brand } from './components/Brand';
+import { Link, useLocation } from 'react-router-dom';
+import { Radiation, User, Trophy, Radio, Activity } from 'lucide-react';
 import styles from './Nav.module.scss';
 
 export const NavBar = () => {
+  const location = useLocation();
+  const currentPage = location.pathname;
+
+  const navItems = [
+    { id: '/game-menu', label: 'ZONE', icon: Radiation },
+    { id: '/profile', label: 'PROFILE', icon: User },
+    { id: '/leaderboard', label: 'LEADERBOARD', icon: Trophy },
+    { id: '/forum', label: 'FORUM', icon: Radio },
+  ];
+
   return (
-    <nav className={styles.nav}>
-      <Brand />
-      <div className={styles.main}>
-        <Link className="stalker-button secondary" to="/">
-          Main
-        </Link>
-        <Link className="stalker-button secondary" to="/profile">
-          Profile
-        </Link>
-        <Link className="stalker-button secondary" to="/leaderboard">
-          Leaderboard
-        </Link>
-        <Link className="stalker-button secondary" to="/forum">
-          Forum
-        </Link>
-        <Link className="stalker-button secondary" to="/signin">
-          Signin
-        </Link>
-        <Link className="stalker-button secondary" to="/signup">
-          Signup
-        </Link>
-        <Link className="stalker-button secondary" to="/error404">
-          Error404
-        </Link>
-        <Link className="stalker-button secondary" to="/error500">
-          Error500
-        </Link>
+    <header className={styles.header}>
+      <div className={styles.scanline} />
+      <div className={styles.topLine} />
+      <div className={styles.container}>
+        <div className={styles.content}>
+          <Link to="/" className={styles.logo}>
+            <div className={styles.logoIcon}>
+              <div className={styles.logoGlow} />
+              <Radiation className={styles.radiationIcon} />
+            </div>
+            <div>
+              <div className={styles.logoTitle}>
+                Z.O.N.E.
+                <Activity className={styles.activityIcon} />
+              </div>
+              <div className={styles.logoSubtitle}>
+                Zombie Outbreak Neutralization
+              </div>
+            </div>
+          </Link>
+          <nav className={styles.nav}>
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              const isActive =
+                currentPage === item.id ||
+                (item.id === '/game-menu' &&
+                  (currentPage === '/game-play' ||
+                    currentPage === '/game-menu'));
+
+              return (
+                <Link
+                  key={item.id}
+                  to={item.id}
+                  className={`${styles.navItem} ${
+                    isActive ? styles.active : ''
+                  }`}
+                >
+                  <Icon className={styles.navIcon} />
+                  <span className={styles.navLabel}>{item.label}</span>
+                </Link>
+              );
+            })}
+          </nav>
+        </div>
       </div>
-    </nav>
+      <div className={styles.bottomLine} />
+    </header>
   );
 };

@@ -25,8 +25,22 @@ export function SigninPage() {
 
   const validate = useCallback(() => {
     const newErrors: Errors = {};
-    if (!username.trim()) newErrors.username = 'Required';
-    if (!password) newErrors.password = 'Required';
+
+    if (!username.trim()) {
+      newErrors.username = 'Required';
+    } else if (username.trim().length < 3) {
+      newErrors.username = 'Call Sign must be at least 3 characters';
+    } else if (!/^[a-zA-Z0-9_]+$/.test(username.trim())) {
+      newErrors.username =
+        'Call Sign can only contain letters, numbers and underscores';
+    }
+
+    if (!password) {
+      newErrors.password = 'Required';
+    } else if (password.length < 6) {
+      newErrors.password = 'Access Code must be at least 6 characters';
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   }, [username, password]);
@@ -46,20 +60,27 @@ export function SigninPage() {
         const user = await getUser().unwrap();
         if (user) {
           dispatch(setUser(user));
-          navigate('/profile');
+          navigate('/game-menu');
         }
-      } catch (err) {
+      } catch (err: any) {
         console.error('Login failed:', err);
+        if (err?.data?.reason) {
+          setErrors({ password: err.data.reason });
+        } else if (err?.status === 401 || err?.status === 'FETCH_ERROR') {
+          setErrors({ password: 'Invalid Call Sign or Access Code' });
+        } else {
+          setErrors({ password: 'Login failed. Please try again.' });
+        }
       }
     },
-    [validate, navigate]
+    [validate, signIn, getUser, username, password, dispatch, navigate]
   );
 
   const handleGuestLogin = useCallback(
     (e?: React.MouseEvent) => {
       e?.preventDefault();
       setErrors({});
-      navigate('/profile');
+      navigate('/game-menu');
     },
     [navigate]
   );
@@ -121,7 +142,12 @@ export function SigninPage() {
                   Icon={<User className={styles.icon} />}
                   value={username}
                   error={errors.username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  onChange={(e) => {
+                    setUsername(e.target.value);
+                    if (errors.username) {
+                      setErrors((prev) => ({ ...prev, username: undefined }));
+                    }
+                  }}
                 />
 
                 <Input
@@ -132,7 +158,12 @@ export function SigninPage() {
                   Icon={<Lock className={styles.icon} />}
                   value={password}
                   error={errors.password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    if (errors.password) {
+                      setErrors((prev) => ({ ...prev, password: undefined }));
+                    }
+                  }}
                 />
 
                 <PixelButton

@@ -1,57 +1,63 @@
-import { useState, useEffect, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { Helmet } from 'react-helmet'
-import { Play } from 'lucide-react'
-import { PixelButton } from '@/components/PixelButton'
-import { LEVELS, CHARACTERS, GAME_CONFIG } from './constants'
+import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
+import { Play } from 'lucide-react';
+import { PixelButton } from '@/components/PixelButton';
+import { LEVELS, CHARACTERS, GAME_CONFIG } from './constants';
 
-import styles from './GameMenuPage.module.scss'
+import styles from './GameMenuPage.module.scss';
 
 export const GameMenuPage = () => {
-  const navigate = useNavigate()
-  const [selectedLevel, setSelectedLevel] = useState(1)
-  const [selectedCharacter, setSelectedCharacter] = useState(0)
-  const [countdown, setCountdown] = useState<number | null>(null)
-  const intervalRef = useRef<NodeJS.Timeout | null>(null)
+  const navigate = useNavigate();
+  const [selectedLevel, setSelectedLevel] = useState(1);
+  const [selectedCharacter, setSelectedCharacter] = useState(0);
+  const [countdown, setCountdown] = useState<number | null>(null);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   // Очистка интервала при unmount для предотвращения утечки памяти
   useEffect(() => {
     return () => {
       if (intervalRef.current) {
-        clearInterval(intervalRef.current)
+        clearInterval(intervalRef.current);
       }
+    };
+  }, []);
+
+  // Навигация после завершения отсчета
+  useEffect(() => {
+    if (countdown === 0) {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+      navigate('/game-play');
     }
-  }, [])
+  }, [countdown, navigate]);
 
   const startGame = () => {
-    setCountdown(GAME_CONFIG.COUNTDOWN_DURATION)
+    setCountdown(GAME_CONFIG.COUNTDOWN_DURATION);
     intervalRef.current = setInterval(() => {
       setCountdown((prev) => {
         if (prev === 1) {
-          if (intervalRef.current) {
-            clearInterval(intervalRef.current)
-            intervalRef.current = null
-          }
-          navigate('/game-play')
-          return null
+          return 0;
         }
-        return prev ? prev - 1 : null
-      })
-    }, 1000)
-  }
+        return prev ? prev - 1 : null;
+      });
+    }, 1000);
+  };
 
   const getDifficultyClass = (difficulty: string) => {
     switch (difficulty) {
       case 'Easy':
-        return styles.difficultyEasy
+        return styles.difficultyEasy;
       case 'Normal':
-        return styles.difficultyNormal
+        return styles.difficultyNormal;
       case 'Hard':
-        return styles.difficultyHard
+        return styles.difficultyHard;
       default:
-        return ''
+        return '';
     }
-  }
+  };
 
   return (
     <>
@@ -280,5 +286,5 @@ export const GameMenuPage = () => {
         </div>
       </main>
     </>
-  )
-}
+  );
+};

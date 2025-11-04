@@ -11,6 +11,7 @@ import { MainPage } from '@/pages/MainPage';
 import { NavBar } from '../Navbar';
 import { GameMenuPage } from '@/pages/GameMenuPage';
 import { GamePlayPage } from '@/pages/GamePlayPage';
+import { GameOverPage } from '@/pages/GameOverPage';
 import { withAuth } from '@/hocs/withAuth';
 import { useGetUserMutation } from '@/slices/authApi';
 import { useEffect } from 'react';
@@ -19,6 +20,7 @@ import { setUser } from '@/store/slices/userSlice';
 
 const GameMenuWithAuth = withAuth(GameMenuPage);
 const GamePlayWithAuth = withAuth(GamePlayPage);
+const GameOverWithAuth = withAuth(GameOverPage);
 const ProfileWithAuth = withAuth(ProfilePage);
 const LeaderboardWithAuth = withAuth(LeaderboardPage);
 const ForumWithAuth = withAuth(ForumPage);
@@ -57,6 +59,7 @@ export const AppRouter = () => {
         //Приватные роуты
         <Route path="/game-menu" Component={GameMenuWithAuth} />
         <Route path="/game-play" Component={GamePlayWithAuth} />
+        <Route path="/game-over" Component={GameOverWithAuth} />
         <Route path="/profile" Component={ProfileWithAuth} />
         <Route path="/leaderboard" Component={LeaderboardWithAuth} />
         <Route path="/forum" Component={ForumWithAuth} />

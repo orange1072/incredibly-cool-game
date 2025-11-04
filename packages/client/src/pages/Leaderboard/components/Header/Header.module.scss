@@ -1,14 +1,13 @@
 @use '/src/styles/variables' as *;
 @use '/src/styles/mixins' as *;
 
-header{
+header {
   @include flex-row;
   justify-content: flex-start;
   align-items: center;
-  margin: 1rem 1rem;
   gap: 15px;
-  
-  .content{
+
+  .content {
     img {
       @include flex-column;
       max-width: 100%;
@@ -16,7 +15,7 @@ header{
     }
   }
 
-  .title{
+  .title {
     @include flex-column;
     flex: 1;
   }
@@ -27,12 +26,12 @@ header{
   header {
     margin: 0.8rem;
     gap: 12px;
-    
+
     .content img {
       max-width: 80px;
       height: auto;
     }
-    
+
     .title {
       font-size: 0.9rem;
     }
@@ -47,12 +46,12 @@ header{
     text-align: center;
     margin: 0.6rem;
     gap: 10px;
-    
+
     .content img {
       max-width: 60px;
       height: auto;
     }
-    
+
     .title {
       font-size: 0.8rem;
       text-align: center;
@@ -65,12 +64,12 @@ header{
   header {
     margin: 0.4rem;
     gap: 8px;
-    
+
     .content img {
       max-width: 50px;
       height: auto;
     }
-    
+
     .title {
       font-size: 0.75rem;
     }

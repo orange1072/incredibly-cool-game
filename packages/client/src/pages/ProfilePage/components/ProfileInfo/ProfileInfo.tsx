@@ -1,7 +1,7 @@
 import { ProfileSVG, RemoveSVG, UploadSVG } from '@/assets/icons';
 import styles from '../../styles.module.scss';
 import { Button } from '@/components/Button';
-import { useRef, useCallback, useState } from 'react';
+import { useRef, useCallback, useState, useEffect } from 'react';
 import { useSelector } from '@/store/store';
 import { MAX_AVATAR_SIZE } from '@/constants';
 import { ERROR_MESSAGES } from '@/messages';
@@ -13,6 +13,7 @@ export const ProfileInfo = () => {
   const [updateUserAvatar, { isLoading: avatarUploading, error, reset }] =
     useUpdateUserAvatarMutation();
   const [validationError, setValidationError] = useState('');
+  const [avatarLoadError, setAvatarLoadError] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleUploadClick = useCallback(() => {
@@ -36,6 +37,7 @@ export const ProfileInfo = () => {
         }
 
         setValidationError('');
+        setAvatarLoadError(false);
         await updateUserAvatar(file);
       }
     },
@@ -50,14 +52,23 @@ export const ProfileInfo = () => {
     setValidationError('');
   }, [reset]);
 
+  const handleAvatarError = useCallback(() => {
+    setAvatarLoadError(true);
+  }, []);
+
+  useEffect(() => {
+    setAvatarLoadError(false);
+  }, [user?.avatar]);
+
   return (
     <div className={styles.info}>
       <div className={styles.avatar}>
-        {user?.avatar ? (
+        {user?.avatar && !avatarLoadError ? (
           <img
             src={user.avatar}
             alt="Profile avatar"
             className={styles.avatarImage}
+            onError={handleAvatarError}
           />
         ) : (
           <ProfileSVG />

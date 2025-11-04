@@ -137,24 +137,31 @@ export const SignupPage = () => {
           const serverErrors: Record<string, string> = {};
 
           if (error?.data) {
-            if (error.data.reason) {
+            const errorReason = error.data.reason || '';
+
+            const isTechnicalError =
+              errorReason.toLowerCase().includes('cookie') ||
+              errorReason.toLowerCase().includes('session') ||
+              errorReason.toLowerCase().includes('token');
+
+            if (errorReason && !isTechnicalError) {
               if (
-                error.data.reason.includes('login') ||
-                error.data.reason.includes('Login')
+                errorReason.includes('login') ||
+                errorReason.includes('Login')
               ) {
-                serverErrors.login = error.data.reason;
+                serverErrors.login = errorReason;
               } else if (
-                error.data.reason.includes('email') ||
-                error.data.reason.includes('Email')
+                errorReason.includes('email') ||
+                errorReason.includes('Email')
               ) {
-                serverErrors.email = error.data.reason;
+                serverErrors.email = errorReason;
               } else if (
-                error.data.reason.includes('phone') ||
-                error.data.reason.includes('Phone')
+                errorReason.includes('phone') ||
+                errorReason.includes('Phone')
               ) {
-                serverErrors.phone = error.data.reason;
+                serverErrors.phone = errorReason;
               } else {
-                serverErrors.login = error.data.reason;
+                serverErrors.login = errorReason;
               }
             }
             if (error.status === 409) {

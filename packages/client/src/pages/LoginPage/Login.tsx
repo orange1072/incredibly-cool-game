@@ -64,8 +64,16 @@ export function SigninPage() {
         }
       } catch (err: any) {
         console.error('Login failed:', err);
-        if (err?.data?.reason) {
-          setErrors({ password: err.data.reason });
+        const errorReason = err?.data?.reason || '';
+
+        if (
+          errorReason.toLowerCase().includes('cookie') ||
+          errorReason.toLowerCase().includes('session') ||
+          errorReason.toLowerCase().includes('token')
+        ) {
+          setErrors({ password: 'Invalid Call Sign or Access Code' });
+        } else if (errorReason) {
+          setErrors({ password: errorReason });
         } else if (err?.status === 401 || err?.status === 'FETCH_ERROR') {
           setErrors({ password: 'Invalid Call Sign or Access Code' });
         } else {

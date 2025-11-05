@@ -1,80 +1,235 @@
 @use '/src/styles/globals' as *;
 @use '/src/styles/mixins' as *;
-a{
-  text-decoration: none;
+@use '/src/styles/variables' as *;
+
+.header {
+  position: relative;
+  background: $stalker-panel;
+  border-bottom: 2px solid rgba(47, 184, 204, 0.3);
+  overflow: hidden;
+  @include metal-panel;
 }
-nav{
+
+.scanline {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  @include scanline;
+}
+
+.topLine {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    $stalker-cyan,
+    transparent
+  );
+  opacity: 0.7;
+}
+
+.bottomLine {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    $stalker-cyan,
+    transparent
+  );
+  opacity: 0.5;
+}
+
+.container {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0 1rem;
+  position: relative;
+  z-index: 10;
+}
+
+.content {
   display: flex;
-  height: 61px;
-  border: 2px solid var(--border);
-  background-color: var(--sidebar);
-  .main{
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-end;
-    background-color: transparent;
-  }
-a{
+  align-items: center;
+  justify-content: space-between;
+  gap: 6rem;
+  padding: 0.75rem 0;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+  transition: opacity 0.2s;
+  cursor: pointer;
+
   &:hover {
-   @include primary
+    opacity: 0.8;
+  }
+}
+
+.logoIcon {
+  position: relative;
+}
+
+.logoGlow {
+  position: absolute;
+  inset: 0;
+  @include cyan-glow;
+  filter: blur(4px);
+}
+
+.radiationIcon {
+  width: 2rem;
+  height: 2rem;
+  color: $stalker-cyan-bright;
+  position: relative;
+  z-index: 10;
+}
+
+.logoTitle {
+  @include stalker-text;
+  color: $stalker-text;
+  letter-spacing: 0.25em;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.activityIcon {
+  width: 0.75rem;
+  height: 0.75rem;
+  color: $stalker-orange;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.logoSubtitle {
+  font-size: 0.5rem;
+  color: $stalker-text-dim;
+  letter-spacing: 0.1em;
+  line-height: 1.2;
+}
+
+.nav {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid $stalker-border;
+  background: $stalker-panel;
+  color: $stalker-text-dim;
+  text-decoration: none;
+  transition: all 0.2s;
+  @include grunge-texture;
+
+  &:hover {
+    border-color: rgba(47, 184, 204, 0.5);
+    color: $stalker-text;
   }
 
   &.active {
-    @include primary
+    background: rgba(47, 184, 204, 0.2);
+    border-color: $stalker-cyan;
+    color: $stalker-cyan-bright;
+    @include cyan-glow;
   }
 }
+
+.navIcon {
+  width: 1rem;
+  height: 1rem;
 }
 
-/* Планшеты */
+.navLabel {
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-family: $font-family-mono;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
 @media (max-width: 1024px) {
-  nav {
-    height: 56px;
+  .content {
+    gap: 2rem;
+    padding: 0.625rem 0;
+  }
 
-    .main {
-      gap: 15px;
-      padding: 0 15px;
-    }
+  .nav {
+    gap: 0.375rem;
+  }
 
-    a {
-      padding: 6px 12px;
-      font-size: 14px;
-    }
+  .navItem {
+    padding: 0.375rem 0.75rem;
+  }
+
+  .navLabel {
+    font-size: 0.7rem;
   }
 }
 
-/* Мобильные устройства */
 @media (max-width: 768px) {
-  nav {
-    height: auto;
-    min-height: 50px;
+  .content {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem 0;
+  }
 
-    .main {
-      flex-wrap: wrap; // Разрешаем перенос на новую строку
-      justify-content: center;
-      gap: 10px;
-      padding: 10px;
-    }
+  .nav {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+  }
 
-    a {
-      padding: 6px 10px;
-      font-size: 13px;
-    }
+  .navItem {
+    padding: 0.375rem 0.625rem;
+  }
+
+  .navLabel {
+    font-size: 0.65rem;
+  }
+
+  .logoTitle {
+    font-size: 0.75rem;
+  }
+
+  .logoSubtitle {
+    font-size: 0.45rem;
   }
 }
 
-/* Маленькие мобильные */
 @media (max-width: 480px) {
-  nav {
-    .main {
-      gap: 8px;
-      padding: 8px;
-    }
+  .nav {
+    gap: 0.375rem;
+  }
 
-    a {
-      padding: 5px 8px;
-      font-size: 12px;
-    }
+  .navItem {
+    padding: 0.375rem 0.5rem;
+  }
+
+  .navLabel {
+    font-size: 0.6rem;
   }
 }

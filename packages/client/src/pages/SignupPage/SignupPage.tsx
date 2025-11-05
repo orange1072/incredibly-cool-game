@@ -45,19 +45,72 @@ export const SignupPage = () => {
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
+  const validateEmail = (email: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const validatePhone = (phone: string): boolean => {
+    const phoneRegex = /^[\d\s\-\+\(\)]+$/;
+    const digitsOnly = phone.replace(/\D/g, '');
+    return phoneRegex.test(phone) && digitsOnly.length >= 10;
+  };
+
   const validateStep = (currentStep: number) => {
     const newErrors: Record<string, string> = {};
 
     if (currentStep === 1) {
-      if (!formData.first_name) newErrors.first_name = 'Required';
-      if (!formData.second_name) newErrors.second_name = 'Required';
+      if (!formData.first_name.trim()) {
+        newErrors.first_name = 'Required';
+      } else if (formData.first_name.trim().length < 2) {
+        newErrors.first_name = 'First Name must be at least 2 characters';
+      } else if (!/^[a-zA-Zа-яА-ЯёЁ\s'-]+$/.test(formData.first_name.trim())) {
+        newErrors.first_name =
+          'First Name can only contain letters, spaces, hyphens and apostrophes';
+      }
+
+      if (!formData.second_name.trim()) {
+        newErrors.second_name = 'Required';
+      } else if (formData.second_name.trim().length < 2) {
+        newErrors.second_name = 'Last Name must be at least 2 characters';
+      } else if (!/^[a-zA-Zа-яА-ЯёЁ\s'-]+$/.test(formData.second_name.trim())) {
+        newErrors.second_name =
+          'Last Name can only contain letters, spaces, hyphens and apostrophes';
+      }
     } else if (currentStep === 2) {
-      if (!formData.email) newErrors.email = 'Required';
-      if (!formData.phone) newErrors.phone = 'Required';
+      if (!formData.email.trim()) {
+        newErrors.email = 'Required';
+      } else if (!validateEmail(formData.email.trim())) {
+        newErrors.email = 'Please enter a valid email address';
+      }
+
+      if (!formData.phone.trim()) {
+        newErrors.phone = 'Required';
+      } else if (!validatePhone(formData.phone.trim())) {
+        newErrors.phone =
+          'Please enter a valid phone number (at least 10 digits)';
+      }
     } else if (currentStep === 3) {
-      if (!formData.login) newErrors.login = 'Required';
-      if (!formData.password) newErrors.password = 'Required';
-      if (formData.password !== formData.confirmPassword) {
+      if (!formData.login.trim()) {
+        newErrors.login = 'Required';
+      } else if (formData.login.trim().length < 3) {
+        newErrors.login = 'Call Sign must be at least 3 characters';
+      } else if (!/^[a-zA-Z0-9_]+$/.test(formData.login.trim())) {
+        newErrors.login =
+          'Call Sign can only contain letters, numbers and underscores';
+      }
+
+      if (!formData.password) {
+        newErrors.password = 'Required';
+      } else if (formData.password.length < 6) {
+        newErrors.password = 'Access Code must be at least 6 characters';
+      } else if (formData.password.length > 50) {
+        newErrors.password = 'Access Code must be less than 50 characters';
+      }
+
+      if (!formData.confirmPassword) {
+        newErrors.confirmPassword = 'Required';
+      } else if (formData.password !== formData.confirmPassword) {
         newErrors.confirmPassword = 'Passwords do not match';
       }
     }
@@ -77,10 +130,57 @@ export const SignupPage = () => {
           const user = await getUser().unwrap();
           if (user) {
             dispatch(setUser(user));
-            navigate('/profile');
+            navigate('/game-menu');
           }
-        } catch (error) {
+        } catch (error: any) {
           console.error('Registration failed:', error);
+          const serverErrors: Record<string, string> = {};
+
+          if (error?.data) {
+            const errorReason = error.data.reason || '';
+
+            const isTechnicalError =
+              errorReason.toLowerCase().includes('cookie') ||
+              errorReason.toLowerCase().includes('session') ||
+              errorReason.toLowerCase().includes('token');
+
+            if (errorReason && !isTechnicalError) {
+              if (
+                errorReason.includes('login') ||
+                errorReason.includes('Login')
+              ) {
+                serverErrors.login = errorReason;
+              } else if (
+                errorReason.includes('email') ||
+                errorReason.includes('Email')
+              ) {
+                serverErrors.email = errorReason;
+              } else if (
+                errorReason.includes('phone') ||
+                errorReason.includes('Phone')
+              ) {
+                serverErrors.phone = errorReason;
+              } else {
+                serverErrors.login = errorReason;
+              }
+            }
+            if (error.status === 409) {
+              serverErrors.login =
+                'This Call Sign or Email is already registered';
+            }
+          }
+
+          if (Object.keys(serverErrors).length > 0) {
+            setErrors(serverErrors);
+            if (serverErrors.login) {
+              setStep(3);
+            } else if (serverErrors.email || serverErrors.phone) {
+              setStep(2);
+            }
+          } else {
+            setErrors({ login: 'Registration failed. Please try again.' });
+            setStep(3);
+          }
         }
       }
     }
@@ -90,8 +190,15 @@ export const SignupPage = () => {
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       const { name, value } = e.target;
       setFormData((prev) => ({ ...prev, [name]: value }));
+      if (errors[name]) {
+        setErrors((prev) => {
+          const newErrors = { ...prev };
+          delete newErrors[name];
+          return newErrors;
+        });
+      }
     },
-    []
+    [errors]
   );
 
   const steps = ['Personal Data', 'Contacts', 'Access ID'];
@@ -154,7 +261,7 @@ export const SignupPage = () => {
                 <span className={styles['status-text']}>Step {step}/3</span>
               </div>
 
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={handleSubmit} noValidate>
                 {step === 1 && (
                   <fieldset className={styles['grid-2']}>
                     <legend style={{ display: 'none' }}>Personal data</legend>
@@ -190,7 +297,7 @@ export const SignupPage = () => {
                     <Input
                       name={'email'}
                       label="Email"
-                      type="email"
+                      type="text"
                       placeholder="stalker@zone.net"
                       Icon={<Mail className={styles['input-icon']} />}
                       value={formData.email}

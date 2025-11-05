@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { SERVER_HOST } from '@/constants';
+import { API_URL } from '@/constants';
 import { getAuthToken } from '@/utils/auth';
 import { API_ENDPOINTS } from './endpoints';
 
@@ -16,13 +16,22 @@ interface UpdateAvatarResponse {
 export const userApi = createApi({
   reducerPath: 'userApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: SERVER_HOST,
+    baseUrl: API_URL,
+    credentials: 'include',
     prepareHeaders: (headers) => {
       const token = getAuthToken();
       if (token) {
         headers.set('Authorization', `Bearer ${token}`);
       }
       return headers;
+    },
+    fetchFn: async (url, options = {}) => {
+      if (options.body instanceof FormData) {
+        const headers = new Headers(options.headers);
+        headers.delete('Content-Type');
+        options.headers = headers;
+      }
+      return fetch(url, options);
     },
   }),
   tagTypes: ['User'],
@@ -36,7 +45,7 @@ export const userApi = createApi({
         const formData = new FormData();
         formData.append('avatar', avatar);
         return {
-          url: API_ENDPOINTS.USER.PROFILE.AVATAR,
+          url: '/user/profile/avatar',
           method: 'PUT',
           body: formData,
         };

@@ -1,11 +1,11 @@
 import classNames from 'classnames';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ReactAdapter } from '../../engine/adapters/ReactAdapter';
 import { createGameEngine } from '../../engine/setup/createGameEngine';
 import ReduxAdapter from '../../engine/adapters/ReduxAdapter';
 import GameEngine from '../../engine/core/GameEngine';
 import styles from './GameCanvas.module.scss';
-import { GameOverPopup } from './GameOverPopup';
 import { type RootState, useStore } from '@/store/store';
 
 export const GameCanvas = () => {
@@ -15,12 +15,16 @@ export const GameCanvas = () => {
   const engineRef = useRef<GameEngine | null>(null);
   const cleanupRef = useRef<(() => void) | null>(null);
   const store = useStore();
+  const navigate = useNavigate();
   const [gameKey, setGameKey] = useState(0);
-  const [isGameOver, setIsGameOver] = useState(false);
 
   const handlePlayerKilled = useCallback(() => {
-    setIsGameOver(true);
-  }, []);
+    if (cleanupRef.current) {
+      cleanupRef.current();
+      cleanupRef.current = null;
+    }
+    navigate('/game-over');
+  }, [navigate]);
 
   const cleanupEngine = useCallback(() => {
     cleanupRef.current?.();
@@ -71,18 +75,11 @@ export const GameCanvas = () => {
     };
   }, [cleanupEngine]);
 
-  const handleRestart = useCallback(() => {
-    cleanupEngine();
-    setIsGameOver(false);
-    setGameKey((key) => key + 1);
-  }, [cleanupEngine]);
-
   const canvasClassName = classNames('game-canvas', styles.canvas);
 
   return (
     <div className={styles.wrapper}>
       <canvas ref={canvasRef} className={canvasClassName} />
-      {isGameOver && <GameOverPopup onRestart={handleRestart} />}
     </div>
   );
 };

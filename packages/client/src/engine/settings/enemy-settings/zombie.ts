@@ -1,5 +1,4 @@
 import defaultZombieRunSprite from '../../../assets/enemies/regulars/default-zombie/run.png';
-import zombieRunnerRunSprite from '../../../assets/enemies/regulars/zombie-runner/run.png';
 import zombieToxicRunSprite from '../../../assets/enemies/regulars/zombie-toxic/run.png';
 import zombieBruiserRunSprite from '../../../assets/enemies/regulars/zombie-bruiser/run.png';
 import zombieTankRunSprite from '../../../assets/enemies/regulars/zombie-tank/run.png';
@@ -131,7 +130,7 @@ const speedyZombieVariant: EnemyVariantDefinition = {
     sprite: {
       ...baseZombieSettings.sprite,
       name: 'zombie-runner',
-      source: zombieRunnerRunSprite,
+      source: undefined,
       defaultColor: 'rgba(92, 196, 212, 0.9)',
     },
   }),

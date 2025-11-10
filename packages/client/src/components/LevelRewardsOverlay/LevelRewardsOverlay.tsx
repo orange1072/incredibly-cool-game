@@ -1,6 +1,6 @@
 import type GameStats from '@/types/game-stats.types';
 import type { PassiveBonusKind } from '@/types/component.types';
-import styles from './GameCanvas.module.scss';
+import styles from '../GameCanvas/GameCanvas.module.scss';
 
 type LevelRewardsState = GameStats['levelRewards'];
 

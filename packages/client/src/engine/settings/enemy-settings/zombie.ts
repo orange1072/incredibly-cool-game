@@ -1,4 +1,10 @@
-import defaultZombieRunSprite from '../../../assets/enemies/default-zombie/zombie-walk-sprite.png';
+import defaultZombieRunSprite from '../../../assets/enemies/regulars/default-zombie/run.png';
+import zombieRunnerRunSprite from '../../../assets/enemies/regulars/zombie-runner/run.png';
+import zombieToxicRunSprite from '../../../assets/enemies/regulars/zombie-toxic/run.png';
+import zombieBruiserRunSprite from '../../../assets/enemies/regulars/zombie-bruiser/run.png';
+import zombieTankRunSprite from '../../../assets/enemies/regulars/zombie-tank/run.png';
+import zombieGunnerRunSprite from '../../../assets/enemies/regulars/zombie-gunner/run.png';
+
 import type {
   DamageProfile,
   EnemySettings,
@@ -125,7 +131,7 @@ const speedyZombieVariant: EnemyVariantDefinition = {
     sprite: {
       ...baseZombieSettings.sprite,
       name: 'zombie-runner',
-      source: undefined,
+      source: zombieRunnerRunSprite,
       defaultColor: 'rgba(92, 196, 212, 0.9)',
     },
   }),
@@ -148,7 +154,7 @@ const bruiserZombieVariant: EnemyVariantDefinition = {
     sprite: {
       ...baseZombieSettings.sprite,
       name: 'zombie-bruiser',
-      source: undefined,
+      source: zombieBruiserRunSprite,
       defaultColor: 'rgba(155, 19, 19, 0.9)',
     },
   }),
@@ -174,7 +180,7 @@ const tankZombieVariant: EnemyVariantDefinition = {
     sprite: {
       ...baseZombieSettings.sprite,
       name: 'zombie-tank',
-      source: undefined,
+      source: zombieTankRunSprite,
       defaultColor: 'rgba(209, 215, 45, 0.9)',
     },
     xpReward: 40,
@@ -204,7 +210,7 @@ const toxicAmbusherVariant: EnemyVariantDefinition = {
     sprite: {
       ...baseZombieSettings.sprite,
       name: 'zombie-toxic',
-      source: undefined,
+      source: zombieToxicRunSprite,
       defaultColor: 'rgba(86, 199, 120, 0.9)',
     },
     skin: {
@@ -241,7 +247,7 @@ const rangedZombieVariant: EnemyVariantDefinition = {
     xpReward: 55,
     sprite: {
       ...baseZombieSettings.sprite,
-      source: undefined,
+      source: zombieGunnerRunSprite,
       defaultColor: 'rgba(195, 127, 255, 0.9)',
     },
     skin: {

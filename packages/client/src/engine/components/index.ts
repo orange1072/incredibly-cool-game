@@ -14,3 +14,7 @@ export { default as SpriteComponent } from './SpriteComponent';
 export { default as ObstacleComponent } from './ObstacleComponent';
 export type { ObstacleKind } from './ObstacleComponent';
 export { default as SpawnPointComponent } from './SpawnPointComponent';
+export { default as PassiveBonusesComponent } from './PassiveBonusesComponent';
+export { default as EnemyProfileComponent } from './EnemyProfileComponent';
+export { default as DespawnTimerComponent } from './DespawnTimerComponent';
+export { default as EnemyRangedAttackComponent } from './EnemyRangedAttackComponent';

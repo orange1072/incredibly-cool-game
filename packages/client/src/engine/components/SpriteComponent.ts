@@ -36,6 +36,7 @@ class SpriteComponent implements IPureDataComponent, SpriteComponentState {
   directionRow: number;
   animationTimer: number;
   padding: { x: number; y: number };
+  defaultColor?: string;
 
   constructor({
     name,
@@ -52,6 +53,7 @@ class SpriteComponent implements IPureDataComponent, SpriteComponentState {
     rows = DEFAULT_SPRITE_ROWS,
     directionRow = DEFAULT_SPRITE_DIRECTION_ROW,
     padding,
+    defaultColor,
   }: SpriteComponentState) {
     this.name = name;
     this.width = width;
@@ -71,6 +73,7 @@ class SpriteComponent implements IPureDataComponent, SpriteComponentState {
       x: padding?.x ?? DEFAULT_SPRITE_PADDING_X,
       y: padding?.y ?? DEFAULT_SPRITE_PADDING_Y,
     };
+    this.defaultColor = defaultColor;
   }
 }
 

@@ -5,10 +5,15 @@ import gameReducer, {
   countBossFrag,
   countFrag,
   levelUp,
+  openLevelRewards,
+  setAttackSpeedModifier,
   setBossCount,
+  setDamageModifier,
   setEnemyCount,
+  setMovementSpeedModifier,
   setPlayerHealth,
   setPlayerXp,
+  updateLevelRewardsPending,
 } from '../../store/slices/game';
 import type { RootState } from '@/store/store';
 import {
@@ -23,9 +28,14 @@ import type {
   EnemyComponent,
   ExperienceComponent,
   HealthComponent,
+  PassiveBonusesComponent,
 } from '../components';
 import EventBus, { type Listener } from '../infrastructure/EventBus';
 import { isProperEntity } from '../systems/helpers/utils';
+import type {
+  LevelUpRewardsAvailablePayload,
+  PassiveBonusAppliedPayload,
+} from '@/types/component.types';
 
 type GameSliceState = ReturnType<typeof gameReducer>;
 
@@ -84,6 +94,11 @@ class ReduxAdapter<TState = RootState> {
     level: null,
     xpToNext: null,
   };
+  private lastModifiersSnapshot = {
+    damage: 0,
+    attackSpeed: 0,
+    movementSpeed: 0,
+  };
 
   constructor({ engine, store, selectGameState }: ReduxAdapterOptions<TState>) {
     this.engine = engine;
@@ -133,10 +148,15 @@ class ReduxAdapter<TState = RootState> {
       this.syncSystemRegistered = true;
     }
 
-    this.addListener('entityAdded', this.handleEntityAdded);
-    this.addListener('entityRemoved', this.handleEntityRemoved);
-    this.addListener('bossSpawned', this.handleBossSpawned);
-    this.addListener('playerLevelUp', this.handlePlayerLevelUp);
+    this.addListener('entityAdded', this.handleEntityAdded)
+      .addListener('entityRemoved', this.handleEntityRemoved)
+      .addListener('bossSpawned', this.handleBossSpawned)
+      .addListener('playerLevelUp', this.handlePlayerLevelUp)
+      .addListener(
+        'levelUpRewardsAvailable',
+        this.handleLevelUpRewardsAvailable
+      )
+      .addListener('passiveBonusApplied', this.handlePassiveBonusAppliedEvent);
 
     this.syncEnemyCounts();
     this.syncPlayerState(this.engine.world);
@@ -180,6 +200,8 @@ class ReduxAdapter<TState = RootState> {
   private addListener(event: string, listener: Listener) {
     this.eventBus.on(event, listener);
     this.cleanupListeners.push(() => this.eventBus.off(event, listener));
+
+    return this;
   }
 
   private initializeSnapshots() {
@@ -192,6 +214,11 @@ class ReduxAdapter<TState = RootState> {
       xp: state.player.xp,
       level: state.player.level,
       xpToNext: state.player.xpToNext,
+    };
+    this.lastModifiersSnapshot = {
+      damage: state.modifiers.damage,
+      attackSpeed: state.modifiers.attackSpeed,
+      movementSpeed: state.modifiers.movementSpeed,
     };
   }
 
@@ -229,6 +256,28 @@ class ReduxAdapter<TState = RootState> {
     this.dispatchImpl(levelUp());
     const state = this.getGameStateImpl();
     this.lastPlayerSnapshot.level = state.player.level;
+  };
+
+  private handleLevelUpRewardsAvailable: Listener = (...args) => {
+    if (!this.isActive) return;
+    const [payload] = args as [LevelUpRewardsAvailablePayload | undefined];
+    if (!payload || !payload.id) return;
+
+    this.dispatchImpl(
+      openLevelRewards({
+        entityId: payload.id,
+        pending: payload.pendingPassiveBonuses,
+        options: payload.passiveOptions,
+      })
+    );
+  };
+
+  private handlePassiveBonusAppliedEvent: Listener = (...args) => {
+    if (!this.isActive) return;
+    const [payload] = args as [PassiveBonusAppliedPayload | undefined];
+    if (!payload) return;
+
+    this.dispatchImpl(updateLevelRewardsPending(payload.remainingChoices));
   };
 
   private syncEnemyCounts() {
@@ -298,6 +347,48 @@ class ReduxAdapter<TState = RootState> {
       );
       this.lastPlayerSnapshot.xp = experience.xp;
       this.lastPlayerSnapshot.xpToNext = experience.xpToNext;
+    }
+
+    const passiveBonuses = playerEntity.getComponent<PassiveBonusesComponent>(
+      COMPONENT_TYPES.passiveBonuses
+    );
+
+    if (passiveBonuses) {
+      const snapshot = passiveBonuses.getSnapshot();
+
+      if (snapshot.damageBonus !== this.lastModifiersSnapshot.damage) {
+        this.dispatchImpl(setDamageModifier(snapshot.damageBonus));
+        this.lastModifiersSnapshot.damage = snapshot.damageBonus;
+      }
+
+      if (
+        snapshot.attackSpeedBonus !== this.lastModifiersSnapshot.attackSpeed
+      ) {
+        this.dispatchImpl(setAttackSpeedModifier(snapshot.attackSpeedBonus));
+        this.lastModifiersSnapshot.attackSpeed = snapshot.attackSpeedBonus;
+      }
+
+      if (
+        snapshot.movementSpeedBonus !== this.lastModifiersSnapshot.movementSpeed
+      ) {
+        this.dispatchImpl(
+          setMovementSpeedModifier(snapshot.movementSpeedBonus)
+        );
+        this.lastModifiersSnapshot.movementSpeed = snapshot.movementSpeedBonus;
+      }
+    } else if (
+      this.lastModifiersSnapshot.damage !== 0 ||
+      this.lastModifiersSnapshot.attackSpeed !== 0 ||
+      this.lastModifiersSnapshot.movementSpeed !== 0
+    ) {
+      this.dispatchImpl(setDamageModifier(0));
+      this.dispatchImpl(setAttackSpeedModifier(0));
+      this.dispatchImpl(setMovementSpeedModifier(0));
+      this.lastModifiersSnapshot = {
+        damage: 0,
+        attackSpeed: 0,
+        movementSpeed: 0,
+      };
     }
 
     const currentLevel = experience.level;

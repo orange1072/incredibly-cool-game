@@ -23,7 +23,8 @@ class ProjectileEntity extends Entity {
     targetPos: PositionComponent,
     sourcePos: PositionComponent,
     sourceId: string,
-    damage: number
+    damage: number,
+    speed = DEFAULT_BULLET_SPEED
   ) {
     super();
 
@@ -38,15 +39,15 @@ class ProjectileEntity extends Entity {
     this.addComponent(new PositionComponent({ x: sourcePos.x, y: sourcePos.y }))
       .addComponent(
         new VelocityComponent({
-          dx: dirX * DEFAULT_BULLET_SPEED,
-          dy: dirY * DEFAULT_BULLET_SPEED,
+          dx: dirX * speed,
+          dy: dirY * speed,
         })
       )
       .addComponent(
         new ProjectileComponent({
           damage,
           sourceId,
-          speed: DEFAULT_BULLET_SPEED,
+          speed,
           lifetime: PROJECTILE_LIFETIME,
         })
       )

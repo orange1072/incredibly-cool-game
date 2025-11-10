@@ -9,9 +9,11 @@ import {
   EnemyComponent,
   HealthComponent,
   PositionComponent,
+  EnemyProfileComponent,
 } from '../components';
 import World from '../core/World';
 import { createLoot } from '../enteties/factories/createLoot';
+import { createToxicPuddle } from '../enteties/factories/createToxicPuddle';
 import EventBus from '../infrastructure/EventBus';
 import Logger from '../infrastructure/Logger';
 import { ZERO_HP, ZERO_XP_REWARD } from './consts/damage';
@@ -46,10 +48,21 @@ class DamageSystem implements ISystem<SystemType> {
         const killerId = damage.sourceId;
         const xpReward = enemy?.xpReward ?? ZERO_XP_REWARD;
 
+        const profile = e.getComponent<EnemyProfileComponent>(
+          COMPONENT_TYPES.enemyProfile
+        );
+        const deathPosition = enemyPosition
+          ? { x: enemyPosition.x, y: enemyPosition.y }
+          : undefined;
+
         world.removeEntity(e.id);
 
         if (isPlayer) {
           this.getKilled();
+        }
+
+        if (profile && deathPosition) {
+          this.handleOnDeathEffects(profile, deathPosition, world);
         }
 
         if (isEnemy && killerId && xpReward > 0 && enemyPosition) {
@@ -81,6 +94,20 @@ class DamageSystem implements ISystem<SystemType> {
     });
     const loot = createLoot(enemyPosition, 'xp', xpReward);
     world.addEntity(loot);
+  }
+
+  private handleOnDeathEffects(
+    profile: EnemyProfileComponent,
+    position: { x: number; y: number },
+    world: World
+  ) {
+    if (
+      profile.variantId === 'zombie-toxic' ||
+      profile.variantId === 'boss-toxic'
+    ) {
+      const puddle = createToxicPuddle(position.x, position.y, 5);
+      world.addEntity(puddle);
+    }
   }
 }
 

@@ -40,3 +40,101 @@
 .restartButton {
   margin-top: 0.5rem;
 }
+
+.levelUpOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(5, 8, 18, 0.6);
+  backdrop-filter: blur(6px);
+  z-index: 15;
+  padding: 1rem;
+}
+
+.levelUpPanel {
+  width: min(460px, 100%);
+  background: linear-gradient(160deg, rgba(12, 16, 28, 0.95), rgba(8, 10, 20, 0.98));
+  border: 1px solid rgba(82, 255, 221, 0.4);
+  border-radius: 18px;
+  padding: 1.75rem;
+  box-shadow: 0 25px 45px rgba(0, 0, 0, 0.55);
+  color: #f8fafc;
+}
+
+.levelUpHeader {
+  text-align: center;
+  margin-bottom: 1.5rem;
+
+  h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.35rem;
+  }
+
+  p {
+    margin: 0;
+    color: rgba(226, 232, 240, 0.85);
+  }
+}
+
+.levelUpOptions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  margin-bottom: 1.5rem;
+}
+
+.levelUpOptionButton {
+  width: 100%;
+  text-align: left;
+  padding: 1rem 1.25rem;
+  border: 1px solid rgba(94, 234, 212, 0.45);
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.85);
+  color: inherit;
+  transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+
+  &:hover {
+    border-color: #5ef1d6;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 20px rgba(94, 234, 212, 0.15);
+  }
+}
+
+.optionTitle {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.optionDescription {
+  display: block;
+  font-size: 0.9rem;
+  color: rgba(226, 232, 240, 0.82);
+}
+
+.dismissButton {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border-radius: 999px;
+  border: none;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: rgba(94, 234, 212, 0.15);
+  color: #5ef1d6;
+  transition: opacity 0.2s, transform 0.15s;
+
+  &:enabled:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}

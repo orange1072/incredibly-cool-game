@@ -1,7 +1,9 @@
+import { getZombieVariantForLevel } from '../../settings/enemy-settings/zombie';
 import ZombieEntity from '../entities/ZombieEntity';
 
 export function createZombie(x: number, y: number, level = 1) {
-  return new ZombieEntity(x, y, level);
+  const variant = getZombieVariantForLevel(level);
+  return new ZombieEntity(x, y, level, variant);
 }
 
 export default createZombie;

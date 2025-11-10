@@ -95,18 +95,18 @@ class GameEngine {
     this.destroyed = true;
   }
 
-  private pause() {
+  pause() {
     if (this.paused) return;
     this.paused = true;
   }
 
-  private resume() {
+  resume() {
     if (!this.paused || this.hardPaused) return;
     this.paused = false;
     this.lastTime = performance.now();
   }
 
-  private togglePause() {
+  togglePause() {
     if (this.hardPaused) return;
     if (this.paused) {
       this.resume();

@@ -35,3 +35,34 @@ export interface XpLootPayload {
 }
 
 export type SpawnType = 'player' | 'enemy' | 'item' | 'boss';
+
+export type PassiveBonusKind = 'movementSpeed' | 'damage' | 'attackSpeed';
+
+export interface PassiveBonusOption {
+  kind: PassiveBonusKind;
+  label: string;
+  description: string;
+}
+
+export interface PlayerLevelUpPayload {
+  id: string;
+  newLevel: number;
+}
+
+export interface PassiveBonusSelectionPayload {
+  id: string;
+  bonus: PassiveBonusKind;
+}
+
+export interface LevelUpRewardsAvailablePayload {
+  id: string;
+  passiveOptions: PassiveBonusOption[];
+  pendingPassiveBonuses: number;
+  weaponOptions?: unknown[];
+}
+
+export interface PassiveBonusAppliedPayload {
+  id: string;
+  bonus: PassiveBonusKind;
+  remainingChoices: number;
+}

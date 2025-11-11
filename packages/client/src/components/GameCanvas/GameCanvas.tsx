@@ -122,7 +122,11 @@ export const GameCanvas = () => {
     logger.info(
       'Level rewards overlay changed, pausing/resuming game engine as needed'
     );
-    if (!levelRewards.visible && !isGameOver) {
+    if (levelRewards.visible) {
+      engineRef.current?.pause();
+      return;
+    }
+    if (!isGameOver) {
       engineRef.current?.resume();
     }
   }, [levelRewards.visible, isGameOver]);

@@ -1,3 +1,7 @@
+import bossFuriousRunSprite from '../../../assets/enemies/bossees/boss-furious/run.png';
+import bossJuggernautRunSprite from '../../../assets/enemies/bossees/boss-juggernaut/run.png';
+import bossToxicRunSprite from '../../../assets/enemies/bossees/boss-toxic/run.png';
+import bossArtilleryRunSprite from '../../../assets/enemies/bossees/boss-artillery/run.png';
 import type {
   EnemyVariantDefinition,
   HealthProfile,
@@ -38,6 +42,10 @@ const furiousBoss: EnemyVariantDefinition = {
       baseValue: 32,
     },
     xpReward: 520,
+    sprite: {
+      ...fatZombieBossSettings.sprite,
+      source: bossFuriousRunSprite,
+    },
   }),
 };
 
@@ -66,7 +74,7 @@ const juggernautBoss: EnemyVariantDefinition = {
     },
     sprite: {
       ...fatZombieBossSettings.sprite,
-      source: undefined,
+      source: bossJuggernautRunSprite,
       defaultColor: 'rgba(175, 135, 90, 0.95)',
     },
   }),
@@ -95,7 +103,7 @@ const toxicOverlord: EnemyVariantDefinition = {
     xpReward: 620,
     sprite: {
       ...fatZombieBossSettings.sprite,
-      source: undefined,
+      source: bossToxicRunSprite,
       defaultColor: 'rgba(106, 200, 142, 0.95)',
     },
     skin: {
@@ -133,7 +141,7 @@ const artilleryBoss: EnemyVariantDefinition = {
     xpReward: 650,
     sprite: {
       ...fatZombieBossSettings.sprite,
-      source: undefined,
+      source: bossArtilleryRunSprite,
       defaultColor: 'rgba(186, 120, 255, 0.95)',
     },
     skin: {

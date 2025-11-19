@@ -25,6 +25,19 @@ export const GameCanvas = () => {
   const [isGameOver, setIsGameOver] = useState(false);
   const logger = useMemo(() => new Logger('GameCanvas', 'info'), []);
 
+  const resizeCanvas = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas || typeof window === 'undefined') return;
+
+    const { innerWidth, innerHeight } = window;
+    if (canvas.width !== innerWidth) {
+      canvas.width = innerWidth;
+    }
+    if (canvas.height !== innerHeight) {
+      canvas.height = innerHeight;
+    }
+  }, []);
+
   const handlePlayerKilled = useCallback(() => {
     logger.info('Player killed - handling game over');
     engineRef.current?.pause();
@@ -54,8 +67,7 @@ export const GameCanvas = () => {
       return;
     }
 
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    resizeCanvas();
 
     try {
       const engine = createGameEngine(canvas, { store });
@@ -77,7 +89,7 @@ export const GameCanvas = () => {
       logger.error('Failed to start game engine', error);
       handleCleanupEngine();
     }
-  }, [handleCleanupEngine, handlePlayerKilled, logger, store]);
+  }, [handleCleanupEngine, handlePlayerKilled, logger, resizeCanvas, store]);
 
   useEffect(() => {
     handleGameStart();
@@ -86,6 +98,14 @@ export const GameCanvas = () => {
       handleCleanupEngine();
     };
   }, [handleGameStart, handleCleanupEngine, gameKey]);
+
+  useEffect(() => {
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+    return () => {
+      window.removeEventListener('resize', resizeCanvas);
+    };
+  }, [resizeCanvas]);
 
   const canvasClassName = classNames('game-canvas', styles.canvas);
 

@@ -95,23 +95,23 @@ class GenerateMapSystem implements ISystem<SystemType> {
 
   private generateSpawnPoints(world: World) {
     const playerSpawn = new Entity();
-    playerSpawn.addComponent(
-      new PositionComponent({ x: PLAYER_SPAWN_X, y: PLAYER_SPAWN_Y })
-    );
-    playerSpawn.addComponent(
-      new SpawnPointComponent({
-        spawnType: 'player',
-        radius: PLAYER_SPAWN_RADIUS,
-      })
-    );
+    playerSpawn
+      .addComponent(
+        new PositionComponent({ x: PLAYER_SPAWN_X, y: PLAYER_SPAWN_Y })
+      )
+      .addComponent(
+        new SpawnPointComponent({
+          spawnType: 'player',
+          radius: PLAYER_SPAWN_RADIUS,
+        })
+      );
     world.addEntity(playerSpawn);
 
     for (let i = 0; i < ENEMY_SPAWN_COUNT; i++) {
       const x = Math.random() * this.mapWidth;
       const y = Math.random() * this.mapHeight;
       const enemySpawn = new Entity();
-      enemySpawn.addComponent(new PositionComponent({ x, y }));
-      enemySpawn.addComponent(
+      enemySpawn.addComponent(new PositionComponent({ x, y })).addComponent(
         new SpawnPointComponent({
           spawnType: 'enemy',
           radius: ENEMY_SPAWN_RADIUS,
@@ -125,14 +125,14 @@ class GenerateMapSystem implements ISystem<SystemType> {
     const e = new Entity();
     const width = OBSTACLE_SIZE;
     const height = OBSTACLE_SIZE;
-    e.addComponent(new PositionComponent({ x, y }));
-    e.addComponent(new ObstacleComponent({ width, height, kind }));
-    e.addComponent(
-      new CollisionComponent({ radius: Math.max(width, height) / 2 })
-    );
-    e.addComponent(
-      new SpriteComponent({ name: kind, width, height, source: kind })
-    );
+    e.addComponent(new PositionComponent({ x, y }))
+      .addComponent(new ObstacleComponent({ width, height, kind }))
+      .addComponent(
+        new CollisionComponent({ radius: Math.max(width, height) / 2 })
+      )
+      .addComponent(
+        new SpriteComponent({ name: kind, width, height, source: kind })
+      );
     return e;
   }
 }

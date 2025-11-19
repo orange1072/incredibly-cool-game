@@ -9,6 +9,7 @@ import {
   PositionComponent,
   VelocityComponent,
   AttackComponent,
+  PassiveBonusesComponent,
 } from '../components';
 import World from '../core/World';
 import InputManager from '../infrastructure/InputManager';
@@ -45,6 +46,9 @@ class PlayerControlSystem implements ISystem<SystemType> {
         COMPONENT_TYPES.playerControl
       );
       const attack = e.getComponent<AttackComponent>(COMPONENT_TYPES.attack);
+      const bonuses = e.getComponent<PassiveBonusesComponent>(
+        COMPONENT_TYPES.passiveBonuses
+      );
 
       if (!pos || !vel || !control) continue;
 
@@ -71,8 +75,10 @@ class PlayerControlSystem implements ISystem<SystemType> {
           ? MOVE_FLAG
           : STOP_FLAG);
 
-      vel.dx = horizontal * this.speed;
-      vel.dy = vertical * this.speed;
+      const movementSpeed = bonuses ? bonuses.getMovementSpeed() : this.speed;
+
+      vel.dx = horizontal * movementSpeed;
+      vel.dy = vertical * movementSpeed;
 
       const target = this.findNearestEnemy(world, pos, DEFAULT_AUTO_FIRE_RANGE);
       control.shooting = Boolean(target);

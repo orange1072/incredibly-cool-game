@@ -11,8 +11,11 @@ import AISystem from '../systems/AISystem';
 import CollisionSystem from '../systems/CollisionSystem';
 import DamageSystem from '../systems/DamageSystem';
 import ExperienceSystem from '../systems/ExpirienceSystem';
+import PlayerProgressionSystem from '../systems/PlayerProgressionSystem';
 import EffectSystem from '../systems/EffectSystem';
 import ProjectileSystem from '../systems/ProjectileSystem';
+import DespawnSystem from '../systems/DespawnSystem';
+import EnemyRangedAttackSystem from '../systems/EnemyRangedAttackSystem';
 import { createPlayer } from '../enteties/factories/createPlayer';
 import { createWorld } from '../enteties/factories/createWorld';
 import type { StoreLike } from '../adapters/ReduxAdapter';
@@ -60,13 +63,22 @@ export function createGameEngine(
     SYSTEM_TYPES.projectile as SystemType
   );
   engine.addSystem(new AISystem(), SYSTEM_TYPES.ai as SystemType);
+  engine.addSystem(
+    new EnemyRangedAttackSystem(),
+    SYSTEM_TYPES.enemyRangedAttack as SystemType
+  );
   engine.addSystem(new CollisionSystem(), SYSTEM_TYPES.collision as SystemType);
   engine.addSystem(new DamageSystem(), SYSTEM_TYPES.damage as SystemType);
   engine.addSystem(
     new ExperienceSystem({ eventBus }),
     SYSTEM_TYPES.experience as SystemType
   );
+  engine.addSystem(
+    new PlayerProgressionSystem({ eventBus }),
+    SYSTEM_TYPES.progression as SystemType
+  );
   engine.addSystem(new EffectSystem(), SYSTEM_TYPES.effect as SystemType);
+  engine.addSystem(new DespawnSystem(), SYSTEM_TYPES.despawn as SystemType);
   engine.addSystem(cameraSystem, SYSTEM_TYPES.camera as SystemType);
   engine.addSystem(spriteLoaderSystem, SYSTEM_TYPES.spriteLoader as SystemType);
 

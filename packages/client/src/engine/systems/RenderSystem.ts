@@ -120,7 +120,9 @@ class RendererSystem implements ISystem<SystemType> {
         sprite && sprite.source ? this.drawSprite(sprite, pos) : 0;
 
       if (renderedWidth === 0) {
-        if (isPlayer) {
+        if (sprite?.defaultColor) {
+          this.ctx.fillStyle = sprite.defaultColor;
+        } else if (isPlayer) {
           this.ctx.fillStyle = player.skin.color;
         } else if (isEnemy) {
           this.ctx.fillStyle = regularZombie.skin.color;

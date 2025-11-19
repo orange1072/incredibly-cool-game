@@ -7,9 +7,11 @@ import {
   PositionComponent,
   SpriteComponent,
   VelocityComponent,
+  PassiveBonusesComponent,
 } from '../../components';
 import Entity from '../../core/Entity';
 import { player as playerSettings } from '../../settings/player-settings/player';
+import { DEFAULT_PLAYER_SPEED } from '../../systems/consts/player-control';
 
 class PlayerEntity extends Entity {
   constructor(worldBoundsWidth: number, worldBoundsHeight: number) {
@@ -25,6 +27,7 @@ class PlayerEntity extends Entity {
       0,
       1
     );
+    const baseAttackCooldown = 0.35;
 
     this.addComponent(
       new PositionComponent({
@@ -37,7 +40,7 @@ class PlayerEntity extends Entity {
       .addComponent(
         new AttackComponent({
           damage: baseDamage,
-          cooldown: 0.35,
+          cooldown: baseAttackCooldown,
         })
       )
       .addComponent(
@@ -48,6 +51,13 @@ class PlayerEntity extends Entity {
       )
       .addComponent(new CollisionComponent({ radius: 12 }))
       .addComponent(new ExperienceComponent({ level: baseLevel }))
+      .addComponent(
+        new PassiveBonusesComponent({
+          baseMovementSpeed: DEFAULT_PLAYER_SPEED,
+          baseDamage,
+          baseAttackCooldown,
+        })
+      )
       .addComponent(
         new SpriteComponent({
           name: playerSettings.sprite.name,

@@ -135,6 +135,15 @@ class CollisionSystem implements ISystem<SystemType> {
     const hitsPlayer = isProperEntity(target, COMPONENT_TYPES.playerControl);
 
     if (isProperEntity(target, COMPONENT_TYPES.health)) {
+      if (projectile.sourceId) {
+        const source = world.getEntity(projectile.sourceId);
+        const sourceIsEnemy = source?.hasComponent(COMPONENT_TYPES.enemy);
+        const targetIsEnemy = target.hasComponent(COMPONENT_TYPES.enemy);
+        if (sourceIsEnemy && targetIsEnemy) {
+          return;
+        }
+      }
+
       const damage = projectile.damage ?? DEFAULT_PROJECTILE_DAMAGE;
       target.addComponent(
         new DamageComponent({

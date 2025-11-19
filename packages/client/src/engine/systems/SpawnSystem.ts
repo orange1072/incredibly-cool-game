@@ -188,7 +188,7 @@ class SpawnSystem implements ISystem<SystemType> {
         if (this.enemiesSpawnedThisWave >= this.waveTarget) break;
         const spawnX = pos.x + (Math.random() - 0.5) * spawn.radius * 2;
         const spawnY = pos.y + (Math.random() - 0.5) * spawn.radius * 2;
-        const zombie = createZombie(spawnX, spawnY);
+        const zombie = createZombie(spawnX, spawnY, this.waveNumber);
         world.addEntity(zombie);
         this.enemiesSpawnedThisWave += 1;
         currentEnemyCount += 1;
@@ -205,7 +205,7 @@ class SpawnSystem implements ISystem<SystemType> {
 
       if (this.waveNumber % BOSS_WAVE_INTERVAL === 0 && !this.bossSpawned) {
         const bossX = bounds ? bounds.width / 2 : this.areaWidth / 2;
-        const boss = createBoss(bossX, 100);
+        const boss = createBoss(bossX, 100, this.waveNumber);
         world.addEntity(boss);
         this.eventBus.emit('bossSpawned', { id: boss.id });
         this.bossSpawned = true;
@@ -264,7 +264,7 @@ class SpawnSystem implements ISystem<SystemType> {
 
       const spawnX = pos.x + (Math.random() - 0.5) * spawn.radius * 2;
       const spawnY = pos.y + (Math.random() - 0.5) * spawn.radius * 2;
-      const zombie = createZombie(spawnX, spawnY);
+      const zombie = createZombie(spawnX, spawnY, this.waveNumber);
 
       world.addEntity(zombie);
       this.enemiesSpawnedThisWave += 1;

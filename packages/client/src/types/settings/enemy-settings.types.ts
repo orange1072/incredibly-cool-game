@@ -28,7 +28,7 @@ export type SpriteProfile = {
   width: number;
   height: number;
   name: string;
-  source: string;
+  source?: string;
   scale?: number;
   frameDuration?: number;
   columns?: number;
@@ -66,4 +66,25 @@ export interface EnemySettings {
   health: HealthProfile;
   movement: MovementProfile;
   attack: AttackProfile;
+}
+
+export type SpawnCondition = {
+  minWorldLevel?: number;
+  maxWorldLevel?: number;
+  minWave?: number;
+  maxWave?: number;
+  weight?: number;
+};
+
+export interface EnemyVariantMetadata {
+  id: string;
+  displayName: string;
+  description: string;
+  tags: string[];
+  abilities: string[];
+  spawn: SpawnCondition;
+}
+
+export interface EnemyVariantDefinition extends EnemyVariantMetadata {
+  settings: EnemySettings;
 }

@@ -5,9 +5,10 @@ export function createProjectile(
   targetPos: PositionComponent,
   sourcePos: PositionComponent,
   sourceId: string,
-  damage: number
+  damage: number,
+  speed?: number
 ) {
-  return new ProjectileEntity(targetPos, sourcePos, sourceId, damage);
+  return new ProjectileEntity(targetPos, sourcePos, sourceId, damage, speed);
 }
 
 export default createProjectile;

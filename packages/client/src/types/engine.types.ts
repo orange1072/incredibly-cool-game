@@ -29,6 +29,10 @@ export const COMPONENT_TYPES = {
   obstacle: 'obstacle',
   spawnPoint: 'spawnPoint',
   loot: 'loot',
+  passiveBonuses: 'passiveBonuses',
+  enemyProfile: 'enemyProfile',
+  despawnTimer: 'despawnTimer',
+  enemyRangedAttack: 'enemyRangedAttack',
 } as const;
 
 export const SYSTEM_TYPES = {
@@ -44,9 +48,12 @@ export const SYSTEM_TYPES = {
   playerControl: 'playerControl',
   projectile: 'projectile',
   render: 'render',
+  progression: 'progression',
   spriteLoader: 'spriteLoader',
   spawn: 'spawn',
   sync: 'sync',
+  despawn: 'despawn',
+  enemyRangedAttack: 'enemyRangedAttack',
 };
 
 export type LootType = 'xp' | 'hp' | 'gd';
@@ -169,6 +176,7 @@ export interface SpriteComponentState {
     x?: number;
     y?: number;
   };
+  defaultColor?: string;
 }
 
 export interface ObstacleComponentState {
@@ -184,3 +192,42 @@ export interface SpawnPointComponentState {
   maxEntities?: number;
   autoSpawn?: boolean;
 }
+
+export interface PassiveBonusesComponentState {
+  baseMovementSpeed: number;
+  baseDamage: number;
+  baseAttackCooldown: number;
+  movementSpeedBonus?: number;
+  damageBonus?: number;
+  attackSpeedBonus?: number;
+  selectionsUsed?: number;
+}
+
+export interface EnemyProfileComponentState {
+  variantId: string;
+  displayName: string;
+  description: string;
+  tags: string[];
+  abilities: string[];
+  spawn: {
+    minWorldLevel?: number;
+    maxWorldLevel?: number;
+    minWave?: number;
+    maxWave?: number;
+    weight?: number;
+  };
+}
+
+export interface DespawnTimerComponentState {
+  ttl: number;
+}
+
+export interface EnemyRangedAttackComponentState {
+  cooldown: number;
+  range: number;
+  projectileDamage: number;
+  projectileSpeed: number;
+  timer?: number;
+}
+
+export type { PassiveBonusKind, PassiveBonusOption } from './component.types';

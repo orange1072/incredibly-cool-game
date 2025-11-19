@@ -1,4 +1,4 @@
-import { ProjectileKind } from './component.types';
+import { ProjectileKind, type PassiveBonusOption } from './component.types';
 
 export type inventoryItem = 'gun' | 'rocketLauncher' | 'shotgun' | 'knife';
 
@@ -29,6 +29,12 @@ interface GameStats {
     damage: number;
     attackSpeed: number;
     movementSpeed: number;
+  };
+  levelRewards: {
+    entityId: string | null;
+    pending: number;
+    options: PassiveBonusOption[];
+    visible: boolean;
   };
 }
 

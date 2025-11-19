@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import { Button } from '../Button';
-import styles from './GameCanvas.module.scss';
+import styles from '../GameCanvas/GameCanvas.module.scss';
 
 interface GameOverPopupProps {
   onRestart: () => void;

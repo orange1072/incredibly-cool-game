@@ -1,7 +1,7 @@
-import bossFuriousRunSprite from '../../../assets/enemies/bossees/boss-furious/run.png';
-import bossJuggernautRunSprite from '../../../assets/enemies/bossees/boss-juggernaut/run.png';
-import bossToxicRunSprite from '../../../assets/enemies/bossees/boss-toxic/run.png';
-import bossArtilleryRunSprite from '../../../assets/enemies/bossees/boss-artillery/run.png';
+import bossFuriousRunSprite from '../../../assets/enemies/bosses/boss-furious/run.png';
+import bossJuggernautRunSprite from '../../../assets/enemies/bosses/boss-juggernaut/run.png';
+import bossToxicRunSprite from '../../../assets/enemies/bosses/boss-toxic/run.png';
+import bossArtilleryRunSprite from '../../../assets/enemies/bosses/boss-artillery/run.png';
 import type {
   EnemyVariantDefinition,
   HealthProfile,

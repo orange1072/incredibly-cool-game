@@ -48,6 +48,7 @@ export {
 export {
   openLevelRewards,
   updateLevelRewardsPending,
+  setLevelRewardsOptions,
   closeLevelRewards,
 } from './levelRewardsSlice';
 

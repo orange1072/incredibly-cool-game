@@ -44,6 +44,16 @@ export interface PassiveBonusOption {
   description: string;
 }
 
+export interface PassiveBonusSnapshot {
+  baseMovementSpeed: number;
+  baseDamage: number;
+  baseAttackCooldown: number;
+  movementSpeedBonus: number;
+  damageBonus: number;
+  attackSpeedBonus: number;
+  selectionsUsed: number;
+}
+
 export interface PlayerLevelUpPayload {
   id: string;
   newLevel: number;
@@ -65,4 +75,6 @@ export interface PassiveBonusAppliedPayload {
   id: string;
   bonus: PassiveBonusKind;
   remainingChoices: number;
+  totals: PassiveBonusSnapshot;
+  availableOptions?: PassiveBonusOption[];
 }

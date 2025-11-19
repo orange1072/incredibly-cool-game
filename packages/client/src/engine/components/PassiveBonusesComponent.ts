@@ -6,11 +6,14 @@ import {
   type IEntity,
   type IPureDataComponent,
 } from '../../types/engine.types';
+import type { PassiveBonusSnapshot } from '@/types/component.types';
 
 export const PASSIVE_MOVEMENT_SPEED_STEP = 40;
 export const PASSIVE_DAMAGE_STEP = 25;
 export const PASSIVE_ATTACK_SPEED_STEP = 0.1;
 export const MIN_ATTACK_COOLDOWN = 0.1;
+export const MAX_MOVEMENT_SPEED_BONUS = PASSIVE_MOVEMENT_SPEED_STEP * 30;
+export const MAX_DAMAGE_BONUS = PASSIVE_DAMAGE_STEP * 30;
 export const MAX_ATTACK_SPEED_BONUS = 3;
 
 export const PASSIVE_BONUS_OPTIONS: PassiveBonusOption[] = [
@@ -30,16 +33,6 @@ export const PASSIVE_BONUS_OPTIONS: PassiveBonusOption[] = [
     description: 'Reduce attack cooldown by roughly 10%',
   },
 ];
-
-export interface PassiveBonusSnapshot {
-  baseMovementSpeed: number;
-  baseDamage: number;
-  baseAttackCooldown: number;
-  movementSpeedBonus: number;
-  damageBonus: number;
-  attackSpeedBonus: number;
-  selectionsUsed: number;
-}
 
 class PassiveBonusesComponent
   implements IPureDataComponent, PassiveBonusesComponentState
@@ -66,8 +59,11 @@ class PassiveBonusesComponent
     this.baseMovementSpeed = Math.max(0, baseMovementSpeed);
     this.baseDamage = Math.max(0, baseDamage);
     this.baseAttackCooldown = Math.max(MIN_ATTACK_COOLDOWN, baseAttackCooldown);
-    this.movementSpeedBonus = Math.max(0, movementSpeedBonus);
-    this.damageBonus = Math.max(0, damageBonus);
+    this.movementSpeedBonus = Math.max(
+      0,
+      Math.min(movementSpeedBonus, MAX_MOVEMENT_SPEED_BONUS)
+    );
+    this.damageBonus = Math.max(0, Math.min(damageBonus, MAX_DAMAGE_BONUS));
     this.attackSpeedBonus = Math.max(
       0,
       Math.min(attackSpeedBonus, MAX_ATTACK_SPEED_BONUS)
@@ -78,11 +74,17 @@ class PassiveBonusesComponent
   applyPassiveBonus(kind: PassiveBonusKind): PassiveBonusSnapshot {
     switch (kind) {
       case 'movementSpeed': {
-        this.movementSpeedBonus += PASSIVE_MOVEMENT_SPEED_STEP;
+        this.movementSpeedBonus = Math.min(
+          MAX_MOVEMENT_SPEED_BONUS,
+          this.movementSpeedBonus + PASSIVE_MOVEMENT_SPEED_STEP
+        );
         break;
       }
       case 'damage': {
-        this.damageBonus += PASSIVE_DAMAGE_STEP;
+        this.damageBonus = Math.min(
+          MAX_DAMAGE_BONUS,
+          this.damageBonus + PASSIVE_DAMAGE_STEP
+        );
         break;
       }
       case 'attackSpeed': {

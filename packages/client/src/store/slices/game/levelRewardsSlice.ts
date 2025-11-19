@@ -31,6 +31,9 @@ const levelRewardsSlice = createSlice({
     updateLevelRewardsPending(state, action: PayloadAction<number>) {
       state.pending = Math.max(0, action.payload);
     },
+    setLevelRewardsOptions(state, action: PayloadAction<PassiveBonusOption[]>) {
+      state.options = action.payload;
+    },
     closeLevelRewards() {
       return initialState;
     },
@@ -40,6 +43,7 @@ const levelRewardsSlice = createSlice({
 export const {
   openLevelRewards,
   updateLevelRewardsPending,
+  setLevelRewardsOptions,
   closeLevelRewards,
 } = levelRewardsSlice.actions;
 

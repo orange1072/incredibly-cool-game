@@ -11,11 +11,15 @@ import Logger from '../infrastructure/Logger';
 import { PassiveBonusesComponent } from '../components';
 import type AttackComponent from '../components/AttackComponent';
 import {
+  MAX_DAMAGE_BONUS,
+  MAX_ATTACK_SPEED_BONUS,
+  MAX_MOVEMENT_SPEED_BONUS,
   PASSIVE_BONUS_OPTIONS,
-  type PassiveBonusSnapshot,
 } from '../components/PassiveBonusesComponent';
 import type {
+  PassiveBonusOption,
   PassiveBonusSelectionPayload,
+  PassiveBonusSnapshot,
   PlayerLevelUpPayload,
 } from '@/types/component.types';
 
@@ -28,6 +32,7 @@ type PassiveBonusEventPayload = {
   bonus: PassiveBonusKind;
   remainingChoices: number;
   totals: PassiveBonusSnapshot;
+  availableOptions: PassiveBonusOption[];
 };
 
 type PassiveBonusAvailabilityPayload = {
@@ -95,12 +100,19 @@ class PlayerProgressionSystem implements ISystem<SystemType> {
       return;
     }
 
+    const passiveOptions = this.getAvailablePassiveOptions(entityId);
+    if (passiveOptions.length === 0) {
+      this.logger.info('No passive bonuses available at level up', {
+        id: entityId,
+      });
+      return;
+    }
+
     const pending = (this.pendingPassiveSelections.get(entityId) ?? 0) + 1;
     this.pendingPassiveSelections.set(entityId, pending);
-
     const availabilityPayload: PassiveBonusAvailabilityPayload = {
       id: entityId,
-      passiveOptions: PASSIVE_BONUS_OPTIONS,
+      passiveOptions,
       pendingPassiveBonuses: pending,
       weaponOptions: [],
     };
@@ -151,6 +163,14 @@ class PlayerProgressionSystem implements ISystem<SystemType> {
       return;
     }
 
+    if (this.isBonusMaxed(bonuses, bonusKind)) {
+      this.logger.info('Passive bonus already at maximum', {
+        id: entityId,
+        requestedBonus: bonusKind,
+      });
+      return;
+    }
+
     const totals = bonuses.applyPassiveBonus(bonusKind);
     this.pendingPassiveSelections.set(entityId, pending - 1);
 
@@ -160,16 +180,55 @@ class PlayerProgressionSystem implements ISystem<SystemType> {
       attack.cooldown = bonuses.getAttackCooldown();
     }
 
+    let remainingChoices = this.pendingPassiveSelections.get(entityId) ?? 0;
+    const availableOptions = this.getAvailablePassiveOptions(entityId);
+    if (availableOptions.length === 0 && remainingChoices > 0) {
+      remainingChoices = 0;
+      this.pendingPassiveSelections.set(entityId, 0);
+    }
+
     const eventPayload: PassiveBonusEventPayload = {
       id: entityId,
       bonus: bonusKind,
-      remainingChoices: this.pendingPassiveSelections.get(entityId) ?? 0,
+      remainingChoices,
       totals,
+      availableOptions,
     };
 
     this.eventBus.emit('passiveBonusApplied', eventPayload);
     this.logger.info('Applied passive bonus', eventPayload);
   };
+
+  private getAvailablePassiveOptions(entityId: string): PassiveBonusOption[] {
+    const world = this.world;
+    if (!world) return [...PASSIVE_BONUS_OPTIONS];
+    const entity = world.getEntity(entityId);
+    if (!entity) return [...PASSIVE_BONUS_OPTIONS];
+    const bonuses = entity.getComponent<PassiveBonusesComponent>(
+      COMPONENT_TYPES.passiveBonuses
+    );
+    if (!bonuses) return [...PASSIVE_BONUS_OPTIONS];
+
+    return PASSIVE_BONUS_OPTIONS.filter(
+      (option) => !this.isBonusMaxed(bonuses, option.kind)
+    );
+  }
+
+  private isBonusMaxed(
+    bonuses: PassiveBonusesComponent,
+    kind: PassiveBonusKind
+  ): boolean {
+    switch (kind) {
+      case 'movementSpeed':
+        return bonuses.movementSpeedBonus >= MAX_MOVEMENT_SPEED_BONUS;
+      case 'damage':
+        return bonuses.damageBonus >= MAX_DAMAGE_BONUS;
+      case 'attackSpeed':
+        return bonuses.attackSpeedBonus >= MAX_ATTACK_SPEED_BONUS;
+      default:
+        return false;
+    }
+  }
 }
 
 export default PlayerProgressionSystem;

@@ -6,6 +6,8 @@ import gameReducer, {
   countFrag,
   levelUp,
   openLevelRewards,
+  closeLevelRewards,
+  setLevelRewardsOptions,
   setAttackSpeedModifier,
   setBossCount,
   setDamageModifier,
@@ -278,6 +280,15 @@ class ReduxAdapter<TState = RootState> {
     if (!payload) return;
 
     this.dispatchImpl(updateLevelRewardsPending(payload.remainingChoices));
+    if (payload.availableOptions) {
+      this.dispatchImpl(setLevelRewardsOptions(payload.availableOptions));
+      if (
+        payload.remainingChoices <= 0 &&
+        payload.availableOptions.length === 0
+      ) {
+        this.dispatchImpl(closeLevelRewards());
+      }
+    }
   };
 
   private syncEnemyCounts() {

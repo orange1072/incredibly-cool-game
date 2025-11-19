@@ -5,6 +5,8 @@ import type {
   SpawnCondition,
 } from '../../../../types/settings/enemy-settings.types';
 
+import defaultBossRunSprite from '../../.././../assets/enemies/bosses/default-boss/run.png';
+
 export const baseBossSpawn: SpawnCondition = {
   minWorldLevel: 1,
   weight: 1,
@@ -31,7 +33,7 @@ export const fatZombieBossSettings: EnemySettings = {
     width: 128,
     height: 128,
     name: 'zombie-boss',
-    source: 'zombie-boss',
+    source: defaultBossRunSprite,
   },
   skin: {
     color: 'rgba(255, 75, 75, 0.95)',

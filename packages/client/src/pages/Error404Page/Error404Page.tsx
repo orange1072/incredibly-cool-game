@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Home, Search, AlertTriangle, Radiation } from 'lucide-react';
 import { PixelButton } from '@/components/PixelButton';
@@ -14,6 +14,7 @@ export function Error404Page() {
   const [zombiePosition, setZombiePosition] = useState(0);
   const [clicked, setClicked] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (clicked) return;
@@ -25,10 +26,21 @@ export function Error404Page() {
     return () => clearInterval(interval);
   }, [clicked]);
 
+  // Очистка таймера при размонтировании компонента
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+      }
+    };
+  }, []);
+
   const handleZombieClick = () => {
     setClicked(true);
-    setTimeout(() => {
+    timeoutRef.current = setTimeout(() => {
       navigate('/');
+      timeoutRef.current = null;
     }, 1000);
   };
 

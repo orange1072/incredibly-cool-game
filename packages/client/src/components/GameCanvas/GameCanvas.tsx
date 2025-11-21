@@ -32,10 +32,14 @@ export const GameCanvas = () => {
     setIsGameOver(true);
   }, [dispatch, logger]);
 
+  // Сохраняем ссылку на обработчик события для корректной очистки
+  const playerKilledHandlerRef = useRef<(() => void) | null>(null);
+
   const handleCleanupEngine = useCallback(() => {
     const engine = engineRef.current;
-    if (engine) {
-      engine.eventBus.off('playerKilled', handlePlayerKilled);
+    if (engine && playerKilledHandlerRef.current) {
+      engine.eventBus.off('playerKilled', playerKilledHandlerRef.current);
+      playerKilledHandlerRef.current = null;
     }
     adapterRef.current?.destroy();
     adapterRef.current = null;
@@ -44,7 +48,7 @@ export const GameCanvas = () => {
     engineRef.current = null;
     dispatch(closeLevelRewards());
     setIsGameOver(false);
-  }, [dispatch, handlePlayerKilled]);
+  }, [dispatch]);
 
   const handleGameStart = useCallback(() => {
     logger.info('Starting game engine');
@@ -66,10 +70,13 @@ export const GameCanvas = () => {
       adapterRef.current = adapter;
       reduxAdapterRef.current = reduxAdapter;
 
-      engine.eventBus.on('playerKilled', () => {
+      // Создаем обработчик и сохраняем ссылку для последующего удаления
+      const playerKilledHandler = () => {
         logger.debug('Event bus: playerKilled event received');
         handlePlayerKilled();
-      });
+      };
+      playerKilledHandlerRef.current = playerKilledHandler;
+      engine.eventBus.on('playerKilled', playerKilledHandler);
 
       reduxAdapter.connect();
       adapter.start();

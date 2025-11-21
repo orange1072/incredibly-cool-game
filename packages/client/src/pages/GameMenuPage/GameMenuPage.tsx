@@ -35,6 +35,11 @@ export const GameMenuPage = () => {
   }, [countdown, navigate]);
 
   const startGame = () => {
+    // Очищаем предыдущий интервал, если он существует, чтобы избежать утечки памяти
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
     setCountdown(GAME_CONFIG.COUNTDOWN_DURATION);
     intervalRef.current = setInterval(() => {
       setCountdown((prev) => {

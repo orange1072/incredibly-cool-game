@@ -13,6 +13,7 @@ class GameEngine {
   private isRunning = false;
   private paused = false;
   private hardPaused = false;
+  private animationFrameId: number | null = null;
 
   private handleKeyDown = (event: KeyboardEvent) => {
     if (event.key === 'Enter') {
@@ -69,15 +70,20 @@ class GameEngine {
     this.paused = false;
     this.hardPaused = false;
     this.lastTime = performance.now();
-    requestAnimationFrame(this.loop);
+    this.animationFrameId = requestAnimationFrame(this.loop);
   }
 
   stop() {
     this.isRunning = false;
+    if (this.animationFrameId !== null) {
+      cancelAnimationFrame(this.animationFrameId);
+      this.animationFrameId = null;
+    }
   }
 
   destroy() {
     if (this.destroyed) return;
+    this.stop();
     for (const system of this.systems.values()) {
       if (typeof (system as ISystem<SystemType>).onDestroy === 'function') {
         if (system.onDestroy) {
@@ -121,11 +127,15 @@ class GameEngine {
   }
 
   private loop = (timestamp: number) => {
+    if (!this.isRunning) return;
+
     const dt = (timestamp - this.lastTime) / 1000;
     this.lastTime = timestamp;
 
     if (this.paused) {
-      if (this.isRunning) requestAnimationFrame(this.loop);
+      if (this.isRunning) {
+        this.animationFrameId = requestAnimationFrame(this.loop);
+      }
       return;
     }
 
@@ -137,7 +147,9 @@ class GameEngine {
 
     this.world.render(dt);
 
-    if (this.isRunning) requestAnimationFrame(this.loop);
+    if (this.isRunning) {
+      this.animationFrameId = requestAnimationFrame(this.loop);
+    }
   };
 }
 

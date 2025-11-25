@@ -1,5 +1,3 @@
-import React from 'react';
-import ReactDOM from 'react-dom/server';
 import { Provider } from 'react-redux';
 import { ServerStyleSheet } from 'styled-components';
 import { Helmet } from 'react-helmet';
@@ -20,9 +18,18 @@ import {
 import { reducer } from './store/store';
 import './index.scss';
 import { setPageHasBeenInitializedOnServer } from './store/slices/ssrSlice';
+import { ROUTES } from './constants';
+
+// Динамический импорт для react-dom/server
+let ReactDOM: any;
 
 export const render = async (req: ExpressRequest) => {
-  const { query, dataRoutes } = createStaticHandler(routes);
+  // Динамически импортируем react-dom/server
+  if (!ReactDOM) {
+    ReactDOM = await import('react-dom/server');
+  }
+
+  const { query, dataRoutes } = createStaticHandler(ROUTES);
   const fetchRequest = createFetchRequest(req);
   const context = await query(fetchRequest);
 
@@ -35,26 +42,10 @@ export const render = async (req: ExpressRequest) => {
   });
 
   const url = createUrl(req);
+  const foundRoutes = matchRoutes(ROUTES, url);
 
-  const foundRoutes = matchRoutes(routes, url);
   if (!foundRoutes) {
     throw new Error('Страница не найдена!');
-  }
-
-  const [
-    {
-      route: { fetchData },
-    },
-  ] = foundRoutes;
-
-  try {
-    await fetchData({
-      dispatch: store.dispatch,
-      state: store.getState(),
-      ctx: createContext(req),
-    });
-  } catch (e) {
-    console.log('Инициализация страницы произошла с ошибкой', e);
   }
 
   store.dispatch(setPageHasBeenInitializedOnServer(true));
@@ -70,7 +61,6 @@ export const render = async (req: ExpressRequest) => {
       )
     );
     const styleTags = sheet.getStyleTags();
-
     const helmet = Helmet.renderStatic();
 
     return {

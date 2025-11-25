@@ -2,7 +2,7 @@ import { ChangeEventHandler, InputHTMLAttributes, memo } from 'react';
 import styles from './styles.module.scss';
 
 type InputProps = {
-  type: 'text' | 'email' | 'password' | 'phone';
+  type?: 'text' | 'email' | 'password' | 'phone';
   label?: string;
   placeholder: string;
   value?: string;

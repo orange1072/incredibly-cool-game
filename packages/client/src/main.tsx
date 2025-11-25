@@ -9,11 +9,8 @@ import './index.scss';
 
 startServiceWorker();
 
-const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
-);
-
-root.render(
+const root = ReactDOM.hydrateRoot(
+  document.getElementById('root') as HTMLElement,
   <Provider store={store}>
     <ErrorBoundary>
       <AppRouter />

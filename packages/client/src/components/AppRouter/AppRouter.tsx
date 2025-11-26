@@ -13,11 +13,6 @@ import { GameMenuPage } from '@/pages/GameMenuPage';
 import { GamePlayPage } from '@/pages/GamePlayPage';
 import { GameOverPage } from '@/pages/GameOverPage';
 import { withAuth } from '@/hocs/withAuth';
-import { useGetUserMutation } from '@/slices/authApi';
-import { useEffect } from 'react';
-import { useDispatch } from '@/store/store';
-import { setUser } from '@/store/slices/userSlice';
-import { useOAuth } from '@/hooks/useOAuth';
 
 const GameMenuWithAuth = withAuth(GameMenuPage);
 const GamePlayWithAuth = withAuth(GamePlayPage);
@@ -27,32 +22,6 @@ const LeaderboardWithAuth = withAuth(LeaderboardPage);
 const ForumWithAuth = withAuth(ForumPage);
 
 export const AppRouter = () => {
-  const [getUser] = useGetUserMutation();
-  const dispatch = useDispatch();
-  const { handleOAuthCallback } = useOAuth();
-
-  useEffect(() => {
-    async function fetchUser() {
-      try {
-        const user = await getUser().unwrap();
-        if (user) {
-          dispatch(setUser(user));
-        }
-      } catch (error) {
-        console.warn('Failed to fetch user:', error);
-      }
-    }
-
-    fetchUser();
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get('code');
-
-    if (code) {
-      handleOAuthCallback(code);
-    }
-  }, []);
-
   return (
     <Router
       future={{

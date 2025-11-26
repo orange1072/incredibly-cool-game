@@ -6,6 +6,7 @@ import { AppRouter } from './components/AppRouter/AppRouter';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import startServiceWorker from './utils/StartServiceWorker';
 import './index.scss';
+import { AuthProvider } from '@/components/AuthProvider/AuthProvider';
 
 startServiceWorker();
 
@@ -16,7 +17,9 @@ const root = ReactDOM.createRoot(
 root.render(
   <Provider store={store}>
     <ErrorBoundary>
-      <AppRouter />
+      <AuthProvider>
+        <AppRouter />
+      </AuthProvider>
     </ErrorBoundary>
   </Provider>
 );

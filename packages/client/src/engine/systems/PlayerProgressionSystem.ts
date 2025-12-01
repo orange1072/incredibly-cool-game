@@ -10,11 +10,15 @@ import EventBus from '../infrastructure/EventBus';
 import Logger from '../infrastructure/Logger';
 import { PassiveBonusesComponent } from '../components';
 import type AttackComponent from '../components/AttackComponent';
+import type HealthComponent from '../components/HealthComponent';
 import {
   MAX_DAMAGE_BONUS,
   MAX_ATTACK_SPEED_BONUS,
   MAX_MOVEMENT_SPEED_BONUS,
+  MAX_HEALTH_BONUS,
+  MAX_XP_BONUS,
   PASSIVE_BONUS_OPTIONS,
+  PASSIVE_HEALTH_STEP,
 } from '../components/PassiveBonusesComponent';
 import type {
   PassiveBonusOption,
@@ -180,6 +184,16 @@ class PlayerProgressionSystem implements ISystem<SystemType> {
       attack.cooldown = bonuses.getAttackCooldown();
     }
 
+    const health = entity.getComponent<HealthComponent>(COMPONENT_TYPES.health);
+    if (health) {
+      if (bonusKind === 'maxHealth') {
+        health.maxHp += PASSIVE_HEALTH_STEP;
+        health.hp = health.maxHp;
+      } else if (bonusKind === 'fullHeal') {
+        health.hp = health.maxHp;
+      }
+    }
+
     let remainingChoices = this.pendingPassiveSelections.get(entityId) ?? 0;
     const availableOptions = this.getAvailablePassiveOptions(entityId);
     if (availableOptions.length === 0 && remainingChoices > 0) {
@@ -225,6 +239,12 @@ class PlayerProgressionSystem implements ISystem<SystemType> {
         return bonuses.damageBonus >= MAX_DAMAGE_BONUS;
       case 'attackSpeed':
         return bonuses.attackSpeedBonus >= MAX_ATTACK_SPEED_BONUS;
+      case 'maxHealth':
+        return bonuses.healthBonus >= MAX_HEALTH_BONUS;
+      case 'fullHeal':
+        return bonuses.healUsed;
+      case 'xpGain':
+        return bonuses.xpBonus >= MAX_XP_BONUS;
       default:
         return false;
     }

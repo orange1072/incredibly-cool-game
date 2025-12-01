@@ -1,10 +1,10 @@
-import { Input } from '@/components/Input'
-import { Search } from 'lucide-react'
+import { Input } from '@/components/Input';
+import { Search } from 'lucide-react';
 
 export type SearchProps = {
-  searchQuery: string
-  setSearchQuery: (value: string) => void
-}
+  searchQuery: string;
+  setSearchQuery: (value: string) => void;
+};
 export const SearchForm = ({ searchQuery, setSearchQuery }: SearchProps) => {
   return (
     <Input
@@ -13,5 +13,5 @@ export const SearchForm = ({ searchQuery, setSearchQuery }: SearchProps) => {
       value={searchQuery}
       onChange={(e) => setSearchQuery(e.target.value)}
     />
-  )
-}
+  );
+};

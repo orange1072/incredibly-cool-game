@@ -36,7 +36,13 @@ export interface XpLootPayload {
 
 export type SpawnType = 'player' | 'enemy' | 'item' | 'boss';
 
-export type PassiveBonusKind = 'movementSpeed' | 'damage' | 'attackSpeed';
+export type PassiveBonusKind =
+  | 'movementSpeed'
+  | 'damage'
+  | 'attackSpeed'
+  | 'maxHealth'
+  | 'fullHeal'
+  | 'xpGain';
 
 export interface PassiveBonusOption {
   kind: PassiveBonusKind;
@@ -51,6 +57,9 @@ export interface PassiveBonusSnapshot {
   movementSpeedBonus: number;
   damageBonus: number;
   attackSpeedBonus: number;
+  healthBonus: number;
+  xpBonus: number;
+  healUsed: boolean;
   selectionsUsed: number;
 }
 

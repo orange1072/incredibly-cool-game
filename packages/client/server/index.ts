@@ -11,7 +11,7 @@ import cookieParser from 'cookie-parser';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 3002;
 // @ts-ignore
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -69,15 +69,12 @@ async function createServer() {
         ).render;
       } else {
         template = await fs.readFile(
-          path.join(clientPath, 'dist/client/index.html'),
+          path.join(clientPath, 'client/index.html'),
           'utf-8'
         );
 
         // Получаем путь до сбилдженого модуля клиента, чтобы не тащить средства сборки клиента на сервер
-        const pathToServer = path.join(
-          clientPath,
-          'dist/server/entry-server.js'
-        );
+        const pathToServer = path.join(clientPath, 'server/entry-server.js');
 
         // Импортируем этот модуль и вызываем с инишл стейтом
         render = (await import(pathToServer)).render;

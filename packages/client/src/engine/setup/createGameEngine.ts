@@ -47,7 +47,7 @@ export function createGameEngine(
   engine
     .addSystem(new GenerateMapSystem(), SYSTEM_TYPES.generateMap as SystemType)
     .addSystem(
-      new SpawnSystem({ eventBus, store: opts?.store }),
+      new SpawnSystem({ eventBus, store: opts?.store, camera: cameraSystem }),
       SYSTEM_TYPES.spawn as SystemType
     )
     .addSystem(

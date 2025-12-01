@@ -52,6 +52,8 @@ class GameEngine {
       system.initialize(this.world);
     }
     this.eventBus.emit('systemAdded', system);
+
+    return this;
   }
 
   getSystem(type: SystemType) {

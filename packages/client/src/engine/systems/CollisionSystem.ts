@@ -66,8 +66,13 @@ class CollisionSystem implements ISystem<SystemType> {
         );
         if (!posB || !colB) continue;
 
-        const dx = getProximity(posA.x, posB.x);
-        const dy = getProximity(posA.y, posB.y);
+        const centerAx = posA.x + (colA.offsetX ?? 0);
+        const centerAy = posA.y + (colA.offsetY ?? 0);
+        const centerBx = posB.x + (colB.offsetX ?? 0);
+        const centerBy = posB.y + (colB.offsetY ?? 0);
+
+        const dx = getProximity(centerAx, centerBx);
+        const dy = getProximity(centerAy, centerBy);
         const dist = Math.hypot(dx, dy);
         const minDist = colA.radius + colB.radius;
 
@@ -201,8 +206,13 @@ class CollisionSystem implements ISystem<SystemType> {
       return;
     }
 
-    let dx = getProximity(playerPos.x, obstaclePos.x);
-    let dy = getProximity(playerPos.y, obstaclePos.y);
+    const playerCenterX = playerPos.x + (playerCollision.offsetX ?? 0);
+    const playerCenterY = playerPos.y + (playerCollision.offsetY ?? 0);
+    const obstacleCenterX = obstaclePos.x + (obstacleCollision.offsetX ?? 0);
+    const obstacleCenterY = obstaclePos.y + (obstacleCollision.offsetY ?? 0);
+
+    let dx = getProximity(playerCenterX, obstacleCenterX);
+    let dy = getProximity(playerCenterY, obstacleCenterY);
     let distance = Math.hypot(dx, dy);
     const minDistance = playerCollision.radius + obstacleCollision.radius;
 
@@ -318,8 +328,13 @@ class CollisionSystem implements ISystem<SystemType> {
     }
 
     //to-do: повторяющийся код
-    let dx = getProximity(posA.x, posB.x);
-    let dy = getProximity(posA.y, posB.y);
+    const centerAx = posA.x + (colA.offsetX ?? 0);
+    const centerAy = posA.y + (colA.offsetY ?? 0);
+    const centerBx = posB.x + (colB.offsetX ?? 0);
+    const centerBy = posB.y + (colB.offsetY ?? 0);
+
+    let dx = getProximity(centerAx, centerBx);
+    let dy = getProximity(centerAy, centerBy);
     let distance = Math.hypot(dx, dy);
     const minDistance = colA.radius + colB.radius;
 

@@ -22,7 +22,7 @@ export const fatZombieBossSettings: EnemySettings = {
   damage: {
     radius: 10,
     baseSpeed: 10,
-    baseValue: 40,
+    baseValue: 34,
     actualDamage(this: DamageProfile, bonus: number, multiplier = 1) {
       return this.baseValue * multiplier + bonus;
     },
@@ -43,18 +43,18 @@ export const fatZombieBossSettings: EnemySettings = {
     radius: 50,
   },
   health: {
-    baseValue: 500,
-    levelBonus: 150,
+    baseValue: 420,
+    levelBonus: 120,
     health(this: HealthProfile, level: number, multiplier = 1) {
       return this.baseValue * multiplier + this.levelBonus * level;
     },
   },
   movement: {
-    speed: 30,
+    speed: 26,
   },
   attack: {
     range: 64,
-    cooldown: 2.5,
+    cooldown: 2.7,
   },
 };
 

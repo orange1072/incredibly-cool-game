@@ -8,7 +8,7 @@ import fs from 'fs/promises';
 import { createServer as createViteServer, ViteDevServer } from 'vite';
 import serialize from 'serialize-javascript';
 import cookieParser from 'cookie-parser';
-import { fileURLToPath } from 'url';
+import { fileURLToPath, pathToFileURL } from 'url';
 import { dirname } from 'path';
 
 const port = process.env.PORT || 3002;
@@ -16,8 +16,25 @@ const port = process.env.PORT || 3002;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const isDev = process.env.NODE_ENV === 'development';
-const clientPath = path.resolve(__dirname, '..'); // packages/client
+const clientPath = path.resolve(__dirname, '..'); // dist в production, packages/client в dev
 const indexHtmlPath = path.resolve(__dirname, '../../client/');
+
+// Функция для получения CSS ссылок в production режиме
+async function getProductionCssLinks(): Promise<string> {
+  try {
+    // clientPath уже указывает на dist, поэтому путь: dist/client/assets
+    const assetsPath = path.join(clientPath, 'client/assets');
+    const files = await fs.readdir(assetsPath);
+    const cssFiles = files.filter((file) => file.endsWith('.css'));
+
+    return cssFiles
+      .map((file) => `<link rel="stylesheet" href="/assets/${file}">`)
+      .join('\n    ');
+  } catch (error) {
+    console.warn('Не удалось найти CSS файлы:', error);
+    return '';
+  }
+}
 async function createServer() {
   const app = express();
 
@@ -34,9 +51,8 @@ async function createServer() {
     });
     app.use(vite.middlewares);
   } else {
-    app.use(
-      express.static(path.join(clientPath, 'dist/client'), { index: false })
-    );
+    // В production clientPath указывает на dist, поэтому путь: dist/client
+    app.use(express.static(path.join(clientPath, 'client'), { index: false }));
   }
   app.get('*', async (req, res, next) => {
     const url = req.originalUrl;
@@ -68,16 +84,22 @@ async function createServer() {
           )
         ).render;
       } else {
+        // В production читаем обработанный index.html из dist/client
+        // который уже содержит ссылки на CSS и JS файлы
+        // clientPath уже указывает на dist, поэтому путь: dist/client/index.html
         template = await fs.readFile(
           path.join(clientPath, 'client/index.html'),
           'utf-8'
         );
 
         // Получаем путь до сбилдженого модуля клиента, чтобы не тащить средства сборки клиента на сервер
+        // clientPath уже указывает на dist, поэтому используем относительный путь
         const pathToServer = path.join(clientPath, 'server/entry-server.js');
 
         // Импортируем этот модуль и вызываем с инишл стейтом
-        render = (await import(pathToServer)).render;
+        // Преобразуем путь в file:// URL для совместимости с ESM на Windows
+        const serverModuleUrl = pathToFileURL(pathToServer).href;
+        render = (await import(serverModuleUrl)).render;
       }
 
       // Получаем HTML-строку из JSX
@@ -88,8 +110,11 @@ async function createServer() {
         styleTags,
       } = await render(req);
 
+      // В dev режиме Vite уже обработал HTML через transformIndexHtml и добавил стили
+      // В production index.html уже содержит ссылки на CSS
+      // Просто удаляем комментарий, так как стили уже в HTML
       const html = template
-        .replace('<!--ssr-styles-->', styleTags)
+        .replace('<!--ssr-styles-->', '')
         .replace(
           `<!--ssr-helmet-->`,
           `${helmet.meta.toString()} ${helmet.title.toString()} ${helmet.link.toString()}`

@@ -1,11 +1,15 @@
 import { Helmet } from 'react-helmet';
 import { Trophy, RotateCcw, Home, Share2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { PixelButton } from '@/components/PixelButton';
 import { ParticleBackground } from '@/components/ParticleBackground';
 import { StatsSection } from './components/StatsSection';
 import { GameStats, DEFAULT_STATS } from './types';
 import { VictoryHeader, DeathHeader } from './components';
+import { sendLeaderboardResult } from '@/api/leaderboard';
+import { selectUserDisplayName, selectUser } from '@/store/slices/userSlice';
 
 import styles from './GameOverPage.module.scss';
 
@@ -19,6 +23,39 @@ export const GameOverPage = ({
   stats = DEFAULT_STATS,
 }: GameOverPageProps) => {
   const navigate = useNavigate();
+  const user = useSelector(selectUser);
+  const displayName = useSelector(selectUserDisplayName);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const submitScore = async () => {
+      if (!user || isSubmitting) return;
+
+      setIsSubmitting(true);
+      setSubmitError(null);
+
+      try {
+        const username = displayName || user.login || 'Anonymous';
+        const score = stats.zombiesKilled * 10 + stats.wave * 100;
+        const level = stats.wave;
+
+        await sendLeaderboardResult({
+          username,
+          score,
+          level,
+        });
+      } catch (error) {
+        setSubmitError(
+          error instanceof Error ? error.message : 'Failed to submit score'
+        );
+      } finally {
+        setIsSubmitting(false);
+      }
+    };
+
+    submitScore();
+  }, [user, displayName, stats, isSubmitting]);
 
   return (
     <>
@@ -49,6 +86,11 @@ export const GameOverPage = ({
               accuracy={stats.accuracy}
               headshots={stats.headshots}
             />
+            {submitError && (
+              <div className={styles.errorMessage}>
+                Failed to submit score: {submitError}
+              </div>
+            )}
             {victory && (
               <aside className={`metal-panel ${styles.trophyPanel} cyan-glow`}>
                 <Trophy className={styles.trophyIcon} />

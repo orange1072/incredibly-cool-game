@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { getLeaderboard } from '@/api/leaderboard';
 import { LeaderboardItem } from '@/types/leaderboard';
-import styles from './Table.module.scss';
+import styles from '../../pages/Leaderboard/components/Table/Table.module.scss';
 
-export const Table = () => {
+export const Leaderboard = () => {
   const [leaderboard, setLeaderboard] = useState<LeaderboardItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

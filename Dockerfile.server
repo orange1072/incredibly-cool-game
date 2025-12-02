@@ -2,26 +2,28 @@ ARG NODE_VERSION=20
 ARG SERVER_PORT=3001
 
 FROM node:$NODE_VERSION as base
-
 WORKDIR /app
 
 FROM base as builder
 
-COPY package.json yarn.lock ./
+COPY package.json yarn.lock lerna.json ./
+COPY packages/server/package.json ./packages/server/
+COPY packages/client/package.json ./packages/client/
+
 RUN yarn install --frozen-lockfile
 
 COPY . .
 
-RUN yarn lerna bootstrap
 RUN rm -rf /app/packages/server/dist/ && yarn build --scope=server
-
 
 FROM node:$NODE_VERSION-slim as production
 WORKDIR /app
 
 COPY --from=builder /app/packages/server/dist/ /app/
 COPY --from=builder /app/packages/server/package.json /app/package.json
-RUN yarn install --production=true
+
+RUN yarn install --production --frozen-lockfile
 
 EXPOSE $SERVER_PORT
-CMD [ "node", "/app/index.js" ]
+
+CMD ["node", "/app/index.js"]

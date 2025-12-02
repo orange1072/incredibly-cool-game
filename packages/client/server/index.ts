@@ -46,7 +46,7 @@ async function createServer() {
       root: clientPath,
       appType: 'custom',
       ssr: {
-        noExternal: ['styled-components'],
+        noExternal: ['@reduxjs/toolkit', 'styled-components'],
       },
     });
     app.use(vite.middlewares);

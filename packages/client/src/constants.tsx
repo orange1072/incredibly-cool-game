@@ -1,4 +1,9 @@
 import './client.d';
+
+// Реэкспортируем API_URL и SERVER_HOST из отдельных файлов для избежания циклических зависимостей
+export { API_URL } from './config/api';
+export { SERVER_HOST } from './config/server';
+
 import { HeartSVG, RadiationSVG, GuardSVG } from '@/assets/icons';
 import { MainPage } from '@/pages/MainPage';
 import { DemoPage } from '@/pages/DemoPage';
@@ -29,13 +34,6 @@ export const ROUTES: RouteObject[] = [
   { path: '/forum', Component: ForumPage },
   { path: '*', Component: Error404Page },
 ];
-
-export const API_URL = 'https://ya-praktikum.tech/api/v2';
-
-export const SERVER_HOST =
-  typeof window === 'undefined'
-    ? __INTERNAL_SERVER_URL__
-    : __EXTERNAL_SERVER_URL__;
 
 export const MAX_AVATAR_SIZE = 5 * 1024 * 1024; // 5MB in bytes
 

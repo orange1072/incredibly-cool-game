@@ -7,16 +7,16 @@ import {
   StaticRouterProvider,
 } from 'react-router-dom/server';
 import { matchRoutes } from 'react-router-dom';
-import { configureStore } from '@reduxjs/toolkit';
-
 import {
   createContext,
   createFetchRequest,
   createUrl,
 } from './entry-server.utils';
-import { reducer } from './store/store';
+import {
+  createServerStore,
+  setPageHasBeenInitializedOnServer,
+} from './store/createServerStore';
 import './index.scss';
-import { setPageHasBeenInitializedOnServer } from './store/slices/ssrSlice';
 import { ROUTES } from './constants';
 
 // Динамический импорт для react-dom/server
@@ -36,9 +36,7 @@ export const render = async (req: ExpressRequest) => {
     throw context;
   }
 
-  const store = configureStore({
-    reducer,
-  });
+  const store = createServerStore();
 
   const url = createUrl(req);
   const foundRoutes = matchRoutes(ROUTES, url);
@@ -50,20 +48,17 @@ export const render = async (req: ExpressRequest) => {
   store.dispatch(setPageHasBeenInitializedOnServer(true));
 
   const router = createStaticRouter(dataRoutes, context);
-  try {
-    const html = ReactDOM.renderToString(
-      <Provider store={store}>
-        <StaticRouterProvider router={router} context={context} />
-      </Provider>
-    );
-    const helmet = Helmet.renderStatic();
+  const html = ReactDOM.renderToString(
+    <Provider store={store}>
+      <StaticRouterProvider router={router} context={context} />
+    </Provider>
+  );
+  const helmet = Helmet.renderStatic();
 
-    return {
-      html,
-      helmet,
-      initialState: store.getState(),
-    };
-  } finally {
-    console.log('');
-  }
+  return {
+    html,
+    helmet,
+    initialState: store.getState(),
+    styleTags: '', // Пустая строка, так как ServerStyleSheet больше не используется
+  };
 };

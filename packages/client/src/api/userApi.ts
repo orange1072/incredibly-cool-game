@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { API_URL } from '@/constants';
+import { API_URL } from '@/config/api';
 import { getAuthToken } from '@/utils/auth';
 import { API_ENDPOINTS } from './endpoints';
 

@@ -9,7 +9,7 @@
     "start": "vite",
     "dev": "cross-env NODE_ENV=development tsx server/index.ts",
     "build": "tsc -p tsconfig.server.json && vite build && vite build --ssr src/entry-server.tsx --outDir dist/server",
-    "preview": "node file:///C:/git/yandex/incredibly-cool-game/packages/client/dist/server-ts/index.js",
+    "preview": "node dist/server-ts/index.js",
     "lint": "eslint .",
     "lint:fix": "eslint --fix",
     "format": "prettier --write .",

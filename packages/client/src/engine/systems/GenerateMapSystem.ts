@@ -6,7 +6,6 @@ import {
   SpriteComponent,
   SpawnPointComponent,
   CollisionComponent,
-  type ObstacleKind,
 } from '../components';
 import Entity from '../core/Entity';
 import Logger from '../infrastructure/Logger';
@@ -25,6 +24,11 @@ import {
   PLAYER_SPAWN_Y,
   SPAWN_PADDING,
 } from './consts/generate-map';
+import OBSTACLE_PRESETS, {
+  ObstaclePreset,
+  ObstaclePresetName,
+  OBSTACLES,
+} from '../settings/obstacles-settings/obstacles';
 
 class GenerateMapSystem implements ISystem<SystemType> {
   type: SystemType = SYSTEM_TYPES.generateMap as SystemType;
@@ -64,7 +68,8 @@ class GenerateMapSystem implements ISystem<SystemType> {
         const wall = this.createObstacle(
           i * this.cellSize,
           j * this.cellSize,
-          'wall'
+          'worldBorder',
+          OBSTACLE_PRESETS['worldBorder']
         );
         world.addEntity(wall);
       }
@@ -75,7 +80,8 @@ class GenerateMapSystem implements ISystem<SystemType> {
         const wall = this.createObstacle(
           i * this.cellSize,
           j * this.cellSize,
-          'wall'
+          'worldBorder',
+          OBSTACLE_PRESETS['worldBorder']
         );
         world.addEntity(wall);
       }
@@ -88,8 +94,8 @@ class GenerateMapSystem implements ISystem<SystemType> {
         Math.random() * (this.mapWidth - SPAWN_PADDING) + OBSTACLE_PADDING;
       const y =
         Math.random() * (this.mapHeight - SPAWN_PADDING) + OBSTACLE_PADDING;
-      const rock = this.createObstacle(x, y, 'rock');
-      world.addEntity(rock);
+      const obstacle = this.createRandomObstacle(x, y);
+      world.addEntity(obstacle);
     }
   }
 
@@ -121,18 +127,43 @@ class GenerateMapSystem implements ISystem<SystemType> {
     }
   }
 
-  private createObstacle(x: number, y: number, kind: ObstacleKind) {
+  private createRandomObstacle(x: number, y: number) {
+    const kind = OBSTACLES[
+      Math.floor(Math.random() * OBSTACLES.length)
+    ] as ObstaclePresetName;
+    const obstacle = OBSTACLE_PRESETS[kind];
+    return this.createObstacle(x, y, kind, obstacle);
+  }
+
+  private createObstacle(
+    x: number,
+    y: number,
+    kind: ObstaclePresetName,
+    obstacle: ObstaclePreset
+  ) {
     const e = new Entity();
-    const width = OBSTACLE_SIZE;
-    const height = OBSTACLE_SIZE;
+    const width = obstacle.isBig ? OBSTACLE_SIZE : OBSTACLE_SIZE / 2;
+    const height = obstacle.isBig ? OBSTACLE_SIZE * 2 : OBSTACLE_SIZE;
+    const spriteOptions =
+      kind === 'worldBorder'
+        ? {
+            name: kind,
+            width,
+            height,
+            source: undefined,
+            defaultColor: 'rgba(0,0,0,0)',
+          }
+        : { name: kind, width, height, source: obstacle.sprite ?? kind };
+
     e.addComponent(new PositionComponent({ x, y }))
       .addComponent(new ObstacleComponent({ width, height, kind }))
       .addComponent(
-        new CollisionComponent({ radius: Math.max(width, height) / 2 })
+        new CollisionComponent({
+          radius: Math.max(width, height) / 7.5,
+          offsetY: height / 4,
+        })
       )
-      .addComponent(
-        new SpriteComponent({ name: kind, width, height, source: kind })
-      );
+      .addComponent(new SpriteComponent(spriteOptions));
     return e;
   }
 }

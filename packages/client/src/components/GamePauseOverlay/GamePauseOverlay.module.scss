@@ -1,0 +1,68 @@
+.pauseOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 4, 12, 0.7);
+  backdrop-filter: blur(6px);
+  z-index: 20;
+  padding: 1rem;
+}
+
+.pausePanel {
+  width: min(520px, 100%);
+  background: linear-gradient(180deg, rgba(14, 20, 35, 0.95), rgba(8, 10, 20, 0.98));
+  border: 1px solid rgba(94, 234, 212, 0.35);
+  border-radius: 18px;
+  padding: 1.5rem;
+  color: #f8fafc;
+  box-shadow: 0 25px 45px rgba(0, 0, 0, 0.55);
+}
+
+.pauseHeader {
+  text-align: center;
+  margin-bottom: 1.25rem;
+
+  h3 {
+    margin: 0;
+    font-size: 1.4rem;
+  }
+
+  p {
+    margin: 0.25rem 0 0;
+    color: rgba(226, 232, 240, 0.78);
+  }
+}
+
+.upgradeList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.upgradeRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.9rem 1rem;
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid rgba(94, 234, 212, 0.25);
+}
+
+.upgradeName {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.upgradeHint {
+  font-size: 0.9rem;
+  color: rgba(226, 232, 240, 0.72);
+}
+
+.upgradeLevel {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #5ef1d6;
+}

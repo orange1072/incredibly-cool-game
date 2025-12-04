@@ -11,9 +11,13 @@ class CollisionComponent
   type = COMPONENT_TYPES.collision;
   entity!: IEntity;
   radius: number;
+  offsetX: number;
+  offsetY: number;
 
-  constructor({ radius }: CollisionComponentState) {
+  constructor({ radius, offsetX = 0, offsetY = 0 }: CollisionComponentState) {
     this.radius = radius;
+    this.offsetX = offsetX;
+    this.offsetY = offsetY;
   }
 }
 

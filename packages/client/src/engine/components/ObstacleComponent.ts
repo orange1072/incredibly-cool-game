@@ -14,7 +14,7 @@ class ObstacleComponent implements IPureDataComponent, ObstacleComponentState {
   width: number;
   height: number;
   kind: ObstacleKind;
-  public isBlocking: boolean;
+  public isBlocking: boolean = false;
   public speedReducing: number;
   public damaging: number;
 
@@ -23,7 +23,7 @@ class ObstacleComponent implements IPureDataComponent, ObstacleComponentState {
     this.width = width;
     this.height = height;
     this.kind = kind;
-    this.isBlocking = preset.isBlocking;
+    this.isBlocking = preset.isBlocking ?? false;
     this.speedReducing = preset.speedReducing;
     this.damaging = preset.damaging;
   }

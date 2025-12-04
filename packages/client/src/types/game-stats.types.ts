@@ -29,6 +29,8 @@ interface GameStats {
     damage: number;
     attackSpeed: number;
     movementSpeed: number;
+    health: number;
+    xp: number;
   };
   levelRewards: {
     entityId: string | null;

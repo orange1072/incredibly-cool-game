@@ -1,16 +1,18 @@
+import worldSettings from '@/engine/settings/world-settings/world';
+
 const DEFAULT_MAP_WIDTH = 800;
 const DEFAULT_MAP_HEIGHT = 600;
 const DEFAULT_CELL_SIZE = 64;
 const BORDER_INDEX = 0;
-const OBSTACLE_COUNT = 10;
-const OBSTACLE_PADDING = 50;
-const SPAWN_PADDING = 100;
+const OBSTACLE_COUNT = worldSettings.bounds.width / 300;
+const OBSTACLE_PADDING = 20;
+const SPAWN_PADDING = -40;
 const PLAYER_SPAWN_X = 400;
 const PLAYER_SPAWN_Y = 300;
 const PLAYER_SPAWN_RADIUS = 15;
-const ENEMY_SPAWN_COUNT = 5;
+const ENEMY_SPAWN_COUNT = 100;
 const ENEMY_SPAWN_RADIUS = 20;
-const OBSTACLE_SIZE = 64;
+const OBSTACLE_SIZE = 256;
 
 export {
   DEFAULT_MAP_WIDTH,

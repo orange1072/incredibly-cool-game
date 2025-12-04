@@ -95,7 +95,7 @@ class ZombieEntity extends Entity {
           cooldown: attackProfile.cooldown,
           range: attackProfile.range,
           projectileDamage: attackDamage,
-          projectileSpeed: 420,
+          projectileSpeed: 180,
         })
       );
     }

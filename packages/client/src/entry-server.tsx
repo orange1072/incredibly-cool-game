@@ -18,6 +18,7 @@ import {
 } from './store/createServerStore';
 import './index.scss';
 import { ROUTES } from './constants';
+import { routes } from './routes';
 
 // Динамический импорт для react-dom/server
 let ReactDOM: any;
@@ -28,7 +29,7 @@ export const render = async (req: ExpressRequest) => {
     ReactDOM = await import('react-dom/server');
   }
 
-  const { query, dataRoutes } = createStaticHandler(ROUTES);
+  const { query, dataRoutes } = createStaticHandler(routes);
   const fetchRequest = createFetchRequest(req);
   const context = await query(fetchRequest);
 
@@ -39,7 +40,7 @@ export const render = async (req: ExpressRequest) => {
   const store = createServerStore();
 
   const url = createUrl(req);
-  const foundRoutes = matchRoutes(ROUTES, url);
+  const foundRoutes = matchRoutes(routes, url);
 
   if (!foundRoutes) {
     throw new Error('Страница не найдена!');

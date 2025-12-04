@@ -2,18 +2,15 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
-import { AppRouter } from './components/AppRouter/AppRouter';
-import { ErrorBoundary } from './components/ErrorBoundary';
-import startServiceWorker from './utils/StartServiceWorker';
 import './index.scss';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { routes } from './routes';
 
-startServiceWorker();
+const router = createBrowserRouter(routes);
 
-const root = ReactDOM.hydrateRoot(
+ReactDOM.hydrateRoot(
   document.getElementById('root') as HTMLElement,
   <Provider store={store}>
-    <ErrorBoundary>
-      <AppRouter />
-    </ErrorBoundary>
+    <RouterProvider router={router} />
   </Provider>
 );

@@ -27,6 +27,10 @@ app.get('/', (_, res) => {
   res.json('👋 Howdy from the server :)')
 })
 
+app.get('/health', (_, res) => {
+  res.status(200).json({ status: 'ok' })
+})
+
 app.listen(port, () => {
   console.log(`  ➜ 🎸 Server is listening on port: ${port}`)
 })

@@ -1,10 +1,15 @@
 version: '3.9'
 
+# Используем env_file для загрузки переменных окружения из .env файла
+# Все секреты и пароли должны быть в .env файле, который не должен попадать в репозиторий
+
 services:
   postgres:
     container_name: prakticum-postgres
     image: postgres:14
     restart: always
+    env_file:
+      - .env
     ports:
       - '${POSTGRES_PORT:-5432}:5432'
     environment:
@@ -14,10 +19,13 @@ services:
     volumes:
       - ./tmp/pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER:-postgres} || exit 1']
       interval: 5s
       timeout: 5s
       retries: 5
+      start_period: 10s
+    networks:
+      - app-network
 
   server:
     container_name: prakticum-server
@@ -26,20 +34,36 @@ services:
       context: .
       dockerfile: Dockerfile.server
       args:
-        SERVER_PORT: ${SERVER_PORT}
+        SERVER_PORT: ${SERVER_PORT:-3001}
+        NODE_VERSION: ${NODE_VERSION:-20}
     restart: always
+    env_file:
+      - .env
     ports:
-      - '${SERVER_PORT}:${SERVER_PORT}'
+      - '${SERVER_PORT:-3001}:${SERVER_PORT:-3001}'
     environment:
-      SERVER_PORT: ${SERVER_PORT}
+      SERVER_PORT: ${SERVER_PORT:-3001}
       POSTGRES_HOST: postgres
       POSTGRES_PORT: 5432
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
+      NODE_ENV: ${NODE_ENV:-production}
     depends_on:
       postgres:
         condition: service_healthy
+    healthcheck:
+      test:
+        [
+          'CMD-SHELL',
+          'node -e "const http=require(\\"http\\");const port=process.env.SERVER_PORT||3001;const r=http.get(`http://localhost:${port}/health`,(res)=>{process.exit(res.statusCode===200?0:1)});r.on(\\"error\\",()=>process.exit(1));"',
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - app-network
 
   client:
     container_name: prakticum-client
@@ -48,12 +72,26 @@ services:
       context: .
       dockerfile: Dockerfile.client
       args:
-        CLIENT_PORT: ${CLIENT_PORT}
+        CLIENT_PORT: ${CLIENT_PORT:-3000}
+        NODE_VERSION: ${NODE_VERSION:-20}
     restart: always
+    env_file:
+      - .env
     ports:
-      - '${CLIENT_PORT}:80'
+      - '${CLIENT_PORT:-3000}:80'
     environment:
-      - CLIENT_PORT=${CLIENT_PORT}
-      - SERVER_PORT=${SERVER_PORT}
+      CLIENT_PORT: ${CLIENT_PORT:-3000}
+      PORT: ${PORT:-3002}
+      SERVER_PORT: ${SERVER_PORT:-3001}
+      EXTERNAL_SERVER_URL: ${EXTERNAL_SERVER_URL:-http://localhost:3001}
+      INTERNAL_SERVER_URL: ${INTERNAL_SERVER_URL:-http://server:3001}
+      NODE_ENV: ${NODE_ENV:-production}
     depends_on:
-      - server
+      server:
+        condition: service_healthy
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

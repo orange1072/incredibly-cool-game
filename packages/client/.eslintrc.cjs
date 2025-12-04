@@ -44,5 +44,6 @@ module.exports = {
     'jest.config.js',
     'src/App.tsx',
     'src/App.test.tsx',
+    'src/main.tsx',
   ],
 };

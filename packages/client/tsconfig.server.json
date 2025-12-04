@@ -1,11 +1,20 @@
 {
   "compilerOptions": {
     "composite": true,
-    "target": "es2019",
-    "module": "commonjs",
+    "target": "ESNext",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "moduleDetection": "force",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "lib": ["es2019", "DOM"]
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "strict": false,
+    "outDir": "dist/server-ts",
+    "rootDir": "server",
+    "types": ["node"],
+    "noEmit": false
   },
-  "include": ["server/index.ts"]
+  "include": ["server/**/*"],
+  "exclude": ["node_modules"]
 }

@@ -7,9 +7,9 @@
   "type": "module",
   "scripts": {
     "start": "vite",
-    "dev": "tsc --project tsconfig.server.json && cross-env NODE_ENV=development EXTERNAL_SERVER_URL='http://localhost:3001' INTERNAL_SERVER_URL='http://localhost:3001' node server/index.js",
-    "build": "tsc --project tsconfig.server.json && vite build && vite build --ssr src/entry-server.tsx --outDir dist/server",
-    "preview": "node server/index.js",
+    "dev": "cross-env NODE_ENV=development tsx server/index.ts",
+    "build": "tsc -p tsconfig.server.json && vite build && vite build --ssr src/entry-server.tsx --outDir dist/server",
+    "preview": "node dist/server-ts/index.js",
     "lint": "eslint .",
     "lint:fix": "eslint --fix",
     "format": "prettier --write .",
@@ -27,7 +27,7 @@
     "dotenv": "^16.0.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
-    "express": "^4.18.2",
+    "express": "4.18.2",
     "lucide-react": "^0.545.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -38,7 +38,7 @@
     "redux": "^4.2.1",
     "serialize-javascript": "^6.0.1",
     "styled-components": "^6.1.0",
-    "vite": "7.1.5"
+    "vite": "^7.2.2"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
@@ -49,9 +49,12 @@
   "devDependencies": {
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^15.0.6",
+    "@types/cookie-parser": "^1.4.10",
     "@types/jest": "^28.1.8",
+    "@types/node": "20.16.11",
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.6",
+    "@types/serialize-javascript": "^5.0.4",
     "@typescript-eslint/eslint-plugin": "8.46.0",
     "@typescript-eslint/parser": "8.46.0",
     "@vitejs/plugin-react": "^2.0.1",
@@ -69,6 +72,8 @@
     "prettier": "2.8.8",
     "sass": "^1.93.2",
     "ts-jest": "^28.0.8",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.20.6",
     "typescript": "^4.8.2",
     "typescript-eslint": "^8.0.0"
   },

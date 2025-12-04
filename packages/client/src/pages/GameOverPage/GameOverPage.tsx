@@ -40,8 +40,24 @@ export const GameOverPage = ({
         const score = stats.zombiesKilled * 10 + stats.wave * 100;
         const level = stats.wave;
 
+        if (score < 0) {
+          throw new Error('Score cannot be negative');
+        }
+
+        if (level < 1) {
+          throw new Error('Level must be at least 1');
+        }
+
+        if (!username || username.trim().length === 0) {
+          throw new Error('Username cannot be empty');
+        }
+
+        if (username.length > 50) {
+          throw new Error('Username is too long (max 50 characters)');
+        }
+
         await sendLeaderboardResult({
-          username,
+          username: username.trim(),
           score,
           level,
         });
@@ -55,7 +71,7 @@ export const GameOverPage = ({
     };
 
     submitScore();
-  }, [user, displayName, stats, isSubmitting]);
+  }, [user, displayName, stats]);
 
   return (
     <>

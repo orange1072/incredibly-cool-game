@@ -33,15 +33,24 @@ export const sendLeaderboardResult = async (
     teamName: TEAM_NAME,
   };
 
-  const response = await fetch(`${API_URL}/leaderboard`, {
-    method: 'POST',
-    headers: getHeaders(),
-    credentials: 'include',
-    body: JSON.stringify(payload),
-  });
+  try {
+    const response = await fetch(`${API_URL}/leaderboard`, {
+      method: 'POST',
+      headers: getHeaders(),
+      credentials: 'include',
+      body: JSON.stringify(payload),
+    });
 
-  if (!response.ok) {
-    throw new Error(`Failed to submit leaderboard result: ${response.status}`);
+    if (!response.ok) {
+      throw new Error(
+        `Failed to submit leaderboard result: ${response.status}`
+      );
+    }
+  } catch (error) {
+    if (error instanceof TypeError) {
+      throw new Error('Network error: Unable to connect to the server');
+    }
+    throw error;
   }
 };
 
@@ -55,23 +64,30 @@ export const getLeaderboard = async (params?: {
     limit: params?.limit || 10,
   };
 
-  const response = await fetch(`${API_URL}/leaderboard/all`, {
-    method: 'POST',
-    headers: getHeaders(),
-    credentials: 'include',
-    body: JSON.stringify(payload),
-  });
+  try {
+    const response = await fetch(`${API_URL}/leaderboard/all`, {
+      method: 'POST',
+      headers: getHeaders(),
+      credentials: 'include',
+      body: JSON.stringify(payload),
+    });
 
-  if (!response.ok) {
-    throw new Error(`Failed to fetch leaderboard: ${response.status}`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch leaderboard: ${response.status}`);
+    }
+
+    const result: LeaderboardResponseItem[] = await response.json();
+
+    return result.map((item, index) => ({
+      username: item.data.username,
+      score: item.data.score,
+      level: item.data.level,
+      rank: params?.cursor ? params.cursor + index + 1 : index + 1,
+    }));
+  } catch (error) {
+    if (error instanceof TypeError) {
+      throw new Error('Network error: Unable to connect to the server');
+    }
+    throw error;
   }
-
-  const result: LeaderboardResponseItem[] = await response.json();
-
-  return result.map((item, index) => ({
-    username: item.data.username,
-    score: item.data.score,
-    level: item.data.level,
-    rank: params?.cursor ? params.cursor + index + 1 : index + 1,
-  }));
 };

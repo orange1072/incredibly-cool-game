@@ -2,6 +2,7 @@ export interface LeaderboardData {
   username: string;
   score: number;
   level: number;
+  timeAlive?: string;
 }
 
 export interface LeaderboardSubmitRequest {
@@ -21,6 +22,8 @@ export interface LeaderboardResponseItem {
     username: string;
     score: number;
     level: number;
+    timeAlive: number;
+    time: string | number;
     [key: string]: string | number;
   };
 }
@@ -30,4 +33,6 @@ export interface LeaderboardItem {
   score: number;
   level: number;
   rank?: number;
+  timeAlive?: number;
+  time?: string;
 }

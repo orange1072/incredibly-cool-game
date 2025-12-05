@@ -1,5 +1,7 @@
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { API_URL } from '@/constants';
 import { getAuthToken } from '@/utils/auth';
+import { API_ENDPOINTS } from './endpoints';
 import {
   LeaderboardData,
   LeaderboardSubmitRequest,
@@ -8,86 +10,122 @@ import {
   LeaderboardItem,
 } from '@/types/leaderboard';
 
-const TEAM_NAME = 'incredibly-cool-team';
+const TEAM_NAME = '404:Speed Not Found';
 const RATING_FIELD = 'score';
 
-const getHeaders = (): HeadersInit => {
-  const headers: HeadersInit = {
-    'Content-Type': 'application/json',
-  };
+export const leaderboardApi = createApi({
+  reducerPath: 'leaderboardApi',
+  baseQuery: fetchBaseQuery({
+    baseUrl: API_URL,
+    credentials: 'include',
+    prepareHeaders: (headers) => {
+      const token = getAuthToken();
+      if (token) {
+        headers.set('Authorization', `Bearer ${token}`);
+      }
+      headers.set('Content-Type', 'application/json');
+      return headers;
+    },
+  }),
+  tagTypes: ['Leaderboard'],
+  endpoints: (builder) => ({
+    sendLeaderboardResult: builder.mutation<void, LeaderboardData>({
+      queryFn: async (data, _api, _extraOptions, fetchWithBQ) => {
+        if (data.score < 0) {
+          return {
+            error: {
+              status: 'CUSTOM_ERROR',
+              error: 'Score cannot be negative',
+            },
+          };
+        }
 
-  const token = getAuthToken();
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-  }
+        if (data.level < 1) {
+          return {
+            error: {
+              status: 'CUSTOM_ERROR',
+              error: 'Level must be at least 1',
+            },
+          };
+        }
 
-  return headers;
-};
+        if (!data.username || data.username.trim().length === 0) {
+          return {
+            error: {
+              status: 'CUSTOM_ERROR',
+              error: 'Username cannot be empty',
+            },
+          };
+        }
 
-export const sendLeaderboardResult = async (
-  data: LeaderboardData
-): Promise<void> => {
-  const payload: LeaderboardSubmitRequest = {
-    data,
-    ratingFieldName: RATING_FIELD,
-    teamName: TEAM_NAME,
-  };
+        if (data.username.length > 50) {
+          return {
+            error: {
+              status: 'CUSTOM_ERROR',
+              error: 'Username is too long (max 50 characters)',
+            },
+          };
+        }
 
-  try {
-    const response = await fetch(`${API_URL}/leaderboard`, {
-      method: 'POST',
-      headers: getHeaders(),
-      credentials: 'include',
-      body: JSON.stringify(payload),
-    });
+        const payload: LeaderboardSubmitRequest = {
+          data: {
+            ...data,
+            username: data.username.trim(),
+          },
+          ratingFieldName: RATING_FIELD,
+          teamName: TEAM_NAME,
+        };
 
-    if (!response.ok) {
-      throw new Error(
-        `Failed to submit leaderboard result: ${response.status}`
-      );
-    }
-  } catch (error) {
-    if (error instanceof TypeError) {
-      throw new Error('Network error: Unable to connect to the server');
-    }
-    throw error;
-  }
-};
+        const result = await fetchWithBQ({
+          url: API_ENDPOINTS.LEADERBOARD.BASE,
+          method: 'POST',
+          body: JSON.stringify(payload),
+        });
 
-export const getLeaderboard = async (params?: {
-  cursor?: number;
-  limit?: number;
-}): Promise<LeaderboardItem[]> => {
-  const payload: LeaderboardFetchRequest = {
-    ratingFieldName: RATING_FIELD,
-    cursor: params?.cursor || 0,
-    limit: params?.limit || 10,
-  };
+        return result.error ? { error: result.error } : { data: undefined };
+      },
+      invalidatesTags: ['Leaderboard'],
+    }),
+    getLeaderboard: builder.query<
+      LeaderboardItem[],
+      { cursor?: number; limit?: number } | void
+    >({
+      query: (params) => {
+        const payload: LeaderboardFetchRequest = {
+          ratingFieldName: RATING_FIELD,
+          cursor: params?.cursor || 0,
+          limit: params?.limit || 10,
+        };
+        return {
+          url: API_ENDPOINTS.LEADERBOARD.ALL,
+          method: 'POST',
+          body: JSON.stringify(payload),
+        };
+      },
+      transformResponse: (
+        response: LeaderboardResponseItem[],
+        _meta,
+        arg
+      ): LeaderboardItem[] => {
+        return response.map((item, index) => ({
+          username: item.data.username,
+          score: item.data.score,
+          level: item.data.level,
+          rank: arg?.cursor ? arg.cursor + index + 1 : index + 1,
+          timeAlive:
+            typeof item.data.timeAlive === 'number'
+              ? item.data.timeAlive
+              : undefined,
+          recordDate:
+            typeof item.data.recordDate === 'string'
+              ? item.data.recordDate
+              : undefined,
+        }));
+      },
+      providesTags: ['Leaderboard'],
+    }),
+  }),
+});
 
-  try {
-    const response = await fetch(`${API_URL}/leaderboard/all`, {
-      method: 'POST',
-      headers: getHeaders(),
-      credentials: 'include',
-      body: JSON.stringify(payload),
-    });
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch leaderboard: ${response.status}`);
-    }
-
-    const result: LeaderboardResponseItem[] = await response.json();
-
-    return result.map((item, index) => ({
-      username: item.data.username,
-      score: item.data.score,
-      level: item.data.level,
-      rank: params?.cursor ? params.cursor + index + 1 : index + 1,
-    }));
-  } catch (error) {
-    if (error instanceof TypeError) {
-      throw new Error('Network error: Unable to connect to the server');
-    }
-    throw error;
-  }
-};
+export const { useSendLeaderboardResultMutation, useGetLeaderboardQuery } =
+  leaderboardApi;

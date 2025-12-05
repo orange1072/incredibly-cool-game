@@ -1,14 +1,14 @@
 import { Helmet } from 'react-helmet';
 import { Trophy, RotateCcw, Home, Share2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { PixelButton } from '@/components/PixelButton';
 import { ParticleBackground } from '@/components/ParticleBackground';
 import { StatsSection } from './components/StatsSection';
 import { GameStats, DEFAULT_STATS } from './types';
 import { VictoryHeader, DeathHeader } from './components';
-import { sendLeaderboardResult } from '@/api/leaderboard';
+import { useSendLeaderboardResultMutation } from '@/api';
 import { selectUserDisplayName, selectUser } from '@/store/slices/userSlice';
 
 import styles from './GameOverPage.module.scss';
@@ -25,53 +25,23 @@ export const GameOverPage = ({
   const navigate = useNavigate();
   const user = useSelector(selectUser);
   const displayName = useSelector(selectUserDisplayName);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [sendLeaderboardResult, { isLoading, error }] =
+    useSendLeaderboardResultMutation();
 
   useEffect(() => {
-    const submitScore = async () => {
-      if (!user || isSubmitting) return;
+    if (!user || isLoading) return;
 
-      setIsSubmitting(true);
-      setSubmitError(null);
+    const username = displayName || user.login || 'Anonymous';
+    const score = stats.zombiesKilled * 10 + stats.wave * 100;
+    const level = stats.wave;
 
-      try {
-        const username = displayName || user.login || 'Anonymous';
-        const score = stats.zombiesKilled * 10 + stats.wave * 100;
-        const level = stats.wave;
-
-        if (score < 0) {
-          throw new Error('Score cannot be negative');
-        }
-
-        if (level < 1) {
-          throw new Error('Level must be at least 1');
-        }
-
-        if (!username || username.trim().length === 0) {
-          throw new Error('Username cannot be empty');
-        }
-
-        if (username.length > 50) {
-          throw new Error('Username is too long (max 50 characters)');
-        }
-
-        await sendLeaderboardResult({
-          username: username.trim(),
-          score,
-          level,
-        });
-      } catch (error) {
-        setSubmitError(
-          error instanceof Error ? error.message : 'Failed to submit score'
-        );
-      } finally {
-        setIsSubmitting(false);
-      }
-    };
-
-    submitScore();
-  }, [user, displayName, stats]);
+    sendLeaderboardResult({
+      username,
+      score,
+      level,
+      timeAlive: stats.timeAlive,
+    });
+  }, [user, displayName, stats, sendLeaderboardResult, isLoading]);
 
   return (
     <>
@@ -102,9 +72,16 @@ export const GameOverPage = ({
               accuracy={stats.accuracy}
               headshots={stats.headshots}
             />
-            {submitError && (
+            {error && (
               <div className={styles.errorMessage}>
-                Failed to submit score: {submitError}
+                Failed to submit score:{' '}
+                {'error' in error
+                  ? error.error
+                  : 'data' in error
+                  ? JSON.stringify(error.data)
+                  : 'message' in error
+                  ? error.message
+                  : 'Unknown error'}
               </div>
             )}
             {victory && (

@@ -1,32 +1,29 @@
-import { useEffect, useState } from 'react';
-import { getLeaderboard } from '@/api/leaderboard';
-import { LeaderboardItem } from '@/types/leaderboard';
+import { useGetLeaderboardQuery } from '@/api';
 import styles from './Table.module.scss';
 
 export const Table = () => {
-  const [leaderboard, setLeaderboard] = useState<LeaderboardItem[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const {
+    data: leaderboard = [],
+    isLoading,
+    error,
+  } = useGetLeaderboardQuery({ cursor: 0, limit: 10 });
 
-  useEffect(() => {
-    const fetchLeaderboard = async () => {
-      setIsLoading(true);
-      setError(null);
+  const formatTime = (seconds?: number) => {
+    if (!seconds) return 'N/A';
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${minutes}:${secs.toString().padStart(2, '0')}`;
+  };
 
-      try {
-        const data = await getLeaderboard({ cursor: 0, limit: 10 });
-        setLeaderboard(data);
-      } catch (err) {
-        setError(
-          err instanceof Error ? err.message : 'Failed to load leaderboard'
-        );
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchLeaderboard();
-  }, []);
+  const formatDate = (dateString?: string) => {
+    if (!dateString) return 'N/A';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    });
+  };
 
   const rankIcons = (rank: number) => {
     switch (rank) {
@@ -54,19 +51,20 @@ export const Table = () => {
   };
 
   if (isLoading) {
-    return (
-      <div style={{ textAlign: 'center', padding: '40px', color: '#fff' }}>
-        Loading leaderboard...
-      </div>
-    );
+    return <div className={styles.message}>Loading leaderboard...</div>;
   }
 
   if (error) {
-    return (
-      <div style={{ textAlign: 'center', padding: '40px', color: '#ff4444' }}>
-        Error: {error}
-      </div>
-    );
+    const errorMessage =
+      'error' in error
+        ? error.error
+        : 'data' in error
+        ? JSON.stringify(error.data)
+        : 'message' in error
+        ? error.message
+        : 'Failed to load leaderboard';
+
+    return <div className={styles.error}>Error: {errorMessage}</div>;
   }
 
   return (
@@ -75,8 +73,10 @@ export const Table = () => {
         <tr>
           <th scope={'row'}>RANK</th>
           <th scope={'row'}>STALKER</th>
+          <th scope={'row'}>ELIMINATED</th>
           <th scope={'row'}>SCORE</th>
           <th scope={'row'}>LEVEL</th>
+          <th scope={'row'}>TIME</th>
         </tr>
       </thead>
       <tbody>
@@ -86,8 +86,10 @@ export const Table = () => {
               {rankIcons(player.rank || 0)}#{player.rank}
             </td>
             <td scope={'row'}>{player.username}</td>
+            <td scope={'row'}>{formatTime(player.timeAlive)}</td>
             <td scope={'row'}>{player.score}</td>
             <td scope={'row'}>{player.level}</td>
+            <td scope={'row'}>{formatDate(player.time)}</td>
           </tr>
         ))}
       </tbody>

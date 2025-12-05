@@ -2,7 +2,7 @@ import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { NavBar } from '@/components/Navbar';
 import { useGetUserMutation } from '@/slices/authApi';
 import { setUser } from '@/store/slices/userSlice';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Outlet } from 'react-router-dom';
 

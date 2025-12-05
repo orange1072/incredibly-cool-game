@@ -14,6 +14,10 @@ import { SigninPage } from './pages/LoginPage';
 import { SignupPage } from './pages/SignupPage';
 import { Error404Page } from './pages/Error404Page';
 
+export type PageInitContext = {
+  clientToken?: string;
+};
+
 export const routes = [
   {
     path: '/',

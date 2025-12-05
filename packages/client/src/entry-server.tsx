@@ -17,7 +17,6 @@ import {
   setPageHasBeenInitializedOnServer,
 } from './store/createServerStore';
 import './index.scss';
-import { ROUTES } from './constants';
 import { routes } from './routes';
 
 // Динамический импорт для react-dom/server

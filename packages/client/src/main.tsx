@@ -5,9 +5,7 @@ import { store } from './store/store';
 import './index.scss';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { routes } from './routes';
-import startServiceWorker from './utils/StartServiceWorker';
-
-// startServiceWorker();
+// import startServiceWorker from './utils/StartServiceWorker';
 
 const router = createBrowserRouter(routes);
 
@@ -17,3 +15,5 @@ ReactDOM.hydrateRoot(
     <RouterProvider router={router} />
   </Provider>
 );
+
+// startServiceWorker();

@@ -31,6 +31,8 @@ export {
   setDamageModifier,
   setAttackSpeedModifier,
   setMovementSpeedModifier,
+  setHealthModifier,
+  setXpModifier,
   resetModifiers,
 } from './modifiersSlice';
 export {

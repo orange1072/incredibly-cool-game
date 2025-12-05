@@ -32,14 +32,14 @@ const furiousBoss: EnemyVariantDefinition = {
   abilities: ['Увеличенная скорость и радиус агрессии', 'Снижен урон'],
   spawn: { ...baseBossSpawn, weight: 0.9 },
   settings: createBossSettings({
-    movement: { speed: 48 },
+    movement: { speed: 42 },
     ai: {
       aggroRange: 720,
       startingValue: 'idle',
     },
     damage: {
       ...fatZombieBossSettings.damage,
-      baseValue: 32,
+      baseValue: 28,
     },
     xpReward: 520,
     sprite: {
@@ -59,14 +59,14 @@ const juggernautBoss: EnemyVariantDefinition = {
   spawn: { ...baseBossSpawn, weight: 0.7 },
   settings: createBossSettings({
     health: {
-      baseValue: 800,
-      levelBonus: 220,
+      baseValue: 680,
+      levelBonus: 180,
       health(this: HealthProfile, level: number, multiplier = 1) {
         return this.baseValue * multiplier + this.levelBonus * level;
       },
     },
-    movement: { speed: 22 },
-    attack: { cooldown: 3.1, range: 72 },
+    movement: { speed: 19 },
+    attack: { cooldown: 3.3, range: 72 },
     xpReward: 580,
     skin: {
       color: 'rgba(175, 135, 90, 0.95)',
@@ -93,13 +93,13 @@ const toxicOverlord: EnemyVariantDefinition = {
   spawn: { ...baseBossSpawn, weight: 0.6, minWorldLevel: 1 },
   settings: createBossSettings({
     health: {
-      baseValue: 650,
-      levelBonus: 190,
+      baseValue: 540,
+      levelBonus: 150,
       health(this: HealthProfile, level: number, multiplier = 1) {
         return this.baseValue * multiplier + this.levelBonus * level;
       },
     },
-    attack: { range: 88, cooldown: 3 },
+    attack: { range: 88, cooldown: 3.2 },
     xpReward: 620,
     sprite: {
       ...fatZombieBossSettings.sprite,
@@ -125,15 +125,15 @@ const artilleryBoss: EnemyVariantDefinition = {
   ],
   spawn: { ...baseBossSpawn, weight: 0.5, minWorldLevel: 1 },
   settings: createBossSettings({
-    movement: { speed: 26 },
-    attack: { range: 360, cooldown: 2.8 },
+    movement: { speed: 22 },
+    attack: { range: 360, cooldown: 3 },
     damage: {
       ...fatZombieBossSettings.damage,
-      baseValue: 28,
+      baseValue: 24,
     },
     health: {
-      baseValue: 540,
-      levelBonus: 170,
+      baseValue: 460,
+      levelBonus: 140,
       health(this: HealthProfile, level: number, multiplier = 1) {
         return this.baseValue * multiplier + this.levelBonus * level;
       },

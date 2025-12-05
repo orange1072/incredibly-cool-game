@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSignInMutation, useGetUserMutation } from '@/slices/authApi';
 import { useDispatch } from '@/store/store';
 import { setUser } from '@/store/slices/userSlice';
+import { useOAuth } from '@/hooks/useOAuth';
 
 type Errors = Partial<Record<'username' | 'password', string>>;
 
@@ -17,6 +18,7 @@ export function SigninPage() {
   const [getUser] = useGetUserMutation();
 
   const dispatch = useDispatch();
+  const { handleOAuthLogin } = useOAuth();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState<Errors>({});
@@ -140,7 +142,6 @@ export function SigninPage() {
 
                 <span className={styles['status-text']}>System Online</span>
               </div>
-
               <form onSubmit={handleSubmit} className={styles['panel-inner']}>
                 <Input
                   type="text"
@@ -202,8 +203,19 @@ export function SigninPage() {
                 >
                   Anonymous Access
                 </PixelButton>
-              </form>
 
+                <PixelButton
+                  variant="secondary"
+                  size="md"
+                  icon={
+                    <ArrowRight className={`${styles.icon} ${styles.small}`} />
+                  }
+                  className={styles['full-width']}
+                  onClick={handleOAuthLogin}
+                >
+                  Access via Yandex
+                </PixelButton>
+              </form>
               <div className={styles['panel-actions']}>
                 <button
                   onClick={() => navigate('/signup')}
@@ -211,7 +223,6 @@ export function SigninPage() {
                 >
                   Register Stalker ID
                 </button>
-
                 <button className={`${styles.link} ${styles['muted-link']}`}>
                   <Radiation
                     className={`${styles.icon} ${styles.small} ${styles.pulse}`}

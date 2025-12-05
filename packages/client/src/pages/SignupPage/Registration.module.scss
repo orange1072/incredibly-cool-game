@@ -37,6 +37,25 @@ $cyan-20: rgba(47,184,204,0.2);
   text-align: center;
 }
 
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.divider .line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(45,58,46,0.6));
+}
+
+.or {
+  color: $stalker-text-dim;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
 .logo-wrap {
   position: relative;
   display: inline-flex;
@@ -168,7 +187,10 @@ fieldset {
 
 .footer-link {
   padding-top: 1rem;
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
   border-top: 1px solid $stalker-border;
 }
 

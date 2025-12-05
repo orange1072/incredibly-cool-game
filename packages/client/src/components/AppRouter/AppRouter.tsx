@@ -13,10 +13,6 @@ import { GameMenuPage } from '@/pages/GameMenuPage';
 import { GamePlayPage } from '@/pages/GamePlayPage';
 import { GameOverPage } from '@/pages/GameOverPage';
 import { withAuth } from '@/hocs/withAuth';
-import { useGetUserMutation } from '@/slices/authApi';
-import { useEffect } from 'react';
-import { useDispatch } from '@/store/store';
-import { setUser } from '@/store/slices/userSlice';
 
 const GameMenuWithAuth = withAuth(GameMenuPage);
 const GamePlayWithAuth = withAuth(GamePlayPage);
@@ -26,20 +22,6 @@ const LeaderboardWithAuth = withAuth(LeaderboardPage);
 const ForumWithAuth = withAuth(ForumPage);
 
 export const AppRouter = () => {
-  const [getUser] = useGetUserMutation();
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    async function fetchUser() {
-      const user = await getUser().unwrap();
-      if (user) {
-        dispatch(setUser(user));
-      }
-    }
-
-    fetchUser();
-  }, []);
-
   return (
     <Router
       future={{

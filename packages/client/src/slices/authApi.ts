@@ -60,6 +60,25 @@ export const authAPI = createApi({
         method: 'POST',
       }),
     }),
+    getOAuthServiceId: builder.query<
+      { service_id: string },
+      { redirect_uri: string }
+    >({
+      query: (params) => ({
+        url: '/oauth/yandex/service-id',
+        method: 'GET',
+        params,
+      }),
+    }),
+    oauthYandex: builder.mutation<void, { code: string; redirect_uri: string }>(
+      {
+        query: (body) => ({
+          url: '/oauth/yandex',
+          method: 'POST',
+          body,
+        }),
+      }
+    ),
   }),
 });
 
@@ -68,4 +87,6 @@ export const {
   useSignUpMutation,
   useSignInMutation,
   useLogoutMutation,
+  useLazyGetOAuthServiceIdQuery,
+  useOauthYandexMutation,
 } = authAPI;

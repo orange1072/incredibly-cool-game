@@ -5,7 +5,7 @@ import {
   SYSTEM_TYPES,
   SystemType,
 } from '../../types/engine.types';
-import { ExperienceComponent } from '../components';
+import { ExperienceComponent, PassiveBonusesComponent } from '../components';
 import World from '../core/World';
 import EventBus from '../infrastructure/EventBus';
 import Logger from '../infrastructure/Logger';
@@ -82,7 +82,13 @@ class ExperienceSystem implements ISystem<SystemType> {
       return;
     }
 
-    exp.xp += xpReward;
+    const bonuses = player.getComponent<PassiveBonusesComponent>(
+      COMPONENT_TYPES.passiveBonuses
+    );
+    const multiplier = bonuses?.getXpMultiplier() ?? 1;
+    const adjustedXp = xpReward * Math.max(multiplier, 0);
+
+    exp.xp += adjustedXp;
   }
 
   private flushPendingRewards() {

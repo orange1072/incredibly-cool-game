@@ -5,6 +5,9 @@ import { store } from './store/store';
 import './index.scss';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { routes } from './routes';
+import startServiceWorker from './utils/StartServiceWorker';
+
+// startServiceWorker();
 
 const router = createBrowserRouter(routes);
 
@@ -14,3 +17,9 @@ ReactDOM.hydrateRoot(
     <RouterProvider router={router} />
   </Provider>
 );
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.ready.then((registration) => {
+    registration.unregister();
+  });
+}

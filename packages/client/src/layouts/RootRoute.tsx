@@ -2,8 +2,7 @@ import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { NavBar } from '@/components/Navbar';
 import { useGetUserMutation } from '@/slices/authApi';
 import { setUser } from '@/store/slices/userSlice';
-import startServiceWorker from '@/utils/StartServiceWorker';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Outlet } from 'react-router-dom';
 
@@ -21,8 +20,6 @@ const RootRoute = () => {
 
     fetchUser();
   }, []);
-
-  startServiceWorker();
 
   return (
     <>

@@ -28,6 +28,10 @@ const loadMigrations = (): Migration[] => {
       name: '002_create_reactions_table',
       path: '002_create_reactions_table.sql',
     },
+    {
+      name: '003_create_posts_table',
+      path: '003_create_posts_table.sql',
+    },
   ]
 
   for (const migration of migrationFiles) {

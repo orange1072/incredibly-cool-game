@@ -225,6 +225,8 @@ class ReduxAdapter<TState = RootState> {
       damage: state.modifiers.damage,
       attackSpeed: state.modifiers.attackSpeed,
       movementSpeed: state.modifiers.movementSpeed,
+      health: state.modifiers.health,
+      xp: state.modifiers.xp,
     };
   }
 

@@ -1,11 +1,10 @@
+import 'reflect-metadata' // Должен быть импортирован первым для работы декораторов
 import dotenv from 'dotenv'
 import cors from 'cors'
 dotenv.config()
 
 import express from 'express'
-import { createClientAndConnect } from './db'
-import { runMigrations } from './migrations/migrate'
-import reactionsRoutes from './routes/reactionsRoutes'
+import { connectDatabase } from './db'
 
 const app = express()
 app.use(cors())
@@ -13,21 +12,6 @@ app.use(express.json())
 
 const port = Number(process.env.SERVER_PORT) || 3001
 
-// Initialize database connection and run migrations
-const initializeDatabase = async () => {
-  await createClientAndConnect()
-  try {
-    await runMigrations()
-  } catch (error) {
-    console.error('Failed to run migrations:', error)
-    process.exit(1)
-  }
-}
-
-// API routes
-app.use('/api/topics', reactionsRoutes)
-
-// Legacy routes
 app.get('/friends', (_, res) => {
   res.json([
     { name: 'Саша', secondName: 'Панов' },
@@ -44,8 +28,12 @@ app.get('/', (_, res) => {
   res.json('👋 Howdy from the server :)')
 })
 
+app.get('/health', (_, res) => {
+  res.status(200).json({ status: 'ok' })
+})
+
 // Start server after database initialization
-initializeDatabase()
+connectDatabase()
   .then(() => {
     app.listen(port, () => {
       console.log(`  ➜ 🎸 Server is listening on port: ${port}`)

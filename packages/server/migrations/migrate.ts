@@ -1,6 +1,5 @@
 import { readFileSync, existsSync } from 'fs'
-import { join, dirname } from 'path'
-import { fileURLToPath } from 'url'
+import { join } from 'path'
 import { getDbPool } from '../db'
 
 interface Migration {
@@ -13,13 +12,9 @@ const MIGRATIONS_TABLE = 'schema_migrations'
 
 // Get migrations directory path
 const getMigrationsDir = (): string => {
-  // For ES modules
-  if (typeof __dirname === 'undefined') {
-    const __filename = fileURLToPath(import.meta.url)
-    return join(dirname(__filename), '..', 'migrations')
-  }
-  // For CommonJS
-  return join(__dirname, '..', 'migrations')
+  // For CommonJS (используется в проекте)
+  // migrate.ts уже находится в директории migrations, поэтому используем __dirname напрямую
+  return __dirname
 }
 
 // Load migration SQL files
@@ -72,7 +67,7 @@ export const runMigrations = async (): Promise<void> => {
       `SELECT name FROM ${MIGRATIONS_TABLE}`
     )
     const appliedMigrations = new Set(
-      appliedMigrationsResult.rows.map(row => row.name)
+      appliedMigrationsResult.rows.map((row: { name: string }) => row.name)
     )
 
     // Run pending migrations

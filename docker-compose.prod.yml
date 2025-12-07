@@ -5,8 +5,9 @@ services:
     restart: always
     env_file:
       - .env
-    ports:
-      - '${POSTGRES_PORT:-5432}:5432'
+    # Порты не открываются наружу - доступ только внутри Docker сети
+    expose:
+      - '5432'
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -34,8 +35,9 @@ services:
     restart: always
     env_file:
       - .env
-    ports:
-      - '${SERVER_PORT:-3001}:${SERVER_PORT:-3001}'
+    # Порты не открываются наружу - доступ только внутри Docker сети
+    expose:
+      - '${SERVER_PORT:-3001}'
     environment:
       SERVER_PORT: ${SERVER_PORT:-3001}
       POSTGRES_HOST: postgres
@@ -44,6 +46,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
       NODE_ENV: ${NODE_ENV:-production}
+      DOCKER_ENV: 'true'
     depends_on:
       postgres:
         condition: service_healthy
@@ -72,6 +75,7 @@ services:
     restart: always
     env_file:
       - .env
+    # Единственный порт, открытый наружу - для доступа к приложению
     ports:
       - '${CLIENT_PORT:-3000}:80'
     environment:

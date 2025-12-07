@@ -12,12 +12,6 @@ app.use(express.json())
 
 const port = Number(process.env.SERVER_PORT) || 3001
 
-// Подключаемся к БД через Sequelize
-connectDatabase().catch(error => {
-  console.error('Failed to connect to database:', error)
-  process.exit(1)
-})
-
 app.get('/friends', (_, res) => {
   res.json([
     { name: 'Саша', secondName: 'Панов' },
@@ -34,8 +28,12 @@ app.get('/', (_, res) => {
   res.json('👋 Howdy from the server :)')
 })
 
+app.get('/health', (_, res) => {
+  res.status(200).json({ status: 'ok' })
+})
+
 // Start server after database initialization
-initializeDatabase()
+connectDatabase()
   .then(() => {
     app.listen(port, () => {
       console.log(`  ➜ 🎸 Server is listening on port: ${port}`)

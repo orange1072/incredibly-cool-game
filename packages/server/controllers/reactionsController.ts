@@ -130,11 +130,13 @@ export const getReactions = async (
       [topicIdNum]
     )
 
-    const stats: ReactionStats[] = statsResult.rows.map(row => ({
-      emoji: row.emoji,
-      count: parseInt(row.count, 10),
-      users: row.users,
-    }))
+    const stats: ReactionStats[] = statsResult.rows.map(
+      (row: { emoji: string; count: string; users: number[] }) => ({
+        emoji: row.emoji,
+        count: parseInt(row.count, 10),
+        users: row.users,
+      })
+    )
 
     // Get all individual reactions (optional - for detailed view)
     const reactionsResult = await pool.query(
@@ -145,13 +147,21 @@ export const getReactions = async (
       [topicIdNum]
     )
 
-    const reactions: ReactionResponse[] = reactionsResult.rows.map(row => ({
-      id: row.id,
-      topic_id: row.topic_id,
-      user_id: row.user_id,
-      emoji: row.emoji,
-      created_at: row.created_at.toISOString(),
-    }))
+    const reactions: ReactionResponse[] = reactionsResult.rows.map(
+      (row: {
+        id: number
+        topic_id: number
+        user_id: number
+        emoji: string
+        created_at: Date
+      }) => ({
+        id: row.id,
+        topic_id: row.topic_id,
+        user_id: row.user_id,
+        emoji: row.emoji,
+        created_at: row.created_at.toISOString(),
+      })
+    )
 
     res.status(200).json({
       topic_id: topicIdNum,

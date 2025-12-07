@@ -25,10 +25,10 @@ router.put('/:id', updateTopic)
 // DELETE /api/topics/:id - Delete topic by ID
 router.delete('/:id', deleteTopic)
 
-// GET /api/topics/:topicId/posts - Get all posts for a topic
+// GET /api/topics/:topicId/posts - Get all posts (comments) for a topic
 router.get('/:topicId/posts', getPostsByTopic)
 
-// POST /api/topics/:topicId/posts - Create new post in a topic
+// POST /api/topics/:topicId/posts - Create new post (comment) in a topic
 router.post('/:topicId/posts', createPost)
 
 export default router

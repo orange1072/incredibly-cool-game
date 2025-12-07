@@ -32,6 +32,10 @@ const loadMigrations = (): Migration[] => {
       name: '003_create_posts_table',
       path: '003_create_posts_table.sql',
     },
+    {
+      name: '004_add_parent_id_to_posts',
+      path: '004_add_parent_id_to_posts.sql',
+    },
   ]
 
   for (const migration of migrationFiles) {

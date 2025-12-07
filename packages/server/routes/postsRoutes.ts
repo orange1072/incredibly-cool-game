@@ -3,6 +3,7 @@ import {
   getPostById,
   updatePost,
   deletePost,
+  getRepliesByPost,
 } from '../controllers/postsController'
 
 const router = Router()
@@ -15,5 +16,8 @@ router.put('/:id', updatePost)
 
 // DELETE /api/posts/:id - Delete post by ID
 router.delete('/:id', deletePost)
+
+// GET /api/posts/:postId/replies - Get all replies for a post (comment)
+router.get('/:postId/replies', getRepliesByPost)
 
 export default router

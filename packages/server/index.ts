@@ -8,6 +8,8 @@ import { connectDatabase } from './db'
 
 const app = express()
 app.use(cors())
+app.use(express.json())
+
 const port = Number(process.env.SERVER_PORT) || 3001
 
 // Подключаемся к БД через Sequelize
@@ -32,10 +34,14 @@ app.get('/', (_, res) => {
   res.json('👋 Howdy from the server :)')
 })
 
-app.get('/health', (_, res) => {
-  res.status(200).json({ status: 'ok' })
-})
-
-app.listen(port, () => {
-  console.log(`  ➜ 🎸 Server is listening on port: ${port}`)
-})
+// Start server after database initialization
+initializeDatabase()
+  .then(() => {
+    app.listen(port, () => {
+      console.log(`  ➜ 🎸 Server is listening on port: ${port}`)
+    })
+  })
+  .catch(error => {
+    console.error('Failed to initialize server:', error)
+    process.exit(1)
+  })

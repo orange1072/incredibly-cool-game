@@ -1,15 +1,20 @@
+import 'reflect-metadata' // Должен быть импортирован первым для работы декораторов
 import dotenv from 'dotenv'
 import cors from 'cors'
 dotenv.config()
 
 import express from 'express'
-import { createClientAndConnect } from './db'
+import { connectDatabase } from './db'
 
 const app = express()
 app.use(cors())
 const port = Number(process.env.SERVER_PORT) || 3001
 
-createClientAndConnect()
+// Подключаемся к БД через Sequelize
+connectDatabase().catch(error => {
+  console.error('Failed to connect to database:', error)
+  process.exit(1)
+})
 
 app.get('/friends', (_, res) => {
   res.json([

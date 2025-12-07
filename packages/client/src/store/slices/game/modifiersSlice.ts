@@ -5,6 +5,8 @@ const initialState: GameStats['modifiers'] = {
   damage: 0,
   attackSpeed: 0,
   movementSpeed: 0,
+  health: 0,
+  xp: 0,
 };
 
 const modifiersSlice = createSlice({
@@ -20,6 +22,12 @@ const modifiersSlice = createSlice({
     setMovementSpeedModifier(state, action: PayloadAction<number>) {
       state.movementSpeed = action.payload;
     },
+    setHealthModifier(state, action: PayloadAction<number>) {
+      state.health = action.payload;
+    },
+    setXpModifier(state, action: PayloadAction<number>) {
+      state.xp = action.payload;
+    },
     resetModifiers() {
       return initialState;
     },
@@ -30,6 +38,8 @@ export const {
   setDamageModifier,
   setAttackSpeedModifier,
   setMovementSpeedModifier,
+  setHealthModifier,
+  setXpModifier,
   resetModifiers,
 } = modifiersSlice.actions;
 

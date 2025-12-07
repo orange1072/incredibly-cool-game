@@ -12,9 +12,11 @@ import gameReducer, {
   setBossCount,
   setDamageModifier,
   setEnemyCount,
+  setHealthModifier,
   setMovementSpeedModifier,
   setPlayerHealth,
   setPlayerXp,
+  setXpModifier,
   updateLevelRewardsPending,
 } from '../../store/slices/game';
 import type { RootState } from '@/store/store';
@@ -100,6 +102,8 @@ class ReduxAdapter<TState = RootState> {
     damage: 0,
     attackSpeed: 0,
     movementSpeed: 0,
+    health: 0,
+    xp: 0,
   };
 
   constructor({ engine, store, selectGameState }: ReduxAdapterOptions<TState>) {
@@ -221,6 +225,8 @@ class ReduxAdapter<TState = RootState> {
       damage: state.modifiers.damage,
       attackSpeed: state.modifiers.attackSpeed,
       movementSpeed: state.modifiers.movementSpeed,
+      health: state.modifiers.health,
+      xp: state.modifiers.xp,
     };
   }
 
@@ -387,18 +393,34 @@ class ReduxAdapter<TState = RootState> {
         );
         this.lastModifiersSnapshot.movementSpeed = snapshot.movementSpeedBonus;
       }
+
+      if (snapshot.healthBonus !== this.lastModifiersSnapshot.health) {
+        this.dispatchImpl(setHealthModifier(snapshot.healthBonus));
+        this.lastModifiersSnapshot.health = snapshot.healthBonus;
+      }
+
+      if (snapshot.xpBonus !== this.lastModifiersSnapshot.xp) {
+        this.dispatchImpl(setXpModifier(snapshot.xpBonus));
+        this.lastModifiersSnapshot.xp = snapshot.xpBonus;
+      }
     } else if (
       this.lastModifiersSnapshot.damage !== 0 ||
       this.lastModifiersSnapshot.attackSpeed !== 0 ||
-      this.lastModifiersSnapshot.movementSpeed !== 0
+      this.lastModifiersSnapshot.movementSpeed !== 0 ||
+      this.lastModifiersSnapshot.health !== 0 ||
+      this.lastModifiersSnapshot.xp !== 0
     ) {
       this.dispatchImpl(setDamageModifier(0));
       this.dispatchImpl(setAttackSpeedModifier(0));
       this.dispatchImpl(setMovementSpeedModifier(0));
+      this.dispatchImpl(setHealthModifier(0));
+      this.dispatchImpl(setXpModifier(0));
       this.lastModifiersSnapshot = {
         damage: 0,
         attackSpeed: 0,
         movementSpeed: 0,
+        health: 0,
+        xp: 0,
       };
     }
 

@@ -25,7 +25,7 @@ class BossEntity extends Entity {
 
     const bossSettings = variant?.settings ?? defaultBoss;
     const baseHp = bossSettings.health.health.call(bossSettings.health, level);
-    const baseSpeed = bossSettings.movement.speed + level * 3;
+    const baseSpeed = bossSettings.movement.speed + level * 2.2;
     const baseDamage = bossSettings.damage.actualDamage.call(
       bossSettings.damage,
       0,
@@ -93,7 +93,7 @@ class BossEntity extends Entity {
           cooldown: attackProfile.cooldown,
           range: attackProfile.range,
           projectileDamage: baseDamage,
-          projectileSpeed: 380,
+          projectileSpeed: 160,
         })
       );
     }

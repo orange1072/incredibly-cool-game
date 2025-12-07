@@ -1,15 +1,16 @@
+import 'reflect-metadata' // Должен быть импортирован первым для работы декораторов
 import dotenv from 'dotenv'
 import cors from 'cors'
 dotenv.config()
 
 import express from 'express'
-import { createClientAndConnect } from './db'
+import { connectDatabase } from './db'
 
 const app = express()
 app.use(cors())
-const port = Number(process.env.SERVER_PORT) || 3001
+app.use(express.json())
 
-createClientAndConnect()
+const port = Number(process.env.SERVER_PORT) || 3001
 
 app.get('/friends', (_, res) => {
   res.json([
@@ -27,6 +28,18 @@ app.get('/', (_, res) => {
   res.json('👋 Howdy from the server :)')
 })
 
-app.listen(port, () => {
-  console.log(`  ➜ 🎸 Server is listening on port: ${port}`)
+app.get('/health', (_, res) => {
+  res.status(200).json({ status: 'ok' })
 })
+
+// Start server after database initialization
+connectDatabase()
+  .then(() => {
+    app.listen(port, () => {
+      console.log(`  ➜ 🎸 Server is listening on port: ${port}`)
+    })
+  })
+  .catch(error => {
+    console.error('Failed to initialize server:', error)
+    process.exit(1)
+  })

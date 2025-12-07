@@ -1,11 +1,12 @@
 import EventBus from '../infrastructure/EventBus';
 import Entity from './Entity';
 import type RendererSystem from '../systems/RenderSystem';
+import worldSettings from '../settings/world-settings/world';
 
 class World {
   private entities = new Map<string, Entity>();
   private eventBus: EventBus;
-  private _bounds = { width: 1600, height: 1200 };
+  private _bounds = worldSettings.bounds;
   private renderer: RendererSystem;
 
   constructor(eventBus: EventBus, render: RendererSystem) {

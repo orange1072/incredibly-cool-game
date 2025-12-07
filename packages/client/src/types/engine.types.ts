@@ -128,6 +128,8 @@ export interface PlayerControlComponentState {
 
 export interface CollisionComponentState {
   radius: number;
+  offsetX?: number;
+  offsetY?: number;
 }
 
 export interface EffectComponentState {
@@ -200,6 +202,9 @@ export interface PassiveBonusesComponentState {
   movementSpeedBonus?: number;
   damageBonus?: number;
   attackSpeedBonus?: number;
+  healthBonus?: number;
+  xpBonus?: number;
+  healUsed?: boolean;
   selectionsUsed?: number;
 }
 

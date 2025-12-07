@@ -24,6 +24,7 @@ import { buildRenderQueue } from './helpers/renderQueue';
 import { getDamageRect, getHealthBarRect } from './helpers/healthBar';
 import CameraSystem from './CameraSystem';
 import SpriteLoaderSystem from './SpriteLoaderSystem';
+import { IsometricTileRenderer } from './IsometricTileRendererSystem';
 import {
   DEFAULT_ENTITY_FILL_COLOR,
   DEFAULT_SCALE,
@@ -50,6 +51,7 @@ class RendererSystem implements ISystem<SystemType> {
   type: SystemType = SYSTEM_TYPES.render as SystemType;
   private ctx: CanvasRenderingContext2D;
   private elapsedTime = 0;
+  private isoTiles: IsometricTileRenderer;
 
   constructor(
     canvas: HTMLCanvasElement,
@@ -63,6 +65,7 @@ class RendererSystem implements ISystem<SystemType> {
     if ('imageSmoothingQuality' in this.ctx) {
       this.ctx.imageSmoothingQuality = 'high';
     }
+    this.isoTiles = new IsometricTileRenderer(this.spriteLoader);
   }
 
   update(_world: World, dt: number) {
@@ -75,13 +78,14 @@ class RendererSystem implements ISystem<SystemType> {
     const { width, height } = this.ctx.canvas;
 
     resetCanvas(this.ctx);
-
     this.ctx.fillStyle = worldSettings.tileGrid.bg;
     this.ctx.fillRect(0, 0, width, height);
 
     this.ctx.save();
     this.ctx.scale(worldSettings.zoom, worldSettings.zoom);
     this.ctx.translate(-cameraState.x, -cameraState.y);
+    this.isoTiles.ensureGrid(world.bounds);
+    this.isoTiles.render(this.ctx, cameraState.frustum);
     this.drawEntities(renderQueue);
 
     this.ctx.restore();

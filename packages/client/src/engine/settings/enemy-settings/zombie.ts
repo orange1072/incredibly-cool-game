@@ -28,7 +28,7 @@ const baseZombieSettings: EnemySettings = {
   damage: {
     radius: 5,
     baseSpeed: 40,
-    baseValue: 10,
+    baseValue: 8,
     actualDamage(this: DamageProfile, bonus: number, multiplier = 1) {
       return this.baseValue * multiplier + bonus;
     },
@@ -57,14 +57,14 @@ const baseZombieSettings: EnemySettings = {
     radius: 12,
   },
   health: {
-    baseValue: 300,
-    levelBonus: 10,
+    baseValue: 260,
+    levelBonus: 8,
     health(this: HealthProfile, level: number, multiplier = 1) {
       return this.baseValue * multiplier + this.levelBonus * level;
     },
   },
   movement: {
-    speed: 60,
+    speed: 52,
   },
   attack: {
     range: 45,
@@ -126,7 +126,7 @@ const speedyZombieVariant: EnemyVariantDefinition = {
   abilities: ['Увеличенная скорость передвижения', 'Сохраняет базовый урон'],
   spawn: { ...baseSpawn, weight: 1.2 },
   settings: createVariantSettings({
-    movement: { speed: 85 },
+    movement: { speed: 72 },
     xpReward: 30,
     sprite: {
       ...baseZombieSettings.sprite,
@@ -148,7 +148,7 @@ const bruiserZombieVariant: EnemyVariantDefinition = {
   settings: createVariantSettings({
     damage: {
       ...baseZombieSettings.damage,
-      baseValue: 18,
+      baseValue: 15,
     },
     xpReward: 35,
     sprite: {
@@ -170,13 +170,13 @@ const tankZombieVariant: EnemyVariantDefinition = {
   spawn: { ...baseSpawn, weight: 0.8 },
   settings: createVariantSettings({
     health: {
-      baseValue: 450,
-      levelBonus: 18,
+      baseValue: 400,
+      levelBonus: 15,
       health(this: HealthProfile, level: number, multiplier = 1) {
         return this.baseValue * multiplier + this.levelBonus * level;
       },
     },
-    movement: { speed: 45 },
+    movement: { speed: 38 },
     sprite: {
       ...baseZombieSettings.sprite,
       name: 'zombie-tank',
@@ -200,8 +200,8 @@ const toxicAmbusherVariant: EnemyVariantDefinition = {
   spawn: { ...baseSpawn, weight: 0.6 },
   settings: createVariantSettings({
     health: {
-      baseValue: 360,
-      levelBonus: 14,
+      baseValue: 320,
+      levelBonus: 11,
       health(this: HealthProfile, level: number, multiplier = 1) {
         return this.baseValue * multiplier + this.levelBonus * level;
       },
@@ -236,10 +236,10 @@ const rangedZombieVariant: EnemyVariantDefinition = {
       range: 280,
       cooldown: 2.5,
     },
-    movement: { speed: 55 },
+    movement: { speed: 46 },
     health: {
-      baseValue: 260,
-      levelBonus: 12,
+      baseValue: 230,
+      levelBonus: 9,
       health(this: HealthProfile, level: number, multiplier = 1) {
         return this.baseValue * multiplier + this.levelBonus * level;
       },

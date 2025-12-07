@@ -44,43 +44,38 @@ export function createGameEngine(
   const input = engine.inputManager;
   const worldBounds = world.bounds;
 
-  engine.addSystem(
-    new GenerateMapSystem(),
-    SYSTEM_TYPES.generateMap as SystemType
-  );
-  engine.addSystem(
-    new SpawnSystem({ eventBus, store: opts?.store }),
-    SYSTEM_TYPES.spawn as SystemType
-  );
-  engine.addSystem(
-    new PlayerControlSystem(input),
-    SYSTEM_TYPES.playerControl as SystemType
-  );
-  engine.addSystem(new MovementSystem(), SYSTEM_TYPES.movement as SystemType);
-  engine.addSystem(new AnimationSystem(), SYSTEM_TYPES.animation as SystemType);
-  engine.addSystem(
-    new ProjectileSystem(),
-    SYSTEM_TYPES.projectile as SystemType
-  );
-  engine.addSystem(new AISystem(), SYSTEM_TYPES.ai as SystemType);
-  engine.addSystem(
-    new EnemyRangedAttackSystem(),
-    SYSTEM_TYPES.enemyRangedAttack as SystemType
-  );
-  engine.addSystem(new CollisionSystem(), SYSTEM_TYPES.collision as SystemType);
-  engine.addSystem(new DamageSystem(), SYSTEM_TYPES.damage as SystemType);
-  engine.addSystem(
-    new ExperienceSystem({ eventBus }),
-    SYSTEM_TYPES.experience as SystemType
-  );
-  engine.addSystem(
-    new PlayerProgressionSystem({ eventBus }),
-    SYSTEM_TYPES.progression as SystemType
-  );
-  engine.addSystem(new EffectSystem(), SYSTEM_TYPES.effect as SystemType);
-  engine.addSystem(new DespawnSystem(), SYSTEM_TYPES.despawn as SystemType);
-  engine.addSystem(cameraSystem, SYSTEM_TYPES.camera as SystemType);
-  engine.addSystem(spriteLoaderSystem, SYSTEM_TYPES.spriteLoader as SystemType);
+  engine
+    .addSystem(new GenerateMapSystem(), SYSTEM_TYPES.generateMap as SystemType)
+    .addSystem(
+      new SpawnSystem({ eventBus, store: opts?.store, camera: cameraSystem }),
+      SYSTEM_TYPES.spawn as SystemType
+    )
+    .addSystem(
+      new PlayerControlSystem(input),
+      SYSTEM_TYPES.playerControl as SystemType
+    )
+    .addSystem(new MovementSystem(), SYSTEM_TYPES.movement as SystemType)
+    .addSystem(new AnimationSystem(), SYSTEM_TYPES.animation as SystemType)
+    .addSystem(new ProjectileSystem(), SYSTEM_TYPES.projectile as SystemType)
+    .addSystem(new AISystem(), SYSTEM_TYPES.ai as SystemType)
+    .addSystem(
+      new EnemyRangedAttackSystem(),
+      SYSTEM_TYPES.enemyRangedAttack as SystemType
+    )
+    .addSystem(new CollisionSystem(), SYSTEM_TYPES.collision as SystemType)
+    .addSystem(new DamageSystem(), SYSTEM_TYPES.damage as SystemType)
+    .addSystem(
+      new ExperienceSystem({ eventBus }),
+      SYSTEM_TYPES.experience as SystemType
+    )
+    .addSystem(
+      new PlayerProgressionSystem({ eventBus }),
+      SYSTEM_TYPES.progression as SystemType
+    )
+    .addSystem(new EffectSystem(), SYSTEM_TYPES.effect as SystemType)
+    .addSystem(new DespawnSystem(), SYSTEM_TYPES.despawn as SystemType)
+    .addSystem(cameraSystem, SYSTEM_TYPES.camera as SystemType)
+    .addSystem(spriteLoaderSystem, SYSTEM_TYPES.spriteLoader as SystemType);
 
   const player = createPlayer(worldBounds.width, worldBounds.height);
 

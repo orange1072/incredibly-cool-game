@@ -5,7 +5,6 @@ import {
   DataType,
   HasMany,
   CreatedAt,
-  UpdatedAt,
   PrimaryKey,
   AutoIncrement,
 } from 'sequelize-typescript'
@@ -13,7 +12,7 @@ import { Topic } from './Topic'
 import { Post } from './Post'
 
 @Table({
-  tableName: 'Users',
+  tableName: 'users',
   timestamps: true,
 })
 export class User extends Model {
@@ -26,7 +25,7 @@ export class User extends Model {
     type: DataType.STRING(100),
     allowNull: false,
   })
-  declare name: string
+  declare login: string
 
   @Column({
     type: DataType.STRING(150),
@@ -53,8 +52,5 @@ export class User extends Model {
   declare posts: Post[]
 
   @CreatedAt
-  declare createdAt: Date
-
-  @UpdatedAt
-  declare updatedAt: Date
+  declare created_at: Date
 }

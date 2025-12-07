@@ -22,21 +22,7 @@ const loadMigrations = (): Migration[] => {
   const migrationsDir = getMigrationsDir()
   const migrations: Migration[] = []
 
-  const migrationFiles = [
-    { name: '001_create_topics_table', path: '001_create_topics_table.sql' },
-    {
-      name: '002_create_reactions_table',
-      path: '002_create_reactions_table.sql',
-    },
-    {
-      name: '003_create_posts_table',
-      path: '003_create_posts_table.sql',
-    },
-    {
-      name: '004_add_parent_id_to_posts',
-      path: '004_add_parent_id_to_posts.sql',
-    },
-  ]
+  const migrationFiles = [{ name: 'schema', path: 'schema.sql' }]
 
   for (const migration of migrationFiles) {
     const filePath = join(migrationsDir, migration.path)

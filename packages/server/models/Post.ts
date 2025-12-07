@@ -6,7 +6,6 @@ import {
   ForeignKey,
   BelongsTo,
   CreatedAt,
-  UpdatedAt,
   PrimaryKey,
   AutoIncrement,
 } from 'sequelize-typescript'
@@ -14,7 +13,7 @@ import { User } from './User'
 import { Topic } from './Topic'
 
 @Table({
-  tableName: 'Posts',
+  tableName: 'posts',
   timestamps: true,
 })
 export class Post extends Model {
@@ -31,21 +30,21 @@ export class Post extends Model {
 
   @ForeignKey(() => User)
   @Column(DataType.INTEGER)
-  declare authorId: number
+  declare user_id: number
 
   @BelongsTo(() => User)
-  declare author: User
+  declare user: User
 
   @ForeignKey(() => Topic)
   @Column(DataType.INTEGER)
-  declare topicId: number
+  declare topic_id: number
+
+  @Column(DataType.INTEGER)
+  declare parent_id: number
 
   @BelongsTo(() => Topic)
   declare topic: Topic
 
   @CreatedAt
-  declare createdAt: Date
-
-  @UpdatedAt
-  declare updatedAt: Date
+  declare created_at: Date
 }

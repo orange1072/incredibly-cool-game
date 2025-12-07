@@ -15,7 +15,7 @@ import { Topic } from './Topic'
   tableName: 'reactions',
   timestamps: true,
   createdAt: 'created_at',
-  updatedAt: false,
+  updatedAt: 'updated_at',
   indexes: [
     {
       fields: ['topic_id'],
@@ -60,6 +60,13 @@ export class Reaction extends Model {
   declare userId: number
 
   @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+    field: 'post_id',
+  })
+  declare post_id: number
+
+  @Column({
     type: DataType.STRING(10),
     allowNull: false,
   })
@@ -70,5 +77,5 @@ export class Reaction extends Model {
     type: DataType.DATE,
     field: 'created_at',
   })
-  declare createdAt: Date
+  declare created_at: Date
 }

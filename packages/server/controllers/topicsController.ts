@@ -1,10 +1,10 @@
-import { Request, Response } from 'express'
+import type { Request, Response } from 'express'
 import { getDbPool } from '../db'
+import { formatDate } from '../helpers'
 
 export interface CreateTopicRequest {
   title: string
-  author: string
-  author_badge: string
+  user_id: number
   preview: string
   tags?: string[]
 }
@@ -12,62 +12,58 @@ export interface CreateTopicRequest {
 export interface TopicResponse {
   id: number
   title: string
-  author: string
-  authorBadge: string
+  user_id: number
   date: string
   preview: string
   tags?: string[]
-  likes?: number
-  comments?: number
+  reactions_count?: number
+  comments_count?: number
 }
 
-// Get all topics
-export const getTopics = async (req: Request, res: Response): Promise<void> => {
+// Get all topics with statistics
+export const getTopics = async (
+  _req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const pool = getDbPool()
 
-    // Get topics with counts of reactions (likes) and posts (comments)
     const result = await pool.query(
-      `SELECT 
-        t.id,
-        t.title,
-        t.author,
-        t.author_badge,
-        t.created_at,
-        t.preview,
-        t.tags,
-        COALESCE(COUNT(DISTINCT r.id), 0) as likes,
-        COALESCE(COUNT(DISTINCT p.id), 0) as comments
-      FROM topics t
-      LEFT JOIN reactions r ON t.id = r.topic_id
-      LEFT JOIN posts p ON t.id = p.topic_id
-      GROUP BY t.id
-      ORDER BY t.created_at DESC`
+      `SELECT
+         t.id,
+         t.title,
+         t.user_id,
+         t.created_at,
+         t.preview,
+         t.tags,
+         COALESCE(r.reactions_count, 0) AS reactions_count,
+         COALESCE(p.comments_count, 0) AS comments_count
+       FROM topics t
+              LEFT JOIN (
+         SELECT topic_id, COUNT(*) AS reactions_count
+         FROM reactions
+         WHERE topic_id IS NOT NULL
+         GROUP BY topic_id
+       ) r ON t.id = r.topic_id
+              LEFT JOIN (
+         SELECT topic_id, COUNT(*) AS comments_count
+         FROM posts
+         WHERE parent_id IS NULL  -- Only top-level comments
+         GROUP BY topic_id
+       ) p ON t.id = p.topic_id
+       ORDER BY t.created_at DESC`
     )
 
-    const topics: TopicResponse[] = result.rows.map(row => {
-      const date = new Date(row.created_at)
-      const formattedDate = `${date.getDate().toString().padStart(2, '0')}.${(
-        date.getMonth() + 1
-      )
-        .toString()
-        .padStart(2, '0')}.${date.getFullYear().toString().slice(2)} ${date
-        .getHours()
-        .toString()
-        .padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`
-
-      return {
-        id: row.id,
-        title: row.title,
-        author: row.author,
-        authorBadge: row.author_badge,
-        date: formattedDate,
-        preview: row.preview,
-        tags: row.tags || [],
-        likes: parseInt(row.likes, 10),
-        comments: parseInt(row.comments, 10),
-      }
-    })
+    const topics: TopicResponse[] = result.rows.map(row => ({
+      id: row.id,
+      title: row.title,
+      user_id: row.user_id,
+      date: formatDate(row.created_at),
+      preview: row.preview,
+      tags: row.tags || [],
+      reactions_count: parseInt(row.reactions_count, 10),
+      comments_count: parseInt(row.comments_count, 10),
+    }))
 
     res.status(200).json(topics)
   } catch (error) {
@@ -93,21 +89,27 @@ export const getTopicById = async (
     const pool = getDbPool()
 
     const result = await pool.query(
-      `SELECT 
-        t.id,
-        t.title,
-        t.author,
-        t.author_badge,
-        t.created_at,
-        t.preview,
-        t.tags,
-        COALESCE(COUNT(DISTINCT r.id), 0) as likes,
-        COALESCE(COUNT(DISTINCT p.id), 0) as comments
-      FROM topics t
-      LEFT JOIN reactions r ON t.id = r.topic_id
-      LEFT JOIN posts p ON t.id = p.topic_id
-      WHERE t.id = $1
-      GROUP BY t.id`,
+      `SELECT
+         t.id,
+         t.title,
+         t.user_id,
+         t.created_at,
+         t.preview,
+         t.tags,
+         COALESCE(r.reactions_count, 0) AS reactions_count,
+         COALESCE(p.comments_count, 0) AS comments
+       FROM topics t
+              LEFT JOIN (
+         SELECT topic_id, COUNT(*) AS reactions_count
+         FROM reactions
+         GROUP BY topic_id
+       ) r ON t.id = r.topic_id
+              LEFT JOIN (
+         SELECT topic_id, COUNT(*) AS comments_count
+         FROM posts
+         GROUP BY topic_id
+       ) p ON t.id = p.topic_id
+       WHERE t.id = $1`,
       [topicId]
     )
 
@@ -130,13 +132,12 @@ export const getTopicById = async (
     const topic: TopicResponse = {
       id: row.id,
       title: row.title,
-      author: row.author,
-      authorBadge: row.author_badge,
+      user_id: row.user_id,
       date: formattedDate,
       preview: row.preview,
       tags: row.tags || [],
-      likes: parseInt(row.likes, 10),
-      comments: parseInt(row.comments, 10),
+      reactions_count: parseInt(row.reactions_count, 10),
+      comments_count: parseInt(row.comments_count, 10),
     }
 
     res.status(200).json(topic)
@@ -152,13 +153,12 @@ export const createTopic = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { title, author, author_badge, preview, tags }: CreateTopicRequest =
-      req.body
+    const { title, user_id, preview, tags }: CreateTopicRequest = req.body
 
     // Validate required fields
-    if (!title || !author || !author_badge || !preview) {
+    if (!title || !user_id || !preview) {
       res.status(400).json({
-        error: 'Missing required fields: title, author, author_badge, preview',
+        error: 'Missing required fields: title, user_id, preview',
       })
       return
     }
@@ -169,29 +169,19 @@ export const createTopic = async (
       return
     }
 
-    // Validate author length
-    if (author.length > 100) {
-      res
-        .status(400)
-        .json({ error: 'Author name too long (max 100 characters)' })
-      return
-    }
-
-    // Validate author_badge length
-    if (author_badge.length > 50) {
-      res.status(400).json({
-        error: 'Author badge too long (max 50 characters)',
-      })
+    // Validate user_id length
+    if (!user_id) {
+      res.status(400).json({ error: 'user_id not defined' })
       return
     }
 
     const pool = getDbPool()
 
     const result = await pool.query(
-      `INSERT INTO topics (title, author, author_badge, preview, tags)
+      `INSERT INTO topics (title, user_id, preview, tags)
        VALUES ($1, $2, $3, $4, $5)
-       RETURNING id, title, author, author_badge, created_at, preview, tags`,
-      [title, author, author_badge, preview, tags || []]
+       RETURNING id, title, user_id,  created_at, preview, tags`,
+      [title, user_id, preview, tags || []]
     )
 
     const row = result.rows[0]
@@ -208,13 +198,12 @@ export const createTopic = async (
     const topic: TopicResponse = {
       id: row.id,
       title: row.title,
-      author: row.author,
-      authorBadge: row.author_badge,
+      user_id: row.user_id,
       date: formattedDate,
       preview: row.preview,
       tags: row.tags || [],
-      likes: 0,
-      comments: 0,
+      reactions_count: 0,
+      comments_count: 0,
     }
 
     res.status(201).json(topic)
@@ -288,7 +277,7 @@ export const updateTopic = async (
       `UPDATE topics 
        SET ${updates.join(', ')}
        WHERE id = $${paramCount}
-       RETURNING id, title, author, author_badge, created_at, preview, tags`,
+       RETURNING id, title, user_id, created_at, preview, tags`,
       values
     )
 
@@ -306,8 +295,7 @@ export const updateTopic = async (
     const topic: TopicResponse = {
       id: row.id,
       title: row.title,
-      author: row.author,
-      authorBadge: row.author_badge,
+      user_id: row.user_id,
       date: formattedDate,
       preview: row.preview,
       tags: row.tags || [],

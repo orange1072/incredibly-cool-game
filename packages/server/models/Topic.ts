@@ -5,10 +5,8 @@ import {
   Column,
   DataType,
   ForeignKey,
-  BelongsTo,
   HasMany,
   CreatedAt,
-  UpdatedAt,
   PrimaryKey,
   AutoIncrement,
 } from 'sequelize-typescript'
@@ -16,7 +14,7 @@ import { User } from './User'
 import { Post } from './Post'
 
 @Table({
-  tableName: 'Topics',
+  tableName: 'topics',
   timestamps: true,
 })
 export class Topic extends Model {
@@ -35,21 +33,24 @@ export class Topic extends Model {
     type: DataType.TEXT,
     allowNull: false,
   })
-  declare description: string
+  declare preview: string
+
+  @Column({
+    type: DataType.TEXT,
+    allowNull: false,
+  })
+  declare tags: string
 
   @ForeignKey(() => User)
   @Column(DataType.INTEGER)
-  declare authorId: number
+  declare user_id: string
 
-  @BelongsTo(() => User)
-  declare author: User
+  @Column(DataType.INTEGER)
+  declare topic_id: number
 
   @HasMany(() => Post)
   declare posts: Post[]
 
   @CreatedAt
-  declare createdAt: Date
-
-  @UpdatedAt
-  declare updatedAt: Date
+  declare created_at: Date
 }

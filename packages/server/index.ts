@@ -8,10 +8,18 @@ import { runMigrations } from './migrations/migrate'
 import topicsRoutes from './routes/topicsRoutes'
 import postsRoutes from './routes/postsRoutes'
 import reactionsRoutes from './routes/reactionsRoutes'
+import authorizedRoutes from './routes/AuthorizedRoutes'
+import cookieParser from 'cookie-parser'
 
 const app = express()
-app.use(cors())
+app.use(
+  cors({
+    origin: `http://localhost:${process.env.CLIENT_PORT || 3000}`,
+    credentials: true,
+  })
+)
 app.use(express.json())
+app.use(cookieParser())
 
 const port = Number(process.env.SERVER_PORT) || 3001
 
@@ -25,6 +33,9 @@ const initializeDatabase = async () => {
     process.exit(1)
   }
 }
+
+// roots with authorization check
+app.use('/restricted', authorizedRoutes)
 
 // API routes
 // Topics API: /api/topics

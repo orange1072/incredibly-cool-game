@@ -7,8 +7,11 @@ import {
   deleteTopic,
 } from '../controllers/topicsController'
 import { getPostsByTopic, createPost } from '../controllers/postsController'
+import { checkAuth } from '../middlewares/authorization'
 
 const router = Router()
+
+router.use(checkAuth)
 
 // GET /api/topics - Get all topics
 router.get('/', getTopics)

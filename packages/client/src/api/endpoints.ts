@@ -6,4 +6,8 @@ export const API_ENDPOINTS = {
       PASSWORD: '/user/profile/password',
     },
   },
+  LEADERBOARD: {
+    BASE: '/leaderboard',
+    ALL: '/leaderboard/all',
+  },
 } as const;

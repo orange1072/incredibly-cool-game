@@ -1,6 +1,17 @@
 @use '/src/styles/variables' as *;
 @use '/src/styles/mixins' as *;
 
+.message {
+  text-align: center;
+  padding: 40px;
+  color: #fff;
+}
+
+.error {
+  composes: message;
+  color: #ff4444;
+}
+
 .main{
   margin: 1em 0 0 1em;
   width: 100%;

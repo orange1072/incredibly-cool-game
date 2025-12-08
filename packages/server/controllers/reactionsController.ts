@@ -1,10 +1,12 @@
-import { Request, Response } from 'express'
+import type { Request, Response } from 'express'
 import { getDbPool } from '../db'
 import {
   CreateReactionRequest,
   ReactionResponse,
   ReactionStats,
+  ReactionTargetType,
 } from '../types/Reaction'
+import { formatDate } from '../helpers'
 
 // Validate emoji - basic validation (should be 1-10 characters, Unicode emoji)
 const isValidEmoji = (emoji: string): boolean => {
@@ -17,19 +19,27 @@ const isValidEmoji = (emoji: string): boolean => {
   return emojiRegex.test(emoji)
 }
 
-// Add reaction to topic
+// Add reaction to topic or post
 export const addReaction = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   try {
-    const { topicId } = req.params
+    const { target_type, target_id } = req.params
     const { user_id, emoji }: CreateReactionRequest = req.body
 
-    // Validate topic ID
-    const topicIdNum = parseInt(topicId, 10)
-    if (isNaN(topicIdNum) || topicIdNum <= 0) {
-      res.status(400).json({ error: 'Invalid topic ID' })
+    // Validate target type
+    if (target_type !== 'topic' && target_type !== 'post') {
+      res
+        .status(400)
+        .json({ error: 'Invalid target type. Must be "topic" or "post"' })
+      return
+    }
+
+    // Validate target ID
+    const targetIdNum = parseInt(target_id, 10)
+    if (isNaN(targetIdNum) || targetIdNum <= 0) {
+      res.status(400).json({ error: `Invalid ${target_type} ID` })
       return
     }
 
@@ -47,26 +57,48 @@ export const addReaction = async (
 
     const pool = getDbPool()
 
-    // Check if topic exists
-    const topicResult = await pool.query(
-      'SELECT id FROM topics WHERE id = $1',
-      [topicIdNum]
-    )
+    // Check if target exists
+    let targetExists = false
+    if (target_type === 'topic') {
+      const topicResult = await pool.query(
+        'SELECT id FROM topics WHERE id = $1',
+        [targetIdNum]
+      )
+      targetExists = topicResult.rows.length > 0
+    } else {
+      const postResult = await pool.query(
+        'SELECT id FROM posts WHERE id = $1',
+        [targetIdNum]
+      )
+      targetExists = postResult.rows.length > 0
+    }
 
-    if (topicResult.rows.length === 0) {
-      res.status(404).json({ error: 'Topic not found' })
+    if (!targetExists) {
+      res.status(404).json({
+        error: `${target_type === 'topic' ? 'Topic' : 'Post'} not found`,
+      })
       return
     }
 
-    // Try to insert or update reaction
-    // Use ON CONFLICT to handle duplicate reactions (same user, same topic, same emoji)
-    const result = await pool.query(
-      `INSERT INTO reactions (topic_id, user_id, emoji)
-       VALUES ($1, $2, $3)
-       ON CONFLICT (topic_id, user_id, emoji) DO NOTHING
-       RETURNING id, topic_id, user_id, emoji, created_at`,
-      [topicIdNum, user_id, emoji]
-    )
+    // Try to insert reaction
+    let result
+    if (target_type === 'topic') {
+      result = await pool.query(
+        `INSERT INTO reactions (topic_id, user_id, emoji)
+         VALUES ($1, $2, $3)
+         ON CONFLICT (topic_id, user_id, emoji) DO NOTHING
+         RETURNING id, topic_id, user_id, emoji, created_at`,
+        [targetIdNum, user_id, emoji]
+      )
+    } else {
+      result = await pool.query(
+        `INSERT INTO reactions (post_id, user_id, emoji)
+         VALUES ($1, $2, $3)
+         ON CONFLICT (post_id, user_id, emoji) DO NOTHING
+         RETURNING id, post_id as target_id, user_id, emoji, created_at`,
+        [targetIdNum, user_id, emoji]
+      )
+    }
 
     if (result.rows.length === 0) {
       // Reaction already exists
@@ -74,12 +106,14 @@ export const addReaction = async (
       return
     }
 
+    const row = result.rows[0]
     const reaction: ReactionResponse = {
-      id: result.rows[0].id,
-      topic_id: result.rows[0].topic_id,
-      user_id: result.rows[0].user_id,
-      emoji: result.rows[0].emoji,
-      created_at: result.rows[0].created_at.toISOString(),
+      id: row.id,
+      target_type: target_type as ReactionTargetType,
+      target_id: target_type === 'topic' ? row.topic_id : row.target_id,
+      user_id: row.user_id,
+      emoji: row.emoji,
+      created_at: formatDate(row.created_at),
     }
 
     res.status(201).json(reaction)
@@ -89,46 +123,81 @@ export const addReaction = async (
   }
 }
 
-// Get all reactions for a topic with statistics
+// Get all reactions for a topic or post with statistics
 export const getReactions = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   try {
-    const { topicId } = req.params
+    const { target_type, target_id } = req.params
 
-    // Validate topic ID
-    const topicIdNum = parseInt(topicId, 10)
-    if (isNaN(topicIdNum) || topicIdNum <= 0) {
-      res.status(400).json({ error: 'Invalid topic ID' })
+    // Validate target type
+    if (target_type !== 'topic' && target_type !== 'post') {
+      res
+        .status(400)
+        .json({ error: 'Invalid target type. Must be "topic" or "post"' })
+      return
+    }
+
+    // Validate target ID
+    const targetIdNum = parseInt(target_id, 10)
+    if (isNaN(targetIdNum) || targetIdNum <= 0) {
+      res.status(400).json({ error: `Invalid ${target_type} ID` })
       return
     }
 
     const pool = getDbPool()
 
-    // Check if topic exists
-    const topicResult = await pool.query(
-      'SELECT id FROM topics WHERE id = $1',
-      [topicIdNum]
-    )
+    // Check if target exists
+    let targetExists = false
+    if (target_type === 'topic') {
+      const topicResult = await pool.query(
+        'SELECT id FROM topics WHERE id = $1',
+        [targetIdNum]
+      )
+      targetExists = topicResult.rows.length > 0
+    } else {
+      const postResult = await pool.query(
+        'SELECT id FROM posts WHERE id = $1',
+        [targetIdNum]
+      )
+      targetExists = postResult.rows.length > 0
+    }
 
-    if (topicResult.rows.length === 0) {
-      res.status(404).json({ error: 'Topic not found' })
+    if (!targetExists) {
+      res.status(404).json({
+        error: `${target_type === 'topic' ? 'Topic' : 'Post'} not found`,
+      })
       return
     }
 
-    // Get all reactions for the topic grouped by emoji
-    const statsResult = await pool.query(
-      `SELECT 
-        emoji,
-        COUNT(*) as count,
-        ARRAY_AGG(DISTINCT user_id) as users
-      FROM reactions
-      WHERE topic_id = $1
-      GROUP BY emoji
-      ORDER BY count DESC, emoji ASC`,
-      [topicIdNum]
-    )
+    // Get reactions statistics
+    let statsResult
+    if (target_type === 'topic') {
+      statsResult = await pool.query(
+        `SELECT 
+          emoji,
+          COUNT(*) as count,
+          ARRAY_AGG(DISTINCT user_id) as users
+        FROM reactions
+        WHERE topic_id = $1
+        GROUP BY emoji
+        ORDER BY count DESC, emoji ASC`,
+        [targetIdNum]
+      )
+    } else {
+      statsResult = await pool.query(
+        `SELECT 
+          emoji,
+          COUNT(*) as count,
+          ARRAY_AGG(DISTINCT user_id) as users
+        FROM reactions
+        WHERE post_id = $1
+        GROUP BY emoji
+        ORDER BY count DESC, emoji ASC`,
+        [targetIdNum]
+      )
+    }
 
     const stats: ReactionStats[] = statsResult.rows.map(
       (row: { emoji: string; count: string; users: number[] }) => ({
@@ -138,33 +207,46 @@ export const getReactions = async (
       })
     )
 
-    // Get all individual reactions (optional - for detailed view)
-    const reactionsResult = await pool.query(
-      `SELECT id, topic_id, user_id, emoji, created_at
-       FROM reactions
-       WHERE topic_id = $1
-       ORDER BY created_at DESC`,
-      [topicIdNum]
-    )
+    // Get all individual reactions
+    let reactionsResult
+    if (target_type === 'topic') {
+      reactionsResult = await pool.query(
+        `SELECT id, topic_id as target_id, user_id, emoji, created_at
+         FROM reactions
+         WHERE topic_id = $1
+         ORDER BY created_at DESC`,
+        [targetIdNum]
+      )
+    } else {
+      reactionsResult = await pool.query(
+        `SELECT id, post_id as target_id, user_id, emoji, created_at
+         FROM reactions
+         WHERE post_id = $1
+         ORDER BY created_at DESC`,
+        [targetIdNum]
+      )
+    }
 
     const reactions: ReactionResponse[] = reactionsResult.rows.map(
       (row: {
         id: number
-        topic_id: number
+        target_id: number
         user_id: number
         emoji: string
         created_at: Date
       }) => ({
         id: row.id,
-        topic_id: row.topic_id,
+        target_type: target_type as ReactionTargetType,
+        target_id: row.target_id,
         user_id: row.user_id,
         emoji: row.emoji,
-        created_at: row.created_at.toISOString(),
+        created_at: formatDate(row.created_at),
       })
     )
 
     res.status(200).json({
-      topic_id: topicIdNum,
+      target_type,
+      target_id: targetIdNum,
       stats,
       reactions,
     })
@@ -174,19 +256,27 @@ export const getReactions = async (
   }
 }
 
-// Remove reaction (optional endpoint)
+// Remove reaction
 export const removeReaction = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   try {
-    const { topicId } = req.params
+    const { target_type, target_id } = req.params
     const { user_id, emoji } = req.body
 
-    // Validate topic ID
-    const topicIdNum = parseInt(topicId, 10)
-    if (isNaN(topicIdNum) || topicIdNum <= 0) {
-      res.status(400).json({ error: 'Invalid topic ID' })
+    // Validate target type
+    if (target_type !== 'topic' && target_type !== 'post') {
+      res
+        .status(400)
+        .json({ error: 'Invalid target type. Must be "topic" or "post"' })
+      return
+    }
+
+    // Validate target ID
+    const targetIdNum = parseInt(target_id, 10)
+    if (isNaN(targetIdNum) || targetIdNum <= 0) {
+      res.status(400).json({ error: `Invalid ${target_type} ID` })
       return
     }
 
@@ -204,12 +294,22 @@ export const removeReaction = async (
 
     const pool = getDbPool()
 
-    const result = await pool.query(
-      `DELETE FROM reactions
-       WHERE topic_id = $1 AND user_id = $2 AND emoji = $3
-       RETURNING id`,
-      [topicIdNum, user_id, emoji]
-    )
+    let result
+    if (target_type === 'topic') {
+      result = await pool.query(
+        `DELETE FROM reactions
+         WHERE topic_id = $1 AND user_id = $2 AND emoji = $3
+         RETURNING id`,
+        [targetIdNum, user_id, emoji]
+      )
+    } else {
+      result = await pool.query(
+        `DELETE FROM reactions
+         WHERE post_id = $1 AND user_id = $2 AND emoji = $3
+         RETURNING id`,
+        [targetIdNum, user_id, emoji]
+      )
+    }
 
     if (result.rows.length === 0) {
       res.status(404).json({ error: 'Reaction not found' })

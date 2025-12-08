@@ -21,9 +21,8 @@ FROM node:$NODE_VERSION-slim as production
 WORKDIR /app
 
 COPY --from=builder /app/packages/client/dist/ /app/dist/
-COPY --from=builder /app/packages/client/server/ /app/server/
 COPY --from=builder /app/packages/client/package.json /app/package.json
 RUN yarn install --production=true
 
 EXPOSE $CLIENT_PORT
-CMD [ "node", "/app/server/index.js" ]
+CMD [ "node", "/app/dist/server-ts/index.js" ]

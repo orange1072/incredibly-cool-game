@@ -1,17 +1,269 @@
-# API Документация: Эмодзи-реакции на топики
+# Forum API Documentation
 
-## Эндпоинты
+## Base URL
+```
+http://localhost:3001/api
+```
 
-### POST /api/topics/:topicId/reactions
+## Topics API
 
-Добавляет эмодзи-реакцию на топик.
+### Get all topics
+```
+GET /api/topics
+```
 
-**Параметры URL:**
+**Response:**
+```json
+[
+  {
+    "id": 1,
+    "title": "Topic title",
+    "author": "Author name",
+    "authorBadge": "Badge",
+    "date": "01.01.24 12:00",
+    "preview": "Topic preview text",
+    "tags": ["tag1", "tag2"],
+    "likes": 5,
+    "comments": 10
+  }
+]
+```
 
-- `topicId` (number) - ID топика
+### Get topic by ID
+```
+GET /api/topics/:id
+```
 
-**Тело запроса:**
+**Response:**
+```json
+{
+  "id": 1,
+  "title": "Topic title",
+  "author": "Author name",
+  "authorBadge": "Badge",
+  "date": "01.01.24 12:00",
+  "preview": "Topic preview text",
+  "tags": ["tag1", "tag2"],
+  "likes": 5,
+  "comments": 10
+}
+```
 
+### Create new topic
+```
+POST /api/topics
+```
+
+**Request Body:**
+```json
+{
+  "title": "Topic title",
+  "author": "Author name",
+  "author_badge": "Badge",
+  "preview": "Topic preview text",
+  "tags": ["tag1", "tag2"]
+}
+```
+
+**Response:** 201 Created
+```json
+{
+  "id": 1,
+  "title": "Topic title",
+  "author": "Author name",
+  "authorBadge": "Badge",
+  "date": "01.01.24 12:00",
+  "preview": "Topic preview text",
+  "tags": ["tag1", "tag2"],
+  "likes": 0,
+  "comments": 0
+}
+```
+
+### Update topic
+```
+PUT /api/topics/:id
+```
+
+**Request Body:**
+```json
+{
+  "title": "Updated title",
+  "preview": "Updated preview",
+  "tags": ["tag1", "tag2"]
+}
+```
+
+### Delete topic
+```
+DELETE /api/topics/:id
+```
+
+**Response:** 200 OK
+```json
+{
+  "message": "Topic deleted successfully"
+}
+```
+
+## Posts (Comments) API
+
+### Get all posts (comments) for a topic
+```
+GET /api/topics/:topicId/posts
+```
+
+**Response:**
+```json
+[
+  {
+    "id": 1,
+    "text": "Comment text",
+    "author": "Author name",
+    "date": "01.01.24 12:00",
+    "author_id": 1,
+    "topic_id": 1,
+    "replies_count": 2,
+    "replies": [
+      {
+        "id": 2,
+        "text": "Reply text",
+        "author": "Author name",
+        "date": "01.01.24 12:05",
+        "author_id": 2,
+        "topic_id": 1,
+        "parent_id": 1
+      }
+    ]
+  }
+]
+```
+
+### Create new post (comment) in a topic
+```
+POST /api/topics/:topicId/posts
+```
+
+**Request Body:**
+```json
+{
+  "content": "Comment text",
+  "author": "Author name",
+  "author_id": 1
+}
+```
+
+**Response:** 201 Created
+```json
+{
+  "id": 1,
+  "text": "Comment text",
+  "author": "Author name",
+  "date": "01.01.24 12:00",
+  "author_id": 1,
+  "topic_id": 1
+}
+```
+
+### Create reply to a comment
+```
+POST /api/topics/:topicId/posts
+```
+
+**Request Body:**
+```json
+{
+  "content": "Reply text",
+  "author": "Author name",
+  "author_id": 2,
+  "parent_id": 1
+}
+```
+
+**Response:** 201 Created
+```json
+{
+  "id": 2,
+  "text": "Reply text",
+  "author": "Author name",
+  "date": "01.01.24 12:05",
+  "author_id": 2,
+  "topic_id": 1,
+  "parent_id": 1
+}
+```
+
+### Get post by ID
+```
+GET /api/posts/:id
+```
+
+**Response:**
+```json
+{
+  "id": 1,
+  "text": "Comment text",
+  "author": "Author name",
+  "date": "01.01.24 12:00",
+  "author_id": 1,
+  "topic_id": 1,
+  "parent_id": null,
+  "replies_count": 2
+}
+```
+
+### Get replies for a post
+```
+GET /api/posts/:postId/replies
+```
+
+**Response:**
+```json
+[
+  {
+    "id": 2,
+    "text": "Reply text",
+    "author": "Author name",
+    "date": "01.01.24 12:05",
+    "author_id": 2,
+    "topic_id": 1,
+    "parent_id": 1
+  }
+]
+```
+
+### Update post
+```
+PUT /api/posts/:id
+```
+
+**Request Body:**
+```json
+{
+  "content": "Updated comment text"
+}
+```
+
+### Delete post
+```
+DELETE /api/posts/:id
+```
+
+**Response:** 200 OK
+```json
+{
+  "message": "Post deleted successfully"
+}
+```
+
+## Reactions API
+
+### Add reaction to topic
+```
+POST /api/topics/:topicId/reactions
+```
+
+**Request Body:**
 ```json
 {
   "user_id": 1,
@@ -19,8 +271,7 @@
 }
 ```
 
-**Ответ при успехе (201):**
-
+**Response:** 201 Created
 ```json
 {
   "id": 1,
@@ -31,25 +282,12 @@
 }
 ```
 
-**Ошибки:**
+### Get all reactions for a topic
+```
+GET /api/topics/:topicId/reactions
+```
 
-- `400` - Неверные параметры (invalid topic ID, user_id, или emoji)
-- `404` - Топик не найден
-- `409` - Реакция уже существует
-- `500` - Внутренняя ошибка сервера
-
----
-
-### GET /api/topics/:topicId/reactions
-
-Получает все эмодзи-реакции для топика с статистикой.
-
-**Параметры URL:**
-
-- `topicId` (number) - ID топика
-
-**Ответ при успехе (200):**
-
+**Response:**
 ```json
 {
   "topic_id": 1,
@@ -58,11 +296,6 @@
       "emoji": "👍",
       "count": 5,
       "users": [1, 2, 3, 4, 5]
-    },
-    {
-      "emoji": "❤️",
-      "count": 2,
-      "users": [1, 6]
     }
   ],
   "reactions": [
@@ -77,24 +310,12 @@
 }
 ```
 
-**Ошибки:**
+### Remove reaction
+```
+DELETE /api/topics/:topicId/reactions
+```
 
-- `400` - Неверный ID топика
-- `404` - Топик не найден
-- `500` - Внутренняя ошибка сервера
-
----
-
-### DELETE /api/topics/:topicId/reactions
-
-Удаляет эмодзи-реакцию с топика.
-
-**Параметры URL:**
-
-- `topicId` (number) - ID топика
-
-**Тело запроса:**
-
+**Request Body:**
 ```json
 {
   "user_id": 1,
@@ -102,57 +323,25 @@
 }
 ```
 
-**Ответ при успехе (200):**
-
+**Response:** 200 OK
 ```json
 {
   "message": "Reaction removed successfully"
 }
 ```
 
-**Ошибки:**
+## Error Responses
 
-- `400` - Неверные параметры
-- `404` - Реакция не найдена
-- `500` - Внутренняя ошибка сервера
+All endpoints may return the following error responses:
 
----
+- **400 Bad Request** - Invalid request data
+- **404 Not Found** - Resource not found
+- **409 Conflict** - Resource already exists (e.g., duplicate reaction)
+- **500 Internal Server Error** - Server error
 
-## Валидация
-
-### Эмодзи
-
-- Должно быть валидным Unicode эмодзи
-- Длина: 1-10 символов
-- Используется регулярное выражение для проверки Unicode эмодзи
-
-### User ID
-
-- Должно быть положительным числом
-- Обязательный параметр
-
-### Topic ID
-
-- Должно быть положительным числом
-- Топик должен существовать в базе данных
-
-## База данных
-
-### Таблица `reactions`
-
-- `id` (SERIAL PRIMARY KEY)
-- `topic_id` (INTEGER, FOREIGN KEY → topics.id)
-- `user_id` (INTEGER)
-- `emoji` (VARCHAR(10))
-- `created_at` (TIMESTAMP)
-- Уникальный индекс: `(topic_id, user_id, emoji)`
-
-### Таблица `topics`
-
-- `id` (SERIAL PRIMARY KEY)
-- `title` (VARCHAR(255))
-- `author` (VARCHAR(100))
-- `author_badge` (VARCHAR(50))
-- `created_at` (TIMESTAMP)
-- `preview` (TEXT)
-- `tags` (TEXT[])
+**Error Response Format:**
+```json
+{
+  "error": "Error message"
+}
+```

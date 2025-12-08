@@ -1,4 +1,4 @@
-import { ForumComment, ForumTopic } from './types'
+import { ForumComment, ForumTopic } from './types';
 
 export const topics: ForumTopic[] = [
   {
@@ -56,21 +56,28 @@ export const topics: ForumTopic[] = [
     tags: ['features', 'multiplayer'],
     preview: 'Would be awesome to play with friends. Is multiplayer planned?',
   },
-]
+];
 
 export const comments: ForumComment[] = [
   {
     id: 1,
+    topicId: 1,
     author: 'Zone_Hunter',
     date: '10.10.25 15:00',
     text: 'Great guide! Thanks for the tips.',
     avatar: '☢️',
+    reactions: [
+      { emoji: '👍', count: 3 },
+      { emoji: '🔥', count: 1 },
+    ],
   },
   {
     id: 2,
+    topicId: 1,
     author: 'Survivor_Alpha',
     date: '10.10.25 15:30',
     text: 'Will try these tactics tonight',
     avatar: '⚔️',
+    reactions: [{ emoji: '💀', count: 2 }],
   },
-]
+];

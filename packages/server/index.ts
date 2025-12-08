@@ -1,10 +1,13 @@
-import 'reflect-metadata' // Должен быть импортирован первым для работы декораторов
 import dotenv from 'dotenv'
 import cors from 'cors'
 dotenv.config()
 
 import express from 'express'
-import { connectDatabase } from './db'
+import { createClientAndConnect } from './db'
+import { runMigrations } from './migrations/migrate'
+import topicsRoutes from './routes/topicsRoutes'
+import postsRoutes from './routes/postsRoutes'
+import reactionsRoutes from './routes/reactionsRoutes'
 
 const app = express()
 app.use(cors())
@@ -12,6 +15,28 @@ app.use(express.json())
 
 const port = Number(process.env.SERVER_PORT) || 3001
 
+// Initialize database connection and run migrations
+const initializeDatabase = async () => {
+  await createClientAndConnect()
+  try {
+    await runMigrations()
+  } catch (error) {
+    console.error('Failed to run migrations:', error)
+    process.exit(1)
+  }
+}
+
+// API routes
+// Topics API: /api/topics
+app.use('/api/topics', topicsRoutes)
+
+// Posts API (comments and replies): /api/posts
+app.use('/api/posts', postsRoutes)
+
+// Reactions API: /api/topics/:topicId/reactions
+app.use('/api/topics', reactionsRoutes)
+
+// Legacy routes
 app.get('/friends', (_, res) => {
   res.json([
     { name: 'Саша', secondName: 'Панов' },
@@ -20,20 +45,8 @@ app.get('/friends', (_, res) => {
   ])
 })
 
-app.get('/user', (_, res) => {
-  res.json({ name: '</script>Степа', secondName: 'Степанов' })
-})
-
-app.get('/', (_, res) => {
-  res.json('👋 Howdy from the server :)')
-})
-
-app.get('/health', (_, res) => {
-  res.status(200).json({ status: 'ok' })
-})
-
 // Start server after database initialization
-connectDatabase()
+initializeDatabase()
   .then(() => {
     app.listen(port, () => {
       console.log(`  ➜ 🎸 Server is listening on port: ${port}`)

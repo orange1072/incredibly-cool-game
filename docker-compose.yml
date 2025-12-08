@@ -47,16 +47,16 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-    healthcheck:
-      test:
-        [
-          'CMD-SHELL',
-          'node -e "const http=require(\\"http\\");const port=process.env.SERVER_PORT||3001;const r=http.get(`http://localhost:${port}/health`,(res)=>{process.exit(res.statusCode===200?0:1)});r.on(\\"error\\",()=>process.exit(1));"',
-        ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
+    # healthcheck:
+    #   test:
+    #     [
+    #       'CMD-SHELL',
+    #       'node -e "const http=require(\\"http\\");const port=process.env.SERVER_PORT||3001;const r=http.get(`http://localhost:${port}/health`,(res)=>{process.exit(res.statusCode===200?0:1)});r.on(\\"error\\",()=>process.exit(1));"',
+    #     ]
+    #   interval: 10s
+    #   timeout: 5s
+    #   retries: 5
+    #   start_period: 30s
     networks:
       - app-network
 
@@ -73,17 +73,17 @@ services:
     env_file:
       - .env
     ports:
-      - '${CLIENT_PORT:-3000}:80'
+      - '${CLIENT_PORT:-3000}:${CLIENT_PORT:-3000}'
     environment:
       CLIENT_PORT: ${CLIENT_PORT:-3000}
-      PORT: ${PORT:-3002}
       SERVER_PORT: ${SERVER_PORT:-3001}
       EXTERNAL_SERVER_URL: ${EXTERNAL_SERVER_URL:-http://localhost:3001}
       INTERNAL_SERVER_URL: ${INTERNAL_SERVER_URL:-http://server:3001}
       NODE_ENV: ${NODE_ENV:-production}
     depends_on:
-      server:
-        condition: service_healthy
+      - server
+      # server:
+      #   condition: service_healthy
     networks:
       - app-network
 

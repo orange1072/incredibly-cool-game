@@ -11,7 +11,7 @@ import cookieParser from 'cookie-parser';
 import { fileURLToPath, pathToFileURL } from 'url';
 import { dirname } from 'path';
 
-const port = process.env.PORT || 3002;
+const port = process.env.CLIENT_PORT || 3000;
 // @ts-ignore
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -137,7 +137,7 @@ async function createServer() {
   });
 
   app.listen(port, () => {
-    console.log(`Server is listening on port: ${port}`);
+    console.log(`Client is listening on port: ${port}`);
   });
 }
 

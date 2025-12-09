@@ -1,4 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
+import { requiredCookies, yaAPI } from './constants'
+import { createCookieString } from './utils/createCookies'
 
 export const checkAuth = async (
   req: Request,
@@ -6,13 +8,8 @@ export const checkAuth = async (
   next: NextFunction
 ) => {
   const cookies = req.cookies
-  const requiredCookies = ['authCookie', 'uuid']
   if (requiredCookies.every(cookie => cookies[cookie])) {
-    const yaAPI = 'https://ya-praktikum.tech/api/v2'
-
-    const cookiesFormed = requiredCookies
-      .map(cookieName => `${cookieName}=${cookies[cookieName]}`)
-      .join('; ')
+    const cookiesFormed = createCookieString(requiredCookies, cookies)
 
     try {
       const response = await fetch(`${yaAPI}/auth/user`, {

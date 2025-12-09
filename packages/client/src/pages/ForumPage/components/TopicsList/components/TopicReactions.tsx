@@ -1,8 +1,5 @@
 import { useMemo, useState } from 'react';
-import {
-  useAddTopicReactionMutation,
-  useGetTopicReactionsQuery,
-} from '@/api/emojiApi';
+import { useAddReactionMutation, useGetReactionsQuery } from '@/api/emojiApi';
 import styles from '../TopicsList.module.scss';
 
 const fallbackEmojiPalette = ['👍', '🔥', '💀', '❤️', '😂'] as const;
@@ -18,8 +15,8 @@ export const TopicReactions = ({ topicId }: TopicReactionsProps) => {
     isFetching: isLoading,
     isError,
     refetch,
-  } = useGetTopicReactionsQuery(topicId);
-  const [addReaction, { isLoading: isAdding }] = useAddTopicReactionMutation();
+  } = useGetReactionsQuery({ targetType: 'topic', targetId: topicId });
+  const [addReaction, { isLoading: isAdding }] = useAddReactionMutation();
 
   const [reactedEmojis, setReactedEmojis] = useState<Set<string>>(
     () => new Set()
@@ -66,7 +63,8 @@ export const TopicReactions = ({ topicId }: TopicReactionsProps) => {
 
     try {
       await addReaction({
-        topicId,
+        targetType: 'topic',
+        targetId: topicId,
         body: { user_id: CURRENT_USER_ID, emoji },
       }).unwrap();
       setOptimisticBump((prev) => {

@@ -7,4 +7,5 @@ export const API_ENDPOINTS = {
     },
   },
   TOPICS: '/api/topics',
+  POSTS: '/api/posts',
 } as const;

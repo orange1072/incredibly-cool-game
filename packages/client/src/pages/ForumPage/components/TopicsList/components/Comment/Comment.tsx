@@ -1,9 +1,6 @@
 import { useMemo, useState } from 'react';
 import { ForumComment } from '@/pages/ForumPage/types';
-import {
-  useAddTopicReactionMutation,
-  useGetTopicReactionsQuery,
-} from '@/api/emojiApi';
+import { useAddReactionMutation, useGetReactionsQuery } from '@/api/emojiApi';
 import styles from './Comment.module.scss';
 
 const fallbackEmojiPalette = ['👍', '🔥', '💀', '❤️', '😂'] as const;
@@ -23,11 +20,14 @@ export const Comment = ({
     isFetching: isLoadingReactions,
     isError,
     refetch,
-  } = useGetTopicReactionsQuery(topicId, {
-    skip: !topicId,
-  });
+  } = useGetReactionsQuery(
+    { targetType: 'post', targetId: id },
+    {
+      skip: !id,
+    }
+  );
 
-  const [addReaction, { isLoading: isAdding }] = useAddTopicReactionMutation();
+  const [addReaction, { isLoading: isAdding }] = useAddReactionMutation();
   const [reactedEmojis, setReactedEmojis] = useState<Set<string>>(
     () => new Set()
   );
@@ -79,7 +79,8 @@ export const Comment = ({
 
     try {
       await addReaction({
-        topicId,
+        targetType: 'post',
+        targetId: id,
         body: { user_id: CURRENT_USER_ID, emoji },
       }).unwrap();
       setOptimisticBump((prev) => {

@@ -4,11 +4,8 @@ import {
   getReactions,
   removeReaction,
 } from '../controllers/reactionsController'
-import { checkAuth } from '../middlewares/authorization'
 
 const router = Router()
-
-router.use(checkAuth)
 
 // POST /api/topics/:topicId/reactions - Add emoji reaction to topic
 router.post('/:topicId/reactions', addReaction)

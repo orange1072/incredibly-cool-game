@@ -5,11 +5,8 @@ import {
   deletePost,
   getRepliesByPost,
 } from '../controllers/postsController'
-import { checkAuth } from '../middlewares/authorization'
 
 const router = Router()
-
-router.use(checkAuth)
 
 // GET /api/posts/:id - Get post by ID
 router.get('/:id', getPostById)

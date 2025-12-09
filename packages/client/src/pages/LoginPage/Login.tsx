@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Input } from '@/components/Input/Input';
 import styles from './Login.module.scss';
 import { ParticleBackground } from '@/components/ParticleBackground';
@@ -10,6 +10,7 @@ import { useSignInMutation, useGetUserMutation } from '@/slices/authApi';
 import { useDispatch } from '@/store/store';
 import { setUser } from '@/store/slices/userSlice';
 import { useOAuth } from '@/hooks/useOAuth';
+import { useRedirectIfAuthenticated } from '@/hooks/useRedirectIfAuthenticated';
 
 type Errors = Partial<Record<'username' | 'password', string>>;
 
@@ -24,6 +25,7 @@ export function SigninPage() {
   const [errors, setErrors] = useState<Errors>({});
 
   const navigate = useNavigate();
+  useRedirectIfAuthenticated();
 
   const validate = useCallback(() => {
     const newErrors: Errors = {};
@@ -95,6 +97,19 @@ export function SigninPage() {
     [navigate]
   );
 
+  useEffect(() => {
+    const preloadUser = async () => {
+      try {
+        const user = await getUser().unwrap();
+        if (user) {
+          dispatch(setUser(user));
+        }
+      } catch (error) {
+        console.log('sign in preload error', error);
+      }
+    };
+    preloadUser();
+  }, [dispatch, getUser]);
   return (
     <main className={styles['login-page']}>
       <ParticleBackground particleCount={20} />

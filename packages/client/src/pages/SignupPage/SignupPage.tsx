@@ -18,6 +18,7 @@ import { useGetUserMutation, useSignUpMutation } from '@/slices/authApi';
 import { useDispatch } from '@/store/store';
 import { setUser } from '@/store/slices/userSlice';
 import { useOAuth } from '@/hooks/useOAuth';
+import { useRedirectIfAuthenticated } from '@/hooks/useRedirectIfAuthenticated';
 
 type FormData = {
   first_name: string;
@@ -35,6 +36,7 @@ export const SignupPage = () => {
   const navigate = useNavigate();
   const { handleOAuthLogin } = useOAuth();
   const dispatch = useDispatch();
+  useRedirectIfAuthenticated();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState<FormData>({
     first_name: '',

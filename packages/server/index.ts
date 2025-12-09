@@ -10,7 +10,30 @@ import postsRoutes from './routes/postsRoutes'
 import reactionsRoutes from './routes/reactionsRoutes'
 
 const app = express()
-app.use(cors())
+
+const defaultClientPort = Number(process.env.CLIENT_PORT) || 3000
+const corsOriginsFromEnv = process.env.CLIENT_ORIGINS
+  ? process.env.CLIENT_ORIGINS.split(',')
+      .map(origin => origin.trim())
+      .filter(Boolean)
+  : []
+const allowedCorsOrigins =
+  corsOriginsFromEnv.length > 0
+    ? corsOriginsFromEnv
+    : [`http://localhost:${defaultClientPort}`]
+
+app.use(
+  cors({
+    credentials: true,
+    origin(origin, callback) {
+      if (!origin || allowedCorsOrigins.includes(origin)) {
+        callback(null, true)
+      } else {
+        callback(new Error(`Origin ${origin} is not allowed by CORS`))
+      }
+    },
+  })
+)
 app.use(express.json())
 
 const port = Number(process.env.SERVER_PORT) || 3001

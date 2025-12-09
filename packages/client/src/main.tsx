@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
 import './index.scss';
-import { AuthProvider } from '@/components/AuthProvider/AuthProvider';
+import { AuthProvider } from '@/providers/AuthProvider/AuthProvider';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { routes } from './routes';
 import { ErrorBoundary } from './components/ErrorBoundary';

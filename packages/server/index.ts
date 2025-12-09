@@ -8,7 +8,7 @@ import { runMigrations } from './migrations/migrate'
 import topicsRoutes from './routes/topicsRoutes'
 import postsRoutes from './routes/postsRoutes'
 import reactionsRoutes from './routes/reactionsRoutes'
-import authorizedRoutes from './routes/AuthorizedRoutes'
+import authorizedRoutes from './routes/authorizedRoutes'
 import cookieParser from 'cookie-parser'
 
 const app = express()

@@ -8,6 +8,7 @@ import {
   RefreshCw,
 } from 'lucide-react';
 import { clearCacheAndUpdate } from '@/utils/clearCacheAndUpdate';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import styles from './Nav.module.scss';
 
 export const NavBar = () => {
@@ -64,6 +65,7 @@ export const NavBar = () => {
                 </Link>
               );
             })}
+            <ThemeToggle />
             <button
               onClick={clearCacheAndUpdate}
               className={styles.cacheButton}

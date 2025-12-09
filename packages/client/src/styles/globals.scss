@@ -89,6 +89,38 @@
   --sidebar-ring: #{$sidebar-ring};
 }
 
+.light {
+  --background: #{$light-background};
+  --foreground: #{$light-foreground};
+  --card: #{$light-card};
+  --card-foreground: #{$light-card-foreground};
+  --popover: #{$light-popover};
+  --popover-foreground: #{$light-popover-foreground};
+  --primary: #{$light-primary};
+  --primary-foreground: #{$light-primary-foreground};
+  --secondary: #{$light-secondary};
+  --secondary-foreground: #{$light-secondary-foreground};
+  --muted: #{$light-muted};
+  --muted-foreground: #{$light-muted-foreground};
+  --accent: #{$light-accent};
+  --accent-foreground: #{$light-accent-foreground};
+  --destructive: #{$light-destructive};
+  --destructive-foreground: #{$light-destructive-foreground};
+  --border: #{$light-border};
+  --input: #{$light-input};
+  --input-background: #{$light-input-background};
+  --switch-background: #{$light-switch-background};
+  --ring: #{$light-ring};
+  --sidebar: #{$light-sidebar};
+  --sidebar-foreground: #{$light-sidebar-foreground};
+  --sidebar-primary: #{$light-sidebar-primary};
+  --sidebar-primary-foreground: #{$light-sidebar-primary-foreground};
+  --sidebar-accent: #{$light-sidebar-accent};
+  --sidebar-accent-foreground: #{$light-sidebar-accent-foreground};
+  --sidebar-border: #{$light-sidebar-border};
+  --sidebar-ring: #{$light-sidebar-ring};
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

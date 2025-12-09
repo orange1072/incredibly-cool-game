@@ -3,6 +3,9 @@ import styles from './ReplyForm.module.scss';
 import { Send } from 'lucide-react';
 import { FormEvent, useState } from 'react';
 import { ForumComment } from '@/pages/ForumPage/types';
+import { useCreatePostMutation } from '@/api';
+import { useSelector } from '@/store/store';
+import { selectUser } from '@/store/slices/userSlice';
 
 type ReplyFormProps = {
   setComments: React.Dispatch<React.SetStateAction<ForumComment[]>>;
@@ -11,33 +14,21 @@ type ReplyFormProps = {
 
 export const ReplyForm = ({ setComments, topicId }: ReplyFormProps) => {
   const [commentText, setCommentText] = useState<string>('');
+  const [createPost, { isLoading }] = useCreatePostMutation();
+  const user = useSelector(selectUser);
 
   const formSubmit = (e: FormEvent) => {
     e.preventDefault();
-    if (commentText) {
-      let now = new Date();
-      const options: Intl.DateTimeFormatOptions = {
-        year: 'numeric',
-        month: 'numeric',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false,
-      };
-      setComments((prevComments) => {
-        let newComments = [...prevComments];
-        newComments.push({
-          id: prevComments.length,
-          topicId,
-          author: 'You',
-          date: now.toLocaleString('ru-RU', options),
-          text: commentText,
-          avatar: '☠',
-        });
-        return newComments;
-      });
-      setCommentText('');
-    }
+    if (!commentText.trim()) return;
+    createPost({
+      topicId: topicId,
+      body: {
+        user_id: Number(user?.id),
+        content: commentText,
+        author: user?.first_name || '',
+      },
+    });
+    setCommentText('');
   };
 
   return (

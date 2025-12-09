@@ -19,8 +19,8 @@ export type ForumComment = {
   topicId: number;
   author: string;
   date: string;
-  text: string;
-  avatar: string;
+  content: string;
+  avatar?: string;
   reactions?: {
     emoji: string;
     count: number;

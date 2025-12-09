@@ -12,7 +12,7 @@ export const Comment = ({
   author,
   avatar,
   date,
-  text,
+  content,
   reactions: initialReactions = [],
 }: ForumComment) => {
   const {
@@ -110,7 +110,7 @@ export const Comment = ({
           <span>{author}</span>
           <span className={styles.date}>{date}</span>
         </div>
-        <p>{text}</p>
+        <p>{content}</p>
         <div className={styles.reactions}>
           <div className={styles.reactionsList}>
             {isError && (

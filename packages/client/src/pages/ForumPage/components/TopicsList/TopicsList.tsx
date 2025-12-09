@@ -1,8 +1,6 @@
-import React, { useState } from 'react';
-import { ForumComment } from '../../types';
+import React from 'react';
 import styles from './TopicsList.module.scss';
 import { MessageCircle, MessageSquare, Tag, ThumbsUp } from 'lucide-react';
-import { comments as mockComments } from '../../mockData';
 import { Comment } from './components/Comment';
 import { ReplyForm } from './components/ReplyForm';
 import { TopicReactions } from './components/TopicReactions';
@@ -22,7 +20,6 @@ export const TopicsList = ({
   setSelectedTopic,
   selectedTopic,
 }: TopicsListProps) => {
-  const [comments, setComments] = useState<ForumComment[]>(mockComments);
   const {
     data: postsData,
     isLoading,
@@ -108,7 +105,7 @@ export const TopicsList = ({
                       />
                     ))
                 : 'No comments'}
-              <ReplyForm setComments={setComments} topicId={topic.id} />
+              <ReplyForm topicId={topic.id} />
             </div>
           )}
         </article>

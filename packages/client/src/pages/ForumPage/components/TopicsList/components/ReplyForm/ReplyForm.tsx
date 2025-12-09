@@ -8,11 +8,10 @@ import { useSelector } from '@/store/store';
 import { selectUser } from '@/store/slices/userSlice';
 
 type ReplyFormProps = {
-  setComments: React.Dispatch<React.SetStateAction<ForumComment[]>>;
   topicId: number;
 };
 
-export const ReplyForm = ({ setComments, topicId }: ReplyFormProps) => {
+export const ReplyForm = ({ topicId }: ReplyFormProps) => {
   const [commentText, setCommentText] = useState<string>('');
   const [createPost, { isLoading }] = useCreatePostMutation();
   const user = useSelector(selectUser);

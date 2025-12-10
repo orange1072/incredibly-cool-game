@@ -15,6 +15,7 @@ import { Topic } from './Topic'
 @Table({
   tableName: 'posts',
   timestamps: true,
+  updatedAt: false,
 })
 export class Post extends Model {
   @PrimaryKey

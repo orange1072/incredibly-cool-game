@@ -3,7 +3,7 @@
 CREATE TABLE IF NOT EXISTS users (
                                       id SERIAL PRIMARY KEY,
                                       login VARCHAR(255) NOT NULL,
-                                      registered_at DATE NOT NULL,
+                                      created_at TIMESTAMP DEFAULT NOW(),
                                       password VARCHAR(255) NOT NULL,
                                       email VARCHAR(255) NOT NULL
 );
@@ -12,10 +12,9 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS topics (
                                       id SERIAL PRIMARY KEY,
                                       title VARCHAR(255) NOT NULL,
-                                      user_id INTEGER NOT NULL,
+                                      login VARCHAR(255) NOT NULL,
                                       preview TEXT NOT NULL,
-                                      tags TEXT[],
-                                      created_at TIMESTAMP DEFAULT NOW()
+                                      tags TEXT[]
 );
 
 -- Таблица постов (комментариев и ответов)

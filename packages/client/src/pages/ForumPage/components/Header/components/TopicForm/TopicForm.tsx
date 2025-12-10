@@ -18,7 +18,7 @@ export const TopicForm = () => {
     createTopic({
       title: topicTitle,
       preview: topicPreview,
-      user_id: Number(user?.id),
+      login: String(user?.login),
     });
     e.preventDefault();
     setTopicTitle('');

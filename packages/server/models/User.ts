@@ -8,12 +8,12 @@ import {
   PrimaryKey,
   AutoIncrement,
 } from 'sequelize-typescript'
-import { Topic } from './Topic'
 import { Post } from './Post'
 
 @Table({
   tableName: 'users',
   timestamps: true,
+  updatedAt: false,
 })
 export class User extends Model {
   @PrimaryKey
@@ -44,13 +44,13 @@ export class User extends Model {
   })
   declare password: string
 
-  // Связи
-  @HasMany(() => Topic)
-  declare topics: Topic[]
-
   @HasMany(() => Post)
   declare posts: Post[]
 
   @CreatedAt
+  @Column({
+    type: DataType.DATE,
+    field: 'created_at',
+  })
   declare created_at: Date
 }

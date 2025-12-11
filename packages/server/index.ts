@@ -12,10 +12,28 @@ import authorizedRoutes from './routes/authorizedRoutes'
 import cookieParser from 'cookie-parser'
 
 const app = express()
+
+const defaultClientPort = Number(process.env.CLIENT_PORT) || 3000
+const corsOriginsFromEnv = process.env.CLIENT_ORIGINS
+  ? process.env.CLIENT_ORIGINS.split(',')
+      .map(origin => origin.trim())
+      .filter(Boolean)
+  : []
+const allowedCorsOrigins =
+  corsOriginsFromEnv.length > 0
+    ? corsOriginsFromEnv
+    : [`http://localhost:${defaultClientPort}`]
+
 app.use(
   cors({
-    origin: `http://localhost:${process.env.CLIENT_PORT || 3000}`,
     credentials: true,
+    origin(origin, callback) {
+      if (!origin || allowedCorsOrigins.includes(origin)) {
+        callback(null, true)
+      } else {
+        callback(new Error(`Origin ${origin} is not allowed by CORS`))
+      }
+    },
   })
 )
 app.use(express.json())

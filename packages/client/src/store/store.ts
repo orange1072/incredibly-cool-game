@@ -11,12 +11,15 @@ import userReducer from './slices/userSlice';
 import authReducer from './slices/authSlice';
 import gameReducer from './slices/game';
 import { authAPI } from '@/slices/authApi';
-import { userApi } from '@/api';
+import { emojiApi, postApi, topicApi, userApi } from '@/api';
 
 export const reducer = combineReducers({
   ssr: ssrReducer,
   user: userReducer,
   auth: authReducer,
+  emojiApi: emojiApi.reducer,
+  postApi: postApi.reducer,
+  topicApi: topicApi.reducer,
   userApi: userApi.reducer,
   [authAPI.reducerPath]: authAPI.reducer,
   game: gameReducer,
@@ -54,6 +57,15 @@ export const createStore = (preloadedState?: RootState) => {
 
       if (typeof userApi.middleware === 'function') {
         allMiddlewares.push(userApi.middleware);
+      }
+      if (typeof emojiApi.middleware === 'function') {
+        allMiddlewares.push(emojiApi.middleware);
+      }
+      if (typeof postApi.middleware === 'function') {
+        allMiddlewares.push(postApi.middleware);
+      }
+      if (typeof topicApi.middleware === 'function') {
+        allMiddlewares.push(topicApi.middleware);
       }
       if (typeof authAPI.middleware === 'function') {
         allMiddlewares.push(authAPI.middleware);

@@ -1,12 +1,10 @@
-import { useEffect } from 'react';
+import { PropsWithChildren, useEffect } from 'react';
 import { useDispatch } from '@/store/store';
 import { useGetUserMutation } from '@/slices/authApi';
 import { setUser } from '@/store/slices/userSlice';
 import { useOAuth } from '@/hooks/useOAuth';
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const AuthProvider = ({ children }: PropsWithChildren) => {
   const [getUser] = useGetUserMutation();
   const dispatch = useDispatch();
   const { handleOAuthCallback } = useOAuth();

@@ -8,6 +8,64 @@ import {
 } from '../types/Reaction'
 import { formatDate } from '../helpers'
 
+type ReactionRouteParams = Record<string, string | undefined>
+
+type TargetResolution =
+  | {
+      ok: true
+      targetType: ReactionTargetType
+      targetIdValue: string
+    }
+  | { ok: false; error: string }
+
+const normalizeTargetType = (value?: string): ReactionTargetType | null => {
+  if (!value) {
+    return null
+  }
+
+  if (value === 'topic' || value === 'topics') {
+    return 'topic'
+  }
+
+  if (value === 'post' || value === 'posts') {
+    return 'post'
+  }
+
+  return null
+}
+
+const resolveTargetFromParams = (
+  params: ReactionRouteParams
+): TargetResolution => {
+  const { topicId, postId, target_type, target_id } = params
+
+  if (topicId) {
+    return { ok: true, targetType: 'topic', targetIdValue: topicId }
+  }
+
+  if (postId) {
+    return { ok: true, targetType: 'post', targetIdValue: postId }
+  }
+
+  const normalizedType = normalizeTargetType(target_type)
+
+  if (normalizedType && target_id) {
+    return { ok: true, targetType: normalizedType, targetIdValue: target_id }
+  }
+
+  if (target_type && !normalizedType) {
+    return {
+      ok: false,
+      error: 'Invalid target type. Must be "topic" or "post"',
+    }
+  }
+
+  return {
+    ok: false,
+    error: 'Target type and ID are required',
+  }
+}
+
 // Validate emoji - basic validation (should be 1-10 characters, Unicode emoji)
 const isValidEmoji = (emoji: string): boolean => {
   if (!emoji || emoji.length === 0 || emoji.length > 10) {
@@ -25,21 +83,22 @@ export const addReaction = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { target_type, target_id } = req.params
-    const { user_id, emoji }: CreateReactionRequest = req.body
+    const targetResolution = resolveTargetFromParams(
+      req.params as ReactionRouteParams
+    )
 
-    // Validate target type
-    if (target_type !== 'topic' && target_type !== 'post') {
-      res
-        .status(400)
-        .json({ error: 'Invalid target type. Must be "topic" or "post"' })
+    if (!targetResolution.ok) {
+      res.status(400).json({ error: targetResolution.error })
       return
     }
 
+    const { targetType, targetIdValue } = targetResolution
+    const { user_id, emoji }: CreateReactionRequest = req.body
+
     // Validate target ID
-    const targetIdNum = parseInt(target_id, 10)
+    const targetIdNum = parseInt(targetIdValue, 10)
     if (isNaN(targetIdNum) || targetIdNum <= 0) {
-      res.status(400).json({ error: `Invalid ${target_type} ID` })
+      res.status(400).json({ error: `Invalid ${targetType} ID` })
       return
     }
 
@@ -59,7 +118,7 @@ export const addReaction = async (
 
     // Check if target exists
     let targetExists = false
-    if (target_type === 'topic') {
+    if (targetType === 'topic') {
       const topicResult = await pool.query(
         'SELECT id FROM topics WHERE id = $1',
         [targetIdNum]
@@ -74,20 +133,22 @@ export const addReaction = async (
     }
 
     if (!targetExists) {
-      res.status(404).json({
-        error: `${target_type === 'topic' ? 'Topic' : 'Post'} not found`,
-      })
+      res
+        .status(404)
+        .json({
+          error: `${targetType === 'topic' ? 'Topic' : 'Post'} not found`,
+        })
       return
     }
 
     // Try to insert reaction
     let result
-    if (target_type === 'topic') {
+    if (targetType === 'topic') {
       result = await pool.query(
         `INSERT INTO reactions (topic_id, user_id, emoji)
          VALUES ($1, $2, $3)
          ON CONFLICT (topic_id, user_id, emoji) DO NOTHING
-         RETURNING id, topic_id, user_id, emoji, created_at`,
+         RETURNING id, topic_id as target_id, user_id, emoji, created_at`,
         [targetIdNum, user_id, emoji]
       )
     } else {
@@ -109,8 +170,8 @@ export const addReaction = async (
     const row = result.rows[0]
     const reaction: ReactionResponse = {
       id: row.id,
-      target_type: target_type as ReactionTargetType,
-      target_id: target_type === 'topic' ? row.topic_id : row.target_id,
+      target_type: targetType,
+      target_id: row.target_id,
       user_id: row.user_id,
       emoji: row.emoji,
       created_at: formatDate(row.created_at),
@@ -129,20 +190,21 @@ export const getReactions = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { target_type, target_id } = req.params
+    const targetResolution = resolveTargetFromParams(
+      req.params as ReactionRouteParams
+    )
 
-    // Validate target type
-    if (target_type !== 'topic' && target_type !== 'post') {
-      res
-        .status(400)
-        .json({ error: 'Invalid target type. Must be "topic" or "post"' })
+    if (!targetResolution.ok) {
+      res.status(400).json({ error: targetResolution.error })
       return
     }
 
+    const { targetType, targetIdValue } = targetResolution
+
     // Validate target ID
-    const targetIdNum = parseInt(target_id, 10)
+    const targetIdNum = parseInt(targetIdValue, 10)
     if (isNaN(targetIdNum) || targetIdNum <= 0) {
-      res.status(400).json({ error: `Invalid ${target_type} ID` })
+      res.status(400).json({ error: `Invalid ${targetType} ID` })
       return
     }
 
@@ -150,7 +212,7 @@ export const getReactions = async (
 
     // Check if target exists
     let targetExists = false
-    if (target_type === 'topic') {
+    if (targetType === 'topic') {
       const topicResult = await pool.query(
         'SELECT id FROM topics WHERE id = $1',
         [targetIdNum]
@@ -165,17 +227,19 @@ export const getReactions = async (
     }
 
     if (!targetExists) {
-      res.status(404).json({
-        error: `${target_type === 'topic' ? 'Topic' : 'Post'} not found`,
-      })
+      res
+        .status(404)
+        .json({
+          error: `${targetType === 'topic' ? 'Topic' : 'Post'} not found`,
+        })
       return
     }
 
     // Get reactions statistics
     let statsResult
-    if (target_type === 'topic') {
+    if (targetType === 'topic') {
       statsResult = await pool.query(
-        `SELECT 
+        `SELECT
           emoji,
           COUNT(*) as count,
           ARRAY_AGG(DISTINCT user_id) as users
@@ -187,7 +251,7 @@ export const getReactions = async (
       )
     } else {
       statsResult = await pool.query(
-        `SELECT 
+        `SELECT
           emoji,
           COUNT(*) as count,
           ARRAY_AGG(DISTINCT user_id) as users
@@ -209,7 +273,7 @@ export const getReactions = async (
 
     // Get all individual reactions
     let reactionsResult
-    if (target_type === 'topic') {
+    if (targetType === 'topic') {
       reactionsResult = await pool.query(
         `SELECT id, topic_id as target_id, user_id, emoji, created_at
          FROM reactions
@@ -236,7 +300,7 @@ export const getReactions = async (
         created_at: Date
       }) => ({
         id: row.id,
-        target_type: target_type as ReactionTargetType,
+        target_type: targetType,
         target_id: row.target_id,
         user_id: row.user_id,
         emoji: row.emoji,
@@ -245,7 +309,7 @@ export const getReactions = async (
     )
 
     res.status(200).json({
-      target_type,
+      target_type: targetType,
       target_id: targetIdNum,
       stats,
       reactions,
@@ -262,21 +326,22 @@ export const removeReaction = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { target_type, target_id } = req.params
-    const { user_id, emoji } = req.body
+    const targetResolution = resolveTargetFromParams(
+      req.params as ReactionRouteParams
+    )
 
-    // Validate target type
-    if (target_type !== 'topic' && target_type !== 'post') {
-      res
-        .status(400)
-        .json({ error: 'Invalid target type. Must be "topic" or "post"' })
+    if (!targetResolution.ok) {
+      res.status(400).json({ error: targetResolution.error })
       return
     }
 
+    const { targetType, targetIdValue } = targetResolution
+    const { user_id, emoji } = req.body
+
     // Validate target ID
-    const targetIdNum = parseInt(target_id, 10)
+    const targetIdNum = parseInt(targetIdValue, 10)
     if (isNaN(targetIdNum) || targetIdNum <= 0) {
-      res.status(400).json({ error: `Invalid ${target_type} ID` })
+      res.status(400).json({ error: `Invalid ${targetType} ID` })
       return
     }
 
@@ -295,7 +360,7 @@ export const removeReaction = async (
     const pool = getDbPool()
 
     let result
-    if (target_type === 'topic') {
+    if (targetType === 'topic') {
       result = await pool.query(
         `DELETE FROM reactions
          WHERE topic_id = $1 AND user_id = $2 AND emoji = $3

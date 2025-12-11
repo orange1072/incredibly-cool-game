@@ -6,4 +6,6 @@ export const API_ENDPOINTS = {
       PASSWORD: '/user/profile/password',
     },
   },
+  TOPICS: '/api/topics',
+  POSTS: '/api/posts',
 } as const;

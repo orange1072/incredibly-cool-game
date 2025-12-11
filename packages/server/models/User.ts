@@ -3,12 +3,10 @@ import {
   Model,
   Column,
   DataType,
-  HasMany,
   CreatedAt,
   PrimaryKey,
   AutoIncrement,
 } from 'sequelize-typescript'
-import { Post } from './Post'
 
 @Table({
   tableName: 'users',
@@ -24,6 +22,7 @@ export class User extends Model {
   @Column({
     type: DataType.STRING(100),
     allowNull: false,
+    unique: true,
   })
   declare login: string
 
@@ -43,9 +42,6 @@ export class User extends Model {
     allowNull: false,
   })
   declare password: string
-
-  @HasMany(() => Post)
-  declare posts: Post[]
 
   @CreatedAt
   @Column({

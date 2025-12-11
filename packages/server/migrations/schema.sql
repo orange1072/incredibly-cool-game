@@ -21,10 +21,9 @@ CREATE TABLE IF NOT EXISTS topics (
 CREATE TABLE IF NOT EXISTS posts (
                                      id SERIAL PRIMARY KEY,
                                      content TEXT NOT NULL,
-                                     user_id INTEGER NOT NULL,
+                                     login VARCHAR(255) NOT NULL,
                                      topic_id INTEGER NOT NULL,
                                      parent_id INTEGER,
-                                     created_at TIMESTAMP DEFAULT NOW(),
                                      CONSTRAINT fk_topic
                                          FOREIGN KEY(topic_id)
                                              REFERENCES topics(id)
@@ -32,10 +31,6 @@ CREATE TABLE IF NOT EXISTS posts (
                                      CONSTRAINT fk_parent
                                          FOREIGN KEY(parent_id)
                                              REFERENCES posts(id)
-                                             ON DELETE CASCADE,
-                                     CONSTRAINT fk_user
-                                         FOREIGN KEY(user_id)
-                                             REFERENCES users(id)
                                              ON DELETE CASCADE
 );
 
@@ -73,7 +68,7 @@ CREATE TABLE IF NOT EXISTS reactions (
 -- Индексы для posts
 CREATE INDEX IF NOT EXISTS idx_posts_topic_id ON posts(topic_id);
 CREATE INDEX IF NOT EXISTS idx_posts_parent_id ON posts(parent_id);
-CREATE INDEX IF NOT EXISTS idx_posts_created_at ON posts(created_at);
+-- CREATE INDEX IF NOT EXISTS idx_posts_created_at ON posts(created_at);
 
 -- Индексы для reactions
 CREATE INDEX IF NOT EXISTS idx_reactions_topic_id ON reactions(topic_id) WHERE topic_id IS NOT NULL;
@@ -96,7 +91,7 @@ CREATE INDEX IF NOT EXISTS idx_reactions_count_topic ON reactions(topic_id) WHER
 CREATE INDEX IF NOT EXISTS idx_reactions_count_post ON reactions(post_id) WHERE post_id IS NOT NULL;
 
 -- Дополнительные индексы для оптимизации запросов
-CREATE INDEX IF NOT EXISTS idx_topics_created_at ON topics(created_at DESC);
+-- CREATE INDEX IF NOT EXISTS idx_topics_created_at ON topics(created_at DESC);
 
 --Ограничение reactions_check
 ALTER TABLE reactions
@@ -123,7 +118,7 @@ CREATE OR REPLACE FUNCTION get_comment_tree(topic_id_param INTEGER, max_depth IN
     RETURNS TABLE (
                       id INTEGER,
                       content TEXT,
-                      user_id INTEGER,
+                      login TEXT,
                       topic_id INTEGER,
                       parent_id INTEGER,
                       created_at TIMESTAMP,
@@ -135,7 +130,7 @@ WITH RECURSIVE comment_tree AS (
     SELECT
         p.id,
         p.content,
-        p.user_id,
+        p.login,
         p.topic_id,
         p.parent_id,
         p.created_at,
@@ -156,7 +151,7 @@ WITH RECURSIVE comment_tree AS (
     SELECT
         p.id,
         p.content,
-        p.user_id,
+        p.login,
         p.topic_id,
         p.parent_id,
         p.created_at,

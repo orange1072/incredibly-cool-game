@@ -14,7 +14,7 @@ export const useRedirectIfAuthenticated = () => {
           navigate('/game-menu');
         }
       } catch (error) {
-        console.log('sign in error', error);
+        console.error('sign in error', error);
       }
     };
 

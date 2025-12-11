@@ -6,7 +6,7 @@ import styles from './Comment.module.scss';
 const fallbackEmojiPalette = ['👍', '🔥', '💀', '❤️', '😂'] as const;
 const CURRENT_USER_ID = 1; // TODO: заменить на реального пользователя после интеграции auth
 
-export const Comment = ({
+export const Comment: React.FC<ForumComment> = ({
   id,
   topicId,
   author,
@@ -14,7 +14,7 @@ export const Comment = ({
   date,
   content,
   reactions: initialReactions = [],
-}: ForumComment) => {
+}) => {
   const {
     data,
     isFetching: isLoadingReactions,

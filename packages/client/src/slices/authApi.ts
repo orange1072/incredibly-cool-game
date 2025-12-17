@@ -42,14 +42,14 @@ export const authAPI = createApi({
     }),
     signUp: builder.mutation<{ id: number }, SignupRequestProps>({
       query: (body) => ({
-        url: 'auth/signup',
+        url: '/auth/signup',
         method: 'POST',
         body,
       }),
     }),
     signIn: builder.mutation<void, SigninRequestProps>({
       query: (body) => ({
-        url: 'auth/signin',
+        url: '/auth/signin',
         method: 'POST',
         body,
       }),

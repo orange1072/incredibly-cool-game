@@ -10,32 +10,33 @@ import postsRoutes from './routes/postsRoutes'
 import reactionsRoutes from './routes/reactionsRoutes'
 import authorizedRoutes from './routes/authorizedRoutes'
 import cookieParser from 'cookie-parser'
+import { createProxyMiddleware } from 'http-proxy-middleware'
 
 const app = express()
 
-const defaultClientPort = Number(process.env.CLIENT_PORT) || 3000
-const corsOriginsFromEnv = process.env.CLIENT_ORIGINS
-  ? process.env.CLIENT_ORIGINS.split(',')
-      .map(origin => origin.trim())
-      .filter(Boolean)
-  : []
-const allowedCorsOrigins =
-  corsOriginsFromEnv.length > 0
-    ? corsOriginsFromEnv
-    : [`http://localhost:${defaultClientPort}`]
-
 app.use(
   cors({
+    origin: 'http://localhost:3000',
     credentials: true,
-    origin(origin, callback) {
-      if (!origin || allowedCorsOrigins.includes(origin)) {
-        callback(null, true)
-      } else {
-        callback(new Error(`Origin ${origin} is not allowed by CORS`))
-      }
-    },
+    methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
+    exposedHeaders: ['Set-Cookie'],
+    optionsSuccessStatus: 204,
   })
 )
+
+app.use((_, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000')
+  res.setHeader('Access-Control-Allow-Credentials', 'true')
+  res.setHeader(
+    'Access-Control-Allow-Methods',
+    'GET, POST, PUT, OPTIONS, DELETE'
+  )
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept'
+  )
+  next()
+})
 app.use(express.json())
 app.use(cookieParser())
 
@@ -52,7 +53,36 @@ const initializeDatabase = async () => {
   }
 }
 
-// roots with authorization check
+const yaApiProxy = createProxyMiddleware({
+  target: 'https://ya-praktikum.tech/api/v2',
+  changeOrigin: true,
+  cookieDomainRewrite: {
+    '*': '',
+  },
+  pathRewrite: {
+    '^/ya-api': '',
+  },
+  on: {
+    proxyReq: (proxyReq, req: express.Request) => {
+      const targetUrl = `${proxyReq.protocol}//${proxyReq.host}${proxyReq.path}`
+      console.log('Full Target URL:', targetUrl)
+      console.log('Request Method:', req.method)
+      console.log('Proxying request body:', req.body)
+    },
+    proxyRes: proxyRes => {
+      console.log('status: ', proxyRes.statusCode)
+      const setCookies = proxyRes.headers['set-cookie']
+      console.log('RAW Response from the target', setCookies)
+    },
+    error: err => {
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error'
+      console.log('ERROR: ', errorMessage)
+    },
+  },
+})
+
+app.use('/ya-api', yaApiProxy)
+
 app.use('/restricted', authorizedRoutes)
 
 // API routes

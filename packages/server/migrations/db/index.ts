@@ -36,7 +36,8 @@ const runMigrations = async () => {
 
     console.log('🎉 Все миграции успешно применены')
   } catch (e) {
-    console.error('❌ Ошибка:', e.stderr || e.message)
+    const error = e as { stderr?: string; message?: string }
+    console.error('❌ Ошибка:', error.stderr || error.message || e)
     process.exit(1)
   }
 }

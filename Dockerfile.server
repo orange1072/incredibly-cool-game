@@ -14,7 +14,7 @@ RUN yarn install --frozen-lockfile
 
 COPY . .
 
-RUN rm -rf /app/packages/server/dist/ && lerna run build --scope=server
+RUN rm -rf /app/packages/server/dist/ && yarn lerna run build --scope=server
 
 FROM node:$NODE_VERSION-slim as production
 WORKDIR /app

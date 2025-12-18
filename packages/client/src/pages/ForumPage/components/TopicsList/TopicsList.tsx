@@ -32,8 +32,8 @@ export const TopicsList = ({
     return (
       <div className={styles.wrapper}>
         <div className={styles.emptyState}>
-          <h3>Темы не найдены</h3>
-          <p>Попробуйте изменить поисковый запрос</p>
+          <h3>No topics found</h3>
+          <p>Try adjusting your search query</p>
         </div>
       </div>
     );
@@ -41,6 +41,9 @@ export const TopicsList = ({
 
   return (
     <div className={styles.wrapper}>
+      {isError && (
+        <span className={styles.reactionsError}>Failed to load topics</span>
+      )}
       {filteredTopics.map((topic) => (
         <article key={topic.id} className={styles.topicWrapper}>
           <section

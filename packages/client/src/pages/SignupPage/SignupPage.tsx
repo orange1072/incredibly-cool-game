@@ -131,7 +131,7 @@ export const SignupPage = () => {
         setStep(step + 1);
       } else {
         try {
-          await signUp(formData);
+          await signUp(formData).unwrap();
           const user = await getUser().unwrap();
           if (user) {
             dispatch(setUser(user));

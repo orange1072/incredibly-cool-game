@@ -12,7 +12,7 @@ export const Comment: React.FC<ForumComment> = ({
   author,
   avatar,
   date,
-  text,
+  content,
   reactions: initialReactions = [],
 }) => {
   const {
@@ -110,7 +110,7 @@ export const Comment: React.FC<ForumComment> = ({
           <span>{author}</span>
           <span className={styles.date}>{date}</span>
         </div>
-        <p>{text}</p>
+        <p>{content}</p>
         <div className={styles.reactions}>
           <div className={styles.reactionsList}>
             {isError && (

@@ -6,7 +6,6 @@ import { useSelector } from '@/store/store';
 import { selectUser } from '@/store/slices/userSlice';
 
 const fallbackEmojiPalette = ['👍', '🔥', '💀', '❤️', '😂'] as const;
-const CURRENT_USER_ID = 1; // TODO: заменить на реального пользователя после интеграции auth
 
 export const Comment: React.FC<ForumComment> = ({
   id,
@@ -84,7 +83,7 @@ export const Comment: React.FC<ForumComment> = ({
       await addReaction({
         targetType: 'post',
         targetId: id,
-        body: { user_id: CURRENT_USER_ID, emoji },
+        body: { user_id: Number(user?.id), emoji },
       }).unwrap();
       setOptimisticBump((prev) => {
         const { [emoji]: _, ...rest } = prev;

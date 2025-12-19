@@ -8,14 +8,14 @@ import {
   CreatedAt,
   PrimaryKey,
   AutoIncrement,
+  Sequelize,
+  UpdatedAt,
 } from 'sequelize-typescript'
 import { Topic } from './Topic'
 
 @Table({
   tableName: 'reactions',
-  timestamps: true,
-  createdAt: 'created_at',
-  updatedAt: 'updated_at',
+  underscored: true,
   indexes: [
     {
       fields: ['topic_id'],
@@ -44,7 +44,7 @@ export class Reaction extends Model {
   @ForeignKey(() => Topic)
   @Column({
     type: DataType.INTEGER,
-    allowNull: false,
+    allowNull: true,
     field: 'topic_id',
   })
   declare topicId: number
@@ -61,7 +61,7 @@ export class Reaction extends Model {
 
   @Column({
     type: DataType.INTEGER,
-    allowNull: false,
+    allowNull: true,
     field: 'post_id',
   })
   declare post_id: number
@@ -76,6 +76,15 @@ export class Reaction extends Model {
   @Column({
     type: DataType.DATE,
     field: 'created_at',
+    defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
   })
   declare created_at: Date
+
+  @UpdatedAt
+  @Column({
+    type: DataType.DATE,
+    field: 'updated_at',
+    defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+  })
+  declare updated_at: Date
 }

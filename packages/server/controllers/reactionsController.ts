@@ -66,17 +66,6 @@ const resolveTargetFromParams = (
   }
 }
 
-// Validate emoji - basic validation (should be 1-10 characters, Unicode emoji)
-const isValidEmoji = (emoji: string): boolean => {
-  if (!emoji || emoji.length === 0 || emoji.length > 10) {
-    return false
-  }
-  // Basic emoji validation - Unicode emoji pattern
-  const emojiRegex =
-    /^[\p{Emoji}\p{Emoji_Presentation}\p{Emoji_Modifier_Base}\p{Emoji_Modifier}]$/u
-  return emojiRegex.test(emoji)
-}
-
 // Add reaction to topic or post
 export const addReaction = async (
   req: Request,
@@ -86,7 +75,6 @@ export const addReaction = async (
     const targetResolution = resolveTargetFromParams(
       req.params as ReactionRouteParams
     )
-
     if (!targetResolution.ok) {
       res.status(400).json({ error: targetResolution.error })
       return
@@ -105,12 +93,6 @@ export const addReaction = async (
     // Validate user_id
     if (!user_id || typeof user_id !== 'number' || user_id <= 0) {
       res.status(400).json({ error: 'Invalid user_id' })
-      return
-    }
-
-    // Validate emoji
-    if (!isValidEmoji(emoji)) {
-      res.status(400).json({ error: 'Invalid emoji' })
       return
     }
 
@@ -133,32 +115,35 @@ export const addReaction = async (
     }
 
     if (!targetExists) {
-      res
-        .status(404)
-        .json({
-          error: `${targetType === 'topic' ? 'Topic' : 'Post'} not found`,
-        })
+      res.status(404).json({
+        error: `${targetType === 'topic' ? 'Topic' : 'Post'} not found`,
+      })
       return
     }
 
     // Try to insert reaction
     let result
-    if (targetType === 'topic') {
-      result = await pool.query(
-        `INSERT INTO reactions (topic_id, user_id, emoji)
-         VALUES ($1, $2, $3)
-         ON CONFLICT (topic_id, user_id, emoji) DO NOTHING
-         RETURNING id, topic_id as target_id, user_id, emoji, created_at`,
-        [targetIdNum, user_id, emoji]
-      )
-    } else {
-      result = await pool.query(
-        `INSERT INTO reactions (post_id, user_id, emoji)
-         VALUES ($1, $2, $3)
-         ON CONFLICT (post_id, user_id, emoji) DO NOTHING
-         RETURNING id, post_id as target_id, user_id, emoji, created_at`,
-        [targetIdNum, user_id, emoji]
-      )
+    try {
+      if (targetType === 'topic') {
+        result = await pool.query(
+          `INSERT INTO reactions (topic_id, user_id, emoji)
+           VALUES ($1, $2, $3)
+           RETURNING id, topic_id as target_id, user_id, emoji, created_at`,
+          [targetIdNum, user_id, emoji]
+        )
+      } else {
+        result = await pool.query(
+          `INSERT INTO reactions (post_id, user_id, emoji)
+           VALUES ($1, $2, $3)
+           RETURNING id, post_id as target_id, user_id, emoji, created_at`,
+          [targetIdNum, user_id, emoji]
+        )
+      }
+    } catch (err: unknown) {
+      if (err instanceof Error && 'code' in err && err.code === '23505') {
+        res.status(409).json({ error: 'Reaction already exists' })
+      }
+      throw err
     }
 
     if (result.rows.length === 0) {
@@ -227,11 +212,9 @@ export const getReactions = async (
     }
 
     if (!targetExists) {
-      res
-        .status(404)
-        .json({
-          error: `${targetType === 'topic' ? 'Topic' : 'Post'} not found`,
-        })
+      res.status(404).json({
+        error: `${targetType === 'topic' ? 'Topic' : 'Post'} not found`,
+      })
       return
     }
 
@@ -348,12 +331,6 @@ export const removeReaction = async (
     // Validate user_id
     if (!user_id || typeof user_id !== 'number' || user_id <= 0) {
       res.status(400).json({ error: 'Invalid user_id' })
-      return
-    }
-
-    // Validate emoji
-    if (!isValidEmoji(emoji)) {
-      res.status(400).json({ error: 'Invalid emoji' })
       return
     }
 

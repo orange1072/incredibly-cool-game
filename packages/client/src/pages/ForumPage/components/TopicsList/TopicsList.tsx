@@ -38,7 +38,7 @@ export const TopicsList = ({
       </div>
     );
   }
-
+  const defaultBadge = 'SURVIVOR';
   return (
     <div className={styles.wrapper}>
       {filteredTopics.map((topic) => (
@@ -58,7 +58,7 @@ export const TopicsList = ({
                   <span>
                     <span className={styles.inlineIcon}>☢️</span> {topic.login}
                   </span>
-                  {/*<span className={styles.badge}>{topic.authorBadge}</span>*/}
+                  <span className={styles.badge}>{defaultBadge}</span>
                   <span>{topic.date}</span>
                 </div>
               </div>

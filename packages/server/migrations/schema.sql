@@ -56,12 +56,8 @@ CREATE TABLE IF NOT EXISTS reactions (
                                          CONSTRAINT fk_reactions_post
                                              FOREIGN KEY(post_id)
                                                  REFERENCES posts(id)
-                                                 ON DELETE CASCADE,
-                                         CONSTRAINT fk_users
-                                             FOREIGN KEY(user_id)
-                                                 REFERENCES users(id)
                                                  ON DELETE CASCADE
-);
+                                );
 
 -- Создание индексов для производительности
 

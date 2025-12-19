@@ -7,7 +7,7 @@ import { createClientAndConnect } from './db'
 import { runMigrations } from './migrations/migrate'
 import topicsRoutes from './routes/topicsRoutes'
 import postsRoutes from './routes/postsRoutes'
-// import reactionsRoutes from './routes/reactionsRoutes'
+import reactionsRoutes from './routes/reactionsRoutes'
 
 const app = express()
 
@@ -56,17 +56,8 @@ app.use('/api/topics', topicsRoutes)
 // Posts API (comments and replies): /api/posts
 app.use('/api/posts', postsRoutes)
 
-// Reactions API: /api/topics/:topicId/reactions
-// app.use('/api/topics', reactionsRoutes)
-
-// Legacy routes
-app.get('/friends', (_, res) => {
-  res.json([
-    { name: 'Саша', secondName: 'Панов' },
-    { name: 'Лёша', secondName: 'Садовников' },
-    { name: 'Серёжа', secondName: 'Иванов' },
-  ])
-})
+// Реакции
+app.use('/api', reactionsRoutes)
 
 // Start server after database initialization
 initializeDatabase()

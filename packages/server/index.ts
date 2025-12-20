@@ -8,6 +8,7 @@ import { runMigrations } from './migrations/migrate'
 import topicsRoutes from './routes/topicsRoutes'
 import postsRoutes from './routes/postsRoutes'
 import reactionsRoutes from './routes/reactionsRoutes'
+import { yandexProxy } from './middlewares/yandexProxy'
 import authorizedRoutes from './routes/authorizedRoutes'
 import cookieParser from 'cookie-parser'
 
@@ -36,6 +37,10 @@ app.use(
     },
   })
 )
+
+// proxy requests for yandex api
+app.use('/ya-api', yandexProxy)
+
 app.use(express.json())
 app.use(cookieParser())
 

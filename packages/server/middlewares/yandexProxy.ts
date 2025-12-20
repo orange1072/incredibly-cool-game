@@ -1,10 +1,10 @@
 import { Request } from 'express'
-import { yaAPI } from '../constants'
 import { createProxyMiddleware } from 'http-proxy-middleware'
 import { ServerResponse } from 'http'
+import { YANDEX_API } from './constants'
 
 export const yandexProxy = createProxyMiddleware({
-  target: yaAPI,
+  target: YANDEX_API,
   changeOrigin: true,
   cookieDomainRewrite: {
     '*': '',

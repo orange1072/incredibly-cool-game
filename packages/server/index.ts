@@ -9,6 +9,8 @@ import topicsRoutes from './routes/topicsRoutes'
 import postsRoutes from './routes/postsRoutes'
 import reactionsRoutes from './routes/reactionsRoutes'
 import { yandexProxy } from './middlewares/yandexProxy'
+import cookieParser from 'cookie-parser'
+import { checkAuth } from './middlewares/authorization'
 
 const app = express()
 
@@ -40,6 +42,7 @@ app.use(
 app.use('/ya-api', yandexProxy)
 
 app.use(express.json())
+app.use(cookieParser())
 
 const port = Number(process.env.SERVER_PORT) || 3001
 
@@ -53,6 +56,10 @@ const initializeDatabase = async () => {
     process.exit(1)
   }
 }
+
+// check authorization for forum routes
+
+app.use('/api', checkAuth)
 
 // API routes
 // Topics API: /api/topics

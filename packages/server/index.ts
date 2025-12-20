@@ -9,8 +9,8 @@ import topicsRoutes from './routes/topicsRoutes'
 import postsRoutes from './routes/postsRoutes'
 import reactionsRoutes from './routes/reactionsRoutes'
 import { yandexProxy } from './middlewares/yandexProxy'
-import authorizedRoutes from './routes/authorizedRoutes'
 import cookieParser from 'cookie-parser'
+import { checkAuth } from './middlewares/authorization'
 
 const app = express()
 
@@ -57,8 +57,9 @@ const initializeDatabase = async () => {
   }
 }
 
-// roots with authorization check
-app.use('/restricted', authorizedRoutes)
+// check authorization for forum routes
+
+app.use('/api', checkAuth)
 
 // API routes
 // Topics API: /api/topics

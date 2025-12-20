@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express'
-import { requiredCookies, yaAPI } from './constants'
+import { requiredCookies, YANDEX_API } from './constants'
 import { createCookieString } from './utils/createCookies'
 
 export const checkAuth = async (
@@ -12,7 +12,7 @@ export const checkAuth = async (
     const cookiesFormed = createCookieString(requiredCookies, cookies)
 
     try {
-      const response = await fetch(`${yaAPI}/auth/user`, {
+      const response = await fetch(`${YANDEX_API}/auth/user`, {
         method: 'GET',
         headers: {
           Cookie: cookiesFormed,

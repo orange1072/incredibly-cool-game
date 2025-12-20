@@ -8,6 +8,7 @@ import { runMigrations } from './migrations/migrate'
 import topicsRoutes from './routes/topicsRoutes'
 import postsRoutes from './routes/postsRoutes'
 import reactionsRoutes from './routes/reactionsRoutes'
+import { yandexProxy } from './middlewares/yandexProxy'
 
 const app = express()
 
@@ -34,6 +35,10 @@ app.use(
     },
   })
 )
+
+// proxy requests for yandex api
+app.use('/ya-api', yandexProxy)
+
 app.use(express.json())
 
 const port = Number(process.env.SERVER_PORT) || 3001

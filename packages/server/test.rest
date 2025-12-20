@@ -1,9 +1,0 @@
-###
-
-GET http://localhost:3001/restricted/welcome HTTP/1.1
-Cookie: authCookie=1234; uuid=1
-
-###
-
-GET http://localhost:3001/restricted/welcome HTTP/1.1
-Cookie: authCookie=441546ad8e302125a3725fc5b30f0e0e7c659c48%3A1765205398; uuid=40c35dd0-dc97-42ba-8b3a-73f4cdb46466

@@ -25,7 +25,7 @@ services:
 
   server:
     container_name: prakticum-server
-    image: prackicum-server
+    image: prackticum-server
     build:
       context: .
       dockerfile: Dockerfile.server

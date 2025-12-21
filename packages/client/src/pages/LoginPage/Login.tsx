@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Input } from '@/components/Input/Input';
 import styles from './Login.module.scss';
 import { ParticleBackground } from '@/components/ParticleBackground';
@@ -60,7 +60,7 @@ export function SigninPage() {
         await signIn({
           login: username,
           password: password,
-        });
+        }).unwrap();
         const user = await getUser().unwrap();
         if (user) {
           dispatch(setUser(user));
@@ -97,19 +97,6 @@ export function SigninPage() {
     [navigate]
   );
 
-  useEffect(() => {
-    const preloadUser = async () => {
-      try {
-        const user = await getUser().unwrap();
-        if (user) {
-          dispatch(setUser(user));
-        }
-      } catch (error) {
-        console.log('sign in preload error', error);
-      }
-    };
-    preloadUser();
-  }, [dispatch, getUser]);
   return (
     <main className={styles['login-page']}>
       <ParticleBackground particleCount={20} />

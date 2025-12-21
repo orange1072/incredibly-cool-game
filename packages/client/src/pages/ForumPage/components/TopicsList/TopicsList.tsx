@@ -38,7 +38,7 @@ export const TopicsList = ({
       </div>
     );
   }
-
+  const defaultBadge = 'SURVIVOR';
   return (
     <div className={styles.wrapper}>
       {filteredTopics.map((topic) => (
@@ -54,13 +54,13 @@ export const TopicsList = ({
             <header className={styles.header}>
               <div>
                 <h3>{topic.title}</h3>
-                {/*<div className={styles.topicInfo}>*/}
-                {/*  <span>*/}
-                {/*    <span className={styles.inlineIcon}>☢</span> {topic.author}*/}
-                {/*  </span>*/}
-                {/*  <span className={styles.badge}>{topic.authorBadge}</span>*/}
-                {/*  <span>{topic.date}</span>*/}
-                {/*</div>*/}
+                <div className={styles.topicInfo}>
+                  <span>
+                    <span className={styles.inlineIcon}>☢️</span> {topic.login}
+                  </span>
+                  <span className={styles.badge}>{defaultBadge}</span>
+                  <span>{topic.date}</span>
+                </div>
               </div>
               <MessageSquare className={`forum-icon ${styles.bright}`} />
             </header>

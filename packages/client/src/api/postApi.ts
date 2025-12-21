@@ -5,10 +5,9 @@ import { API_ENDPOINTS } from './endpoints';
 export interface PostResponse {
   id: number;
   content: string;
-  author: string;
+  login: string;
   date: string;
   avatar?: string;
-  user_id?: number;
   topic_id: number;
   parent_id?: number;
   replies?: PostResponse[];
@@ -18,9 +17,8 @@ export interface PostResponse {
 
 export interface CreatePostRequest {
   content: string;
-  author: string;
-  user_id?: number;
-  parent_id?: number;
+  login: string;
+  topic_id: number;
 }
 
 export interface UpdatePostRequest {
@@ -80,8 +78,8 @@ export const postApi = createApi({
           type: 'TopicPosts' | 'Post' | 'PostReplies';
           id: number | string;
         }[] = [{ type: 'TopicPosts', id: topicId }];
-        if (body.parent_id) {
-          tags.push({ type: 'PostReplies', id: body.parent_id });
+        if (body.topic_id) {
+          tags.push({ type: 'PostReplies', id: body.topic_id });
         }
         return tags;
       },

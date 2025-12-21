@@ -21,9 +21,9 @@ export const ReplyForm = ({ topicId }: ReplyFormProps) => {
     createPost({
       topicId: topicId,
       body: {
-        user_id: Number(user?.id),
         content: commentText,
-        author: user?.first_name || '',
+        login: String(user?.login),
+        topic_id: topicId,
       },
     });
     setCommentText('');

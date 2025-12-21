@@ -47,6 +47,7 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
       NODE_ENV: ${NODE_ENV:-production}
       DOCKER_ENV: 'true'
+      CLIENT_ORIGINS: ${CLIENT_ORIGINS:-}
     depends_on:
       postgres:
         condition: service_healthy
@@ -77,12 +78,11 @@ services:
       - .env
     # Единственный порт, открытый наружу - для доступа к приложению
     ports:
-      - '${CLIENT_PORT:-3000}:80'
+      - '${CLIENT_PORT:-3000}:${CLIENT_PORT:-3000}'
     environment:
       CLIENT_PORT: ${CLIENT_PORT:-3000}
-      PORT: ${PORT:-3002}
       SERVER_PORT: ${SERVER_PORT:-3001}
-      EXTERNAL_SERVER_URL: ${EXTERNAL_SERVER_URL:-http://localhost:3001}
+      EXTERNAL_SERVER_URL: ${EXTERNAL_SERVER_URL:-https://404-speed-not-found-zona-mf54.ya-praktikum.tech}
       INTERNAL_SERVER_URL: ${INTERNAL_SERVER_URL:-http://server:3001}
       NODE_ENV: ${NODE_ENV:-production}
     depends_on:

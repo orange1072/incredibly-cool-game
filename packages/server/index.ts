@@ -68,6 +68,10 @@ app.get('/friends', (_, res) => {
   ])
 })
 
+app.get('/health', (_req, res) => {
+  res.status(200).send('OK')
+})
+
 // Start server after database initialization
 initializeDatabase()
   .then(() => {

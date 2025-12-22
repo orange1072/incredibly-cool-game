@@ -3,7 +3,7 @@ import {
   useGetUserMutation,
   useLazyGetOAuthServiceIdQuery,
   useOauthYandexMutation,
-} from '@/slices/authApi';
+} from '@/api/authApi';
 import { setUser } from '@/store/slices/userSlice';
 
 const REDIRECT_URI = 'http://localhost:3000'; // TODO заменить при необходимости

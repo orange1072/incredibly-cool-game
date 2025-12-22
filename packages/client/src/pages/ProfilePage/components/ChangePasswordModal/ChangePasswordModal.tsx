@@ -4,8 +4,8 @@ import { Button } from '@/components/Button';
 import { Input } from '@/components/Input';
 import { Modal } from '@/components/Modal';
 import { useState, useCallback, FormEvent } from 'react';
-import { ERROR_MESSAGES } from '@/messages';
 import { useChangePasswordMutation } from '@/api';
+import { ERROR_MESSAGES } from '@/constants';
 
 interface ChangePasswordModalProps {
   isOpen: boolean;

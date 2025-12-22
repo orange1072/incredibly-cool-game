@@ -80,7 +80,6 @@ describe('createGameEngine', () => {
       const keyEvent = new KeyboardEvent('keydown', { key: 'a' });
       window.dispatchEvent(keyEvent);
       jest.advanceTimersByTime(1000);
-      player = engine.world.query(playerType)[0];
       const vel = player.getComponent<VelocityComponent>(
         COMPONENT_TYPES.velocity
       );

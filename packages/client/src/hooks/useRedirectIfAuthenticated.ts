@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useGetUserMutation } from '@/slices/authApi';
+import { useGetUserMutation } from '@/api/authApi';
 
 export const useRedirectIfAuthenticated = () => {
   const [getUser] = useGetUserMutation();

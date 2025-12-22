@@ -10,7 +10,7 @@ import ssrReducer from './slices/ssrSlice';
 import userReducer from './slices/userSlice';
 import authReducer from './slices/authSlice';
 import gameReducer from './slices/game';
-import { authAPI } from '@/slices/authApi';
+import { authAPI } from '@/api/authApi';
 import { emojiApi, postApi, topicApi, userApi } from '@/api';
 
 export const reducer = combineReducers({

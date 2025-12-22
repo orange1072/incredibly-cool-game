@@ -10,7 +10,7 @@ COPY package.json yarn.lock lerna.json ./
 COPY packages/server/package.json ./packages/server/
 COPY packages/client/package.json ./packages/client/
 
-RUN yarn install --frozen-lockfile
+RUN yarn install
 
 COPY . .
 

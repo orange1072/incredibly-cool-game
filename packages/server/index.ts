@@ -14,6 +14,8 @@ import { checkAuth } from './middlewares/authorization'
 
 const app = express()
 
+console.log('port: ', process.env.CLIENT_PORT)
+
 const defaultClientPort = Number(process.env.CLIENT_PORT) || 3000
 const corsOriginsFromEnv = process.env.CLIENT_ORIGINS
   ? process.env.CLIENT_ORIGINS.split(',')
@@ -70,6 +72,10 @@ app.use('/api/posts', postsRoutes)
 
 // Реакции
 app.use('/api', reactionsRoutes)
+
+app.get('/health', (_req, res) => {
+  res.status(200).send('OK')
+})
 
 // Start server after database initialization
 initializeDatabase()

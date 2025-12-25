@@ -1,28 +1,24 @@
 ARG NODE_VERSION=20
 ARG CLIENT_PORT=3001
 
-FROM node:$NODE_VERSION as base
-
+FROM node:${NODE_VERSION} AS builder
 WORKDIR /app
 
-FROM base as builder
-
-COPY package.json yarn.lock lerna.json ./
+COPY package.json package-lock.json ./
 COPY packages/client/package.json ./packages/client/
 COPY packages/server/package.json ./packages/server/
 
-RUN yarn install
+RUN npm install
 
 COPY . .
 
-RUN rm -rf /app/packages/client/dist/ && yarn build --scope=client
+RUN rm -rf packages/client/dist && npm run build --workspace=packages/client
+FROM node:${NODE_VERSION}-slim AS production
 
-FROM node:$NODE_VERSION-slim as production
 WORKDIR /app
+COPY --from=builder /app/packages/client/dist /app/dist
+COPY --from=builder /app/node_modules /app/node_modules
+COPY --from=builder /app/package.json /app/package.json
 
-COPY --from=builder /app/packages/client/dist/ /app/dist/
-COPY --from=builder /app/packages/client/package.json /app/package.json
-RUN yarn install --production=true
-
-EXPOSE $CLIENT_PORT
-CMD [ "node", "/app/dist/server-ts/index.js" ]
+EXPOSE ${CLIENT_PORT}
+CMD ["node", "/app/dist/server-ts/index.js"]

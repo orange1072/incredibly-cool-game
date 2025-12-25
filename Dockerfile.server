@@ -1,29 +1,31 @@
 ARG NODE_VERSION=20
 ARG SERVER_PORT=3001
 
-FROM node:$NODE_VERSION as base
+FROM node:${NODE_VERSION} AS builder
 WORKDIR /app
 
-FROM base as builder
-
-COPY package.json yarn.lock lerna.json ./
+COPY package.json package-lock.json ./
 COPY packages/server/package.json ./packages/server/
 COPY packages/client/package.json ./packages/client/
 
-RUN yarn install
+RUN npm install --legacy-peer-deps
 
 COPY . .
 
-RUN rm -rf /app/packages/server/dist/ && yarn lerna run build --scope=server
 
-FROM node:$NODE_VERSION-slim as production
+RUN rm -rf packages/server/dist \
+  && npm run build --workspace=packages/server
+
+FROM node:${NODE_VERSION}-slim AS production
 WORKDIR /app
 
-COPY --from=builder /app/packages/server/dist/ /app/
-COPY --from=builder /app/packages/server/package.json /app/package.json
 
-RUN yarn install --production --frozen-lockfile
+COPY --from=builder /app/packages/server/dist /app/
 
-EXPOSE $SERVER_PORT
+
+COPY --from=builder /app/node_modules /app/node_modules
+COPY --from=builder /app/package.json /app/package.json
+
+EXPOSE ${SERVER_PORT}
 
 CMD ["node", "/app/index.js"]

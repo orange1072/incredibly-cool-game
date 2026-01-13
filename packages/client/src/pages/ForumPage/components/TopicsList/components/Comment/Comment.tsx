@@ -2,9 +2,10 @@ import { useMemo, useState } from 'react';
 import { ForumComment } from '@/pages/ForumPage/types';
 import { useAddReactionMutation, useGetReactionsQuery } from '@/api/emojiApi';
 import styles from './Comment.module.scss';
+import { useSelector } from '@/store/store';
+import { selectUser } from '@/store/slices/userSlice';
 
 const fallbackEmojiPalette = ['👍', '🔥', '💀', '❤️', '😂'] as const;
-const CURRENT_USER_ID = 1; // TODO: заменить на реального пользователя после интеграции auth
 
 export const Comment: React.FC<ForumComment> = ({
   id,
@@ -12,7 +13,7 @@ export const Comment: React.FC<ForumComment> = ({
   author,
   avatar,
   date,
-  text,
+  content,
   reactions: initialReactions = [],
 }) => {
   const {
@@ -35,6 +36,7 @@ export const Comment: React.FC<ForumComment> = ({
     {}
   );
   const [isPickerOpen, setIsPickerOpen] = useState(false);
+  const user = useSelector(selectUser);
 
   const backendReactions =
     data?.stats?.map(({ emoji, count }) => ({ emoji, count })) ||
@@ -81,7 +83,7 @@ export const Comment: React.FC<ForumComment> = ({
       await addReaction({
         targetType: 'post',
         targetId: id,
-        body: { user_id: CURRENT_USER_ID, emoji },
+        body: { user_id: Number(user?.id), emoji },
       }).unwrap();
       setOptimisticBump((prev) => {
         const { [emoji]: _, ...rest } = prev;
@@ -107,10 +109,10 @@ export const Comment: React.FC<ForumComment> = ({
       <span className={styles.avatar}>{avatar}</span>
       <div className={styles.main}>
         <div className={styles.header}>
-          <span>{author}</span>
+          <span>{(author = String(user?.login))}</span>
           <span className={styles.date}>{date}</span>
         </div>
-        <p>{text}</p>
+        <p>{content}</p>
         <div className={styles.reactions}>
           <div className={styles.reactionsList}>
             {isError && (

@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
-import { ForumComment, ForumTopic } from '../../types';
+import React from 'react';
 import styles from './TopicsList.module.scss';
 import { MessageCircle, MessageSquare, Tag, ThumbsUp } from 'lucide-react';
-import { comments as mockComments } from '../../mockData';
 import { Comment } from './components/Comment';
 import { ReplyForm } from './components/ReplyForm';
 import { TopicReactions } from './components/TopicReactions';
+import { TopicResponse } from '@/api/topicApi';
+import { useGetTopicPostsQuery } from '@/api';
 
 type TopicId = number | null;
 
 type TopicsListProps = {
-  filteredTopics: ForumTopic[];
+  filteredTopics: TopicResponse[] | [];
   setSelectedTopic: React.Dispatch<React.SetStateAction<TopicId>>;
   selectedTopic: TopicId;
 };
@@ -20,8 +20,25 @@ export const TopicsList = ({
   setSelectedTopic,
   selectedTopic,
 }: TopicsListProps) => {
-  const [comments, setComments] = useState<ForumComment[]>(mockComments);
+  const {
+    data: postsData,
+    isLoading,
+    isError,
+  } = useGetTopicPostsQuery(selectedTopic!, {
+    skip: !selectedTopic,
+  });
 
+  if (!filteredTopics.length) {
+    return (
+      <div className={styles.wrapper}>
+        <div className={styles.emptyState}>
+          <h3>Темы не найдены</h3>
+          <p>Попробуйте изменить поисковый запрос</p>
+        </div>
+      </div>
+    );
+  }
+  const defaultBadge = 'SURVIVOR';
   return (
     <div className={styles.wrapper}>
       {filteredTopics.map((topic) => (
@@ -39,9 +56,9 @@ export const TopicsList = ({
                 <h3>{topic.title}</h3>
                 <div className={styles.topicInfo}>
                   <span>
-                    <span className={styles.inlineIcon}>☢</span> {topic.author}
+                    <span className={styles.inlineIcon}>☢️</span> {topic.login}
                   </span>
-                  <span className={styles.badge}>{topic.authorBadge}</span>
+                  <span className={styles.badge}>{defaultBadge}</span>
                   <span>{topic.date}</span>
                 </div>
               </div>
@@ -49,34 +66,46 @@ export const TopicsList = ({
             </header>
             <p className={styles.preview}>{topic.preview}</p>
             <div className={styles.tags}>
-              {topic.tags.map((tag, i) => (
-                <span key={i}>
-                  <Tag className={styles.tagIcon} />
-                  {tag}
-                </span>
-              ))}
+              {Array.isArray(topic.tags) &&
+                topic.tags.length > 0 &&
+                topic.tags.map((tag, i) => (
+                  <span key={i}>
+                    <Tag className={styles.tagIcon} />
+                    {tag}
+                  </span>
+                ))}
             </div>
             <div className={styles.stats}>
               <span className={styles.bright}>
                 <ThumbsUp className="forum-icon" />
-                {topic.likes}
+                {topic.reactions_count}
               </span>
               <span>
                 <MessageCircle className="forum-icon" />
-                {topic.comments}
+                {topic.comments_count}
               </span>
+              <TopicReactions topicId={topic.id} />
             </div>
-            <TopicReactions topicId={topic.id} />
           </section>
           {selectedTopic === topic.id && (
             <div className={styles.commentsSection}>
               <h4>COMMENTS</h4>
-              {comments
-                .filter((comment) => comment.topicId === topic.id)
-                .map((comment) => (
-                  <Comment key={comment.id} {...comment} topicId={topic.id} />
-                ))}
-              <ReplyForm setComments={setComments} topicId={topic.id} />
+              {isLoading && (
+                <div className={styles.loading}>Loading comments...</div>
+              )}
+
+              {postsData && postsData.length > 0
+                ? postsData
+                    .filter((comment) => comment.topic_id === topic.id)
+                    .map((comment) => (
+                      <Comment
+                        key={comment.id}
+                        {...comment}
+                        topicId={topic.id}
+                      />
+                    ))
+                : 'No comments'}
+              <ReplyForm topicId={topic.id} />
             </div>
           )}
         </article>

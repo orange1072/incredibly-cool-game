@@ -14,7 +14,7 @@ import { PixelButton } from '@/components/PixelButton';
 import styles from './Registration.module.scss';
 import { useNavigate } from 'react-router-dom';
 import { ParticleBackground } from '@/components/ParticleBackground';
-import { useGetUserMutation, useSignUpMutation } from '@/slices/authApi';
+import { useGetUserMutation, useSignUpMutation } from '@/api/authApi';
 import { useDispatch } from '@/store/store';
 import { setUser } from '@/store/slices/userSlice';
 import { useOAuth } from '@/hooks/useOAuth';

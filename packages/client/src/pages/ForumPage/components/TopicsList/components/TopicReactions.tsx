@@ -49,7 +49,8 @@ export const TopicReactions = ({ topicId }: TopicReactionsProps) => {
     [backendReactions, optimisticBump]
   );
 
-  const handleAddReaction = async (emoji: string) => {
+  const handleAddReaction = async (emoji: string, e: React.MouseEvent) => {
+    e.stopPropagation();
     if (reactedEmojis.has(emoji) || isAdding) {
       return;
     }
@@ -86,6 +87,11 @@ export const TopicReactions = ({ topicId }: TopicReactionsProps) => {
     }
   };
 
+  const handleTogglePicker = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsPickerOpen((open) => !open);
+  };
+
   return (
     <div className={styles.reactionsRow}>
       <div className={styles.reactionList}>
@@ -104,7 +110,7 @@ export const TopicReactions = ({ topicId }: TopicReactionsProps) => {
               reactedEmojis.has(reaction.emoji) ? styles.reacted : ''
             }`}
             type="button"
-            onClick={() => handleAddReaction(reaction.emoji)}
+            onClick={(e) => handleAddReaction(reaction.emoji, e)}
             disabled={isAdding}
             aria-label={`Поставить реакцию ${reaction.emoji}`}
           >
@@ -117,7 +123,7 @@ export const TopicReactions = ({ topicId }: TopicReactionsProps) => {
         <button
           type="button"
           className={styles.reactionAdd}
-          onClick={() => setIsPickerOpen((open) => !open)}
+          onClick={handleTogglePicker}
           aria-expanded={isPickerOpen}
           disabled={isAdding}
         >
@@ -130,7 +136,7 @@ export const TopicReactions = ({ topicId }: TopicReactionsProps) => {
                 key={emoji}
                 type="button"
                 className={styles.reactionPickerEmoji}
-                onClick={() => handleAddReaction(emoji)}
+                onClick={(e) => handleAddReaction(emoji, e)}
                 disabled={reactedEmojis.has(emoji) || isAdding}
                 aria-label={`Добавить ${emoji}`}
               >

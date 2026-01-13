@@ -4,7 +4,7 @@ import { formatDate } from '../helpers'
 
 export interface CreateTopicRequest {
   title: string
-  user_id: number
+  login: string
   preview: string
   tags?: string[]
 }
@@ -12,7 +12,7 @@ export interface CreateTopicRequest {
 export interface TopicResponse {
   id: number
   title: string
-  user_id: number
+  login: string
   date: string
   preview: string
   tags?: string[]
@@ -32,7 +32,7 @@ export const getTopics = async (
       `SELECT
          t.id,
          t.title,
-         t.user_id,
+         t.login,
          t.created_at,
          t.preview,
          t.tags,
@@ -57,7 +57,7 @@ export const getTopics = async (
     const topics: TopicResponse[] = result.rows.map(row => ({
       id: row.id,
       title: row.title,
-      user_id: row.user_id,
+      login: row.login,
       date: formatDate(row.created_at),
       preview: row.preview,
       tags: row.tags || [],
@@ -92,7 +92,7 @@ export const getTopicById = async (
       `SELECT
          t.id,
          t.title,
-         t.user_id,
+         t.login,
          t.created_at,
          t.preview,
          t.tags,
@@ -132,7 +132,7 @@ export const getTopicById = async (
     const topic: TopicResponse = {
       id: row.id,
       title: row.title,
-      user_id: row.user_id,
+      login: row.login,
       date: formattedDate,
       preview: row.preview,
       tags: row.tags || [],
@@ -153,12 +153,12 @@ export const createTopic = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { title, user_id, preview, tags }: CreateTopicRequest = req.body
+    const { title, login, preview, tags }: CreateTopicRequest = req.body
 
     // Validate required fields
-    if (!title || !user_id || !preview) {
+    if (!title || !login || !preview) {
       res.status(400).json({
-        error: 'Missing required fields: title, user_id, preview',
+        error: 'Missing required fields: title, login, preview',
       })
       return
     }
@@ -169,37 +169,29 @@ export const createTopic = async (
       return
     }
 
-    // Validate user_id length
-    if (!user_id) {
-      res.status(400).json({ error: 'user_id not defined' })
+    // Validate login length
+    if (!login) {
+      res.status(400).json({ error: 'login not defined' })
       return
     }
 
     const pool = getDbPool()
 
     const result = await pool.query(
-      `INSERT INTO topics (title, user_id, preview, tags)
-       VALUES ($1, $2, $3, $4, $5)
-       RETURNING id, title, user_id,  created_at, preview, tags`,
-      [title, user_id, preview, tags || []]
+      `INSERT INTO topics (title, login, preview, tags)
+       VALUES ($1, $2, $3, $4)
+       RETURNING id, title, login,  created_at, preview, tags`,
+      [title, login, preview, tags || []]
     )
 
     const row = result.rows[0]
-    const date = new Date(row.created_at)
-    const formattedDate = `${date.getDate().toString().padStart(2, '0')}.${(
-      date.getMonth() + 1
-    )
-      .toString()
-      .padStart(2, '0')}.${date.getFullYear().toString().slice(2)} ${date
-      .getHours()
-      .toString()
-      .padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`
+    const date = formatDate(new Date(row.created_at))
 
     const topic: TopicResponse = {
       id: row.id,
       title: row.title,
-      user_id: row.user_id,
-      date: formattedDate,
+      login: row.login,
+      date,
       preview: row.preview,
       tags: row.tags || [],
       reactions_count: 0,
@@ -277,7 +269,7 @@ export const updateTopic = async (
       `UPDATE topics 
        SET ${updates.join(', ')}
        WHERE id = $${paramCount}
-       RETURNING id, title, user_id, created_at, preview, tags`,
+       RETURNING id, title, login, created_at, preview, tags`,
       values
     )
 
@@ -295,7 +287,7 @@ export const updateTopic = async (
     const topic: TopicResponse = {
       id: row.id,
       title: row.title,
-      user_id: row.user_id,
+      login: row.login,
       date: formattedDate,
       preview: row.preview,
       tags: row.tags || [],

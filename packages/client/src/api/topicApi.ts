@@ -5,7 +5,7 @@ import { API_ENDPOINTS } from './endpoints';
 export interface TopicResponse {
   id: number;
   title: string;
-  user_id: number;
+  login: string;
   date: string;
   preview: string;
   tags?: string[];
@@ -15,7 +15,7 @@ export interface TopicResponse {
 
 export interface CreateTopicRequest {
   title: string;
-  user_id: number;
+  login: string;
   preview: string;
   tags?: string[];
 }

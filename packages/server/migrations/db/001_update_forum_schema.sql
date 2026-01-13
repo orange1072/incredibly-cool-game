@@ -53,7 +53,7 @@ CREATE OR REPLACE FUNCTION get_comment_tree(topic_id_param INTEGER, max_depth IN
     RETURNS TABLE (
                       id INTEGER,
                       content TEXT,
-                      user_id INTEGER,
+                      login TEXT,
                       topic_id INTEGER,
                       parent_id INTEGER,
                       created_at TIMESTAMP,
@@ -62,7 +62,7 @@ CREATE OR REPLACE FUNCTION get_comment_tree(topic_id_param INTEGER, max_depth IN
                   ) AS $$
 WITH RECURSIVE comment_tree AS (
     SELECT
-        p.id, p.content, p.author, p.user_id, p.topic_id,
+        p.id, p.content, p.login, p.topic_id,
         p.parent_id, p.created_at,
         0 AS depth,
         COALESCE(r.reactions_count, 0) AS reactions_count
@@ -78,7 +78,7 @@ WITH RECURSIVE comment_tree AS (
     UNION ALL
 
     SELECT
-        p.id, p.content, p.user_id, p.topic_id,
+        p.id, p.content, p.login, p.topic_id,
         p.parent_id, p.created_at,
         ct.depth + 1,
         COALESCE(r.reactions_count, 0)

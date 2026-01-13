@@ -4,18 +4,18 @@ import {
   Model,
   Column,
   DataType,
-  ForeignKey,
   HasMany,
-  CreatedAt,
   PrimaryKey,
   AutoIncrement,
+  Sequelize,
+  CreatedAt,
+  UpdatedAt,
 } from 'sequelize-typescript'
-import { User } from './User'
 import { Post } from './Post'
 
 @Table({
   tableName: 'topics',
-  timestamps: true,
+  underscored: true,
 })
 export class Topic extends Model {
   @PrimaryKey
@@ -37,20 +37,29 @@ export class Topic extends Model {
 
   @Column({
     type: DataType.TEXT,
-    allowNull: false,
+    allowNull: true,
   })
   declare tags: string
 
-  @ForeignKey(() => User)
-  @Column(DataType.INTEGER)
-  declare user_id: string
-
-  @Column(DataType.INTEGER)
-  declare topic_id: number
+  @Column(DataType.STRING)
+  declare login: string
 
   @HasMany(() => Post)
   declare posts: Post[]
 
   @CreatedAt
+  @Column({
+    type: DataType.DATE,
+    field: 'created_at',
+    defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+  })
   declare created_at: Date
+
+  @UpdatedAt
+  @Column({
+    type: DataType.DATE,
+    field: 'updated_at',
+    defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+  })
+  declare updated_at: Date
 }

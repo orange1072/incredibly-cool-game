@@ -15,9 +15,6 @@ COPY . .
 RUN rm -rf packages/client/dist && \
     rm -rf node_modules/.cache && \
     rm -rf packages/client/node_modules/.cache && \
-    rm -rf node_modules/esbuild && \
-    yarn install --frozen-lockfile && \
-    cd node_modules/esbuild && npm run postinstall && cd ../.. && \
     yarn lerna run build --scope=client
 FROM node:${NODE_VERSION}-slim AS production
 

@@ -18,18 +18,14 @@ export const ReplyForm = ({ topicId }: ReplyFormProps) => {
   const formSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!commentText.trim()) return;
-    try {
-      await createPost({
-        topicId: topicId,
-        body: {
-          user_id: Number(user?.id),
-          content: commentText,
-          author: user?.first_name || '',
-        },
-      }).unwrap();
-    } catch (error) {
-      console.error(`Creating post error: ${error}`);
-    }
+    createPost({
+      topicId: topicId,
+      body: {
+        content: commentText,
+        login: String(user?.login),
+        topic_id: topicId,
+      },
+    });
     setCommentText('');
   };
 

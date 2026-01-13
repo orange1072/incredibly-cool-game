@@ -14,21 +14,16 @@ export const TopicForm = () => {
   const [topicPreview, setTopicPreview] = useState('');
   const [createTopic, { isLoading }] = useCreateTopicMutation();
 
-  const formSubmit = async (e: FormEvent) => {
-    try {
-      await createTopic({
-        title: topicTitle,
-        preview: topicPreview,
-        user_id: Number(user?.id),
-      });
-    } catch (error) {
-      console.error(`Creating topic error: ${error}`);
-    } finally {
-      e.preventDefault();
-      setTopicTitle('');
-      setTopicPreview('');
-      toggleOpen();
-    }
+  const formSubmit = (e: FormEvent) => {
+    createTopic({
+      title: topicTitle,
+      preview: topicPreview,
+      login: String(user?.login),
+    });
+    e.preventDefault();
+    setTopicTitle('');
+    setTopicPreview('');
+    toggleOpen();
   };
 
   return (

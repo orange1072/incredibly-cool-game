@@ -6,7 +6,7 @@ import { Logo } from '@/components/ui';
 import { PixelButton } from '@/components/PixelButton';
 import { ArrowRight, Radiation, User, Lock, AlertTriangle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useSignInMutation, useGetUserMutation } from '@/slices/authApi';
+import { useSignInMutation, useGetUserMutation } from '@/api/authApi';
 import { useDispatch } from '@/store/store';
 import { setUser } from '@/store/slices/userSlice';
 import { useOAuth } from '@/hooks/useOAuth';

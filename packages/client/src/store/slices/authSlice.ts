@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { authAPI } from '@/slices/authApi';
+import { authAPI } from '@/api/authApi';
 import { getErrorMessage } from '../utils/rtkQueryErrorHandler';
 import type { RootState } from '../store';
 

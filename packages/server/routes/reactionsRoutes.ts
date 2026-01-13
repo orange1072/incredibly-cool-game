@@ -7,13 +7,14 @@ import {
 
 const router = Router()
 
-// POST /api/topics/:topicId/reactions - Add emoji reaction to topic
-router.post('/:topicId/reactions', addReaction)
+// Реакции на ТОПИКИ
+router.post('/topics/:topicId/reactions', addReaction)
+router.get('/topics/:topicId/reactions', getReactions)
+router.delete('/topics/:topicId/reactions', removeReaction)
 
-// GET /api/topics/:topicId/reactions - Get all reactions for topic
-router.get('/:topicId/reactions', getReactions)
-
-// DELETE /api/topics/:topicId/reactions - Remove reaction (optional)
-router.delete('/:topicId/reactions', removeReaction)
+// Реакции на ПОСТЫ (комментарии)
+router.post('/posts/:postId/reactions', addReaction)
+router.get('/posts/:postId/reactions', getReactions)
+router.delete('/posts/:postId/reactions', removeReaction)
 
 export default router

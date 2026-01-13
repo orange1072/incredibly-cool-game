@@ -8,6 +8,9 @@ import { runMigrations } from './migrations/migrate'
 import topicsRoutes from './routes/topicsRoutes'
 import postsRoutes from './routes/postsRoutes'
 import reactionsRoutes from './routes/reactionsRoutes'
+import { yandexProxy } from './middlewares/yandexProxy'
+import cookieParser from 'cookie-parser'
+import { checkAuth } from './middlewares/authorization'
 
 const app = express()
 
@@ -34,7 +37,12 @@ app.use(
     },
   })
 )
+
+// proxy requests for yandex api
+app.use('/ya-api', yandexProxy)
+
 app.use(express.json())
+app.use(cookieParser())
 
 const port = Number(process.env.SERVER_PORT) || 3001
 
@@ -49,6 +57,10 @@ const initializeDatabase = async () => {
   }
 }
 
+// check authorization for forum routes
+
+app.use('/api', checkAuth)
+
 // API routes
 // Topics API: /api/topics
 app.use('/api/topics', topicsRoutes)
@@ -56,16 +68,11 @@ app.use('/api/topics', topicsRoutes)
 // Posts API (comments and replies): /api/posts
 app.use('/api/posts', postsRoutes)
 
-// Reactions API: /api/topics/:topicId/reactions
-app.use('/api/topics', reactionsRoutes)
+// Реакции
+app.use('/api', reactionsRoutes)
 
-// Legacy routes
-app.get('/friends', (_, res) => {
-  res.json([
-    { name: 'Саша', secondName: 'Панов' },
-    { name: 'Лёша', secondName: 'Садовников' },
-    { name: 'Серёжа', secondName: 'Иванов' },
-  ])
+app.get('/health', (_req, res) => {
+  res.status(200).send('OK')
 })
 
 // Start server after database initialization

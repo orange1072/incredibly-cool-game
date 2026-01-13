@@ -4,18 +4,15 @@ import { formatDate } from '../helpers'
 
 export interface CreatePostRequest {
   content: string
-  author: string
-  user_id?: number
-  parent_id?: number // ID родительского комментария (для ответов)
+  login: string
 }
 
 export interface PostResponse {
   id: number
   content: string
-  author: string
   date: string
   avatar?: string
-  user_id?: number
+  login: string
   topic_id: number
   parent_id?: number
   replies?: PostResponse[]
@@ -27,8 +24,7 @@ export interface PostResponse {
 interface PostRow {
   id: number
   content: string
-  author: string | null
-  user_id: number | null
+  login: string
   topic_id: number
   parent_id: number | null
   created_at: Date
@@ -58,10 +54,9 @@ const buildCommentTree = (
       return {
         id: post.id,
         content: post.content,
-        author: post.author || 'Anonymous',
         date: formatDate(post.created_at),
         avatar: undefined,
-        user_id: post.user_id || undefined,
+        login: post.login,
         topic_id: post.topic_id,
         parent_id: post.parent_id || undefined,
         replies: replies.length > 0 ? replies : undefined,
@@ -103,8 +98,7 @@ export const getPostsByTopic = async (
       `SELECT 
          p.id, 
          p.content, 
-         p.author, 
-         p.user_id, 
+         p.login, 
          p.topic_id, 
          p.parent_id,
          p.created_at,
@@ -153,7 +147,7 @@ export const getPostById = async (
     // Get post with reactions count
     const postResult = await pool.query(
       `SELECT 
-         p.id, p.content, p.author, p.user_id, p.topic_id, 
+         p.id, p.content, p.login, p.topic_id, 
          p.parent_id, p.created_at,
          COALESCE(r.reactions_count, 0) as reactions_count
        FROM posts p
@@ -177,7 +171,7 @@ export const getPostById = async (
     // Get all replies with their replies (up to 2 levels deep)
     const repliesResult = await pool.query(
       `SELECT 
-         p.id, p.content, p.author, p.user_id, p.topic_id, 
+         p.id, p.content, p.login, p.topic_id, 
          p.parent_id, p.created_at,
          COALESCE(r.reactions_count, 0) as reactions_count
        FROM posts p
@@ -203,10 +197,9 @@ export const getPostById = async (
     const replies = repliesResult.rows.map((replyRow: PostRow) => ({
       id: replyRow.id,
       content: replyRow.content,
-      author: replyRow.author || 'Anonymous',
       date: formatDate(replyRow.created_at),
       avatar: undefined,
-      user_id: replyRow.user_id || undefined,
+      login: replyRow.login,
       topic_id: replyRow.topic_id,
       parent_id: replyRow.parent_id || undefined,
       replies_count: 0, // Not including nested replies in this endpoint
@@ -216,10 +209,9 @@ export const getPostById = async (
     const post: PostResponse = {
       id: row.id,
       content: row.content,
-      author: row.author || 'Anonymous',
       date: formatDate(row.created_at),
       avatar: undefined,
-      user_id: row.user_id || undefined,
+      login: row.login,
       topic_id: row.topic_id,
       parent_id: row.parent_id || undefined,
       replies: replies.length > 0 ? replies : undefined,
@@ -242,7 +234,7 @@ export const createPost = async (
   try {
     const { topicId } = req.params
     const topicIdNum = parseInt(topicId, 10)
-    const { content, author, user_id, parent_id }: CreatePostRequest = req.body
+    const { content, login }: CreatePostRequest = req.body
 
     if (isNaN(topicIdNum) || topicIdNum <= 0) {
       res.status(400).json({ error: 'Invalid topic ID' })
@@ -258,66 +250,30 @@ export const createPost = async (
     const pool = getDbPool()
 
     // Check if topic exists
-    const topicResult = await pool.query(
-      'SELECT id FROM topics WHERE id = $1',
-      [topicIdNum]
-    )
-
-    if (topicResult.rows.length === 0) {
+    // Проверяем, существует ли топик
+    const topicExists = await pool.query('SELECT 1 FROM topics WHERE id = $1', [
+      topicIdNum,
+    ])
+    if (topicExists.rows.length === 0) {
       res.status(404).json({ error: 'Topic not found' })
       return
     }
 
-    // If parent_id is provided, validate that parent post exists and belongs to the same topic
-    let parentPostTopicId: number | null = null
-    if (parent_id !== undefined && parent_id !== null) {
-      const parentIdNum = parseInt(String(parent_id), 10)
-      if (isNaN(parentIdNum) || parentIdNum <= 0) {
-        res.status(400).json({ error: 'Invalid parent_id' })
-        return
-      }
-
-      const parentResult = await pool.query(
-        'SELECT id, topic_id FROM posts WHERE id = $1',
-        [parentIdNum]
-      )
-
-      if (parentResult.rows.length === 0) {
-        res.status(404).json({ error: 'Parent post not found' })
-        return
-      }
-
-      parentPostTopicId = parentResult.rows[0].topic_id
-      if (parentPostTopicId !== topicIdNum) {
-        res.status(400).json({
-          error: 'Parent post does not belong to the same topic',
-        })
-        return
-      }
-    }
-
     // Insert post
     const result = await pool.query(
-      `INSERT INTO posts (content, author, user_id, topic_id, parent_id)
-       VALUES ($1, $2, $3, $4, $5)
-       RETURNING id, content, author, user_id, topic_id, parent_id, created_at`,
-      [
-        content.trim(),
-        author || 'Anonymous',
-        user_id || null,
-        topicIdNum,
-        parent_id || null,
-      ]
+      `INSERT INTO posts (content, login, topic_id)
+       VALUES ($1, $2, $3)
+       RETURNING id, content, login, topic_id, created_at`,
+      [content.trim(), login, topicIdNum]
     )
 
     const row = result.rows[0] as PostRow
     const post: PostResponse = {
       id: row.id,
       content: row.content,
-      author: row.author || 'Anonymous',
       date: formatDate(row.created_at),
       avatar: undefined,
-      user_id: row.user_id || undefined,
+      login: row.login,
       topic_id: row.topic_id,
       parent_id: row.parent_id || undefined,
       replies_count: 0,
@@ -367,20 +323,12 @@ export const updatePost = async (
       `UPDATE posts 
        SET content = $1
        WHERE id = $2
-       RETURNING id, content, author, user_id, topic_id, parent_id, created_at`,
+       RETURNING id, content, login, topic_id, parent_id, created_at`,
       [content.trim(), postId]
     )
 
     const row = result.rows[0] as PostRow
-    const date = new Date(row.created_at)
-    const formattedDate = `${date.getDate().toString().padStart(2, '0')}.${(
-      date.getMonth() + 1
-    )
-      .toString()
-      .padStart(2, '0')}.${date.getFullYear().toString().slice(2)} ${date
-      .getHours()
-      .toString()
-      .padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`
+    const date = formatDate(new Date(row.created_at))
 
     // Get replies count
     const repliesCountResult = await pool.query<{ count: string }>(
@@ -392,10 +340,9 @@ export const updatePost = async (
     const post: PostResponse = {
       id: row.id,
       content: row.content,
-      author: row.author || 'Anonymous',
-      date: formattedDate,
+      date,
       avatar: undefined,
-      user_id: row.user_id || undefined,
+      login: row.login,
       topic_id: row.topic_id,
       parent_id: row.parent_id || undefined,
       replies_count: repliesCount,
@@ -469,7 +416,7 @@ export const getRepliesByPost = async (
 
     // Get all replies for the post
     const result = await pool.query(
-      `SELECT id, content, author, user_id, topic_id, parent_id, created_at
+      `SELECT id, content, login, topic_id, parent_id, created_at
        FROM posts
        WHERE parent_id = $1
        ORDER BY created_at ASC`,
@@ -490,10 +437,9 @@ export const getRepliesByPost = async (
       return {
         id: row.id,
         content: row.content,
-        author: row.author || 'Anonymous',
         date: formattedDate,
         avatar: undefined,
-        user_id: row.user_id || undefined,
+        login: row.login,
         topic_id: row.topic_id,
         parent_id: row.parent_id || undefined,
       }

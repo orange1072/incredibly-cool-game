@@ -1,11 +1,15 @@
 import { Helmet } from 'react-helmet';
 import { Trophy, RotateCcw, Home, Share2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { PixelButton } from '@/components/PixelButton';
 import { ParticleBackground } from '@/components/ParticleBackground';
 import { StatsSection } from './components/StatsSection';
 import { GameStats, DEFAULT_STATS } from './types';
 import { VictoryHeader, DeathHeader } from './components';
+import { useSendLeaderboardResultMutation } from '@/api';
+import { selectUserDisplayName, selectUser } from '@/store/slices/userSlice';
 
 import styles from './GameOverPage.module.scss';
 
@@ -19,6 +23,25 @@ export const GameOverPage = ({
   stats = DEFAULT_STATS,
 }: GameOverPageProps) => {
   const navigate = useNavigate();
+  const user = useSelector(selectUser);
+  const displayName = useSelector(selectUserDisplayName);
+  const [sendLeaderboardResult, { isLoading, error }] =
+    useSendLeaderboardResultMutation();
+
+  useEffect(() => {
+    if (!user || isLoading) return;
+
+    const username = displayName || user.login || 'Anonymous';
+    const score = stats.zombiesKilled * 10 + stats.wave * 100;
+    const level = stats.wave;
+
+    sendLeaderboardResult({
+      username,
+      score,
+      level,
+      timeAlive: stats.timeAlive,
+    });
+  }, [user, displayName, stats, sendLeaderboardResult, isLoading]);
 
   return (
     <>
@@ -49,6 +72,18 @@ export const GameOverPage = ({
               accuracy={stats.accuracy}
               headshots={stats.headshots}
             />
+            {error && (
+              <div className={styles.errorMessage}>
+                Failed to submit score:{' '}
+                {'error' in error
+                  ? error.error
+                  : 'data' in error
+                  ? JSON.stringify(error.data)
+                  : 'message' in error
+                  ? error.message
+                  : 'Unknown error'}
+              </div>
+            )}
             {victory && (
               <aside className={`metal-panel ${styles.trophyPanel} cyan-glow`}>
                 <Trophy className={styles.trophyIcon} />

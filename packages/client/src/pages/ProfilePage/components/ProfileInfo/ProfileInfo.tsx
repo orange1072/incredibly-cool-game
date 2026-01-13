@@ -3,8 +3,7 @@ import styles from '../../styles.module.scss';
 import { Button } from '@/components/Button';
 import { useRef, useCallback, useState, useEffect } from 'react';
 import { useSelector } from '@/store/store';
-import { MAX_AVATAR_SIZE } from '@/constants';
-import { ERROR_MESSAGES } from '@/messages';
+import { ERROR_MESSAGES, MAX_AVATAR_SIZE } from '@/constants';
 import { useUpdateUserAvatarMutation } from '@/api';
 import { selectUser } from '@/store/slices/userSlice';
 

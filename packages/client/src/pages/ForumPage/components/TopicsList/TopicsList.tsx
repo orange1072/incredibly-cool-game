@@ -5,7 +5,7 @@ import { Comment } from './components/Comment';
 import { ReplyForm } from './components/ReplyForm';
 import { TopicReactions } from './components/TopicReactions';
 import { TopicResponse } from '@/api/topicApi';
-import { useGetTopicPostsQuery } from '@/api';
+import { PostResponse, useGetTopicPostsQuery } from '@/api';
 
 type TopicId = number | null;
 
@@ -96,12 +96,18 @@ export const TopicsList = ({
 
               {postsData && postsData.length > 0
                 ? postsData
-                    .filter((comment) => comment.topic_id === topic.id)
-                    .map((comment) => (
+                    .filter(
+                      (comment: PostResponse) => comment.topic_id === topic.id
+                    )
+                    .map((comment: PostResponse) => (
                       <Comment
                         key={comment.id}
-                        {...comment}
+                        id={comment.id}
                         topicId={topic.id}
+                        author={comment.login}
+                        date={comment.date}
+                        content={comment.content}
+                        avatar={comment.avatar}
                       />
                     ))
                 : 'No comments'}

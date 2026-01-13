@@ -4,17 +4,17 @@ ARG SERVER_PORT=3001
 FROM node:${NODE_VERSION} AS builder
 WORKDIR /app
 
-COPY package.json package-lock.json ./
+COPY package.json yarn.lock ./
 COPY packages/server/package.json ./packages/server/
 COPY packages/client/package.json ./packages/client/
 
-RUN npm install --legacy-peer-deps
+RUN yarn install --frozen-lockfile
 
 COPY . .
 
 
 RUN rm -rf packages/server/dist \
-  && npm run build --workspace=packages/server
+  && yarn lerna run build --scope=server
 
 FROM node:${NODE_VERSION}-slim AS production
 WORKDIR /app

@@ -4,15 +4,21 @@ ARG CLIENT_PORT=3001
 FROM node:${NODE_VERSION} AS builder
 WORKDIR /app
 
-COPY package.json package-lock.json ./
+COPY package.json yarn.lock ./
 COPY packages/client/package.json ./packages/client/
 COPY packages/server/package.json ./packages/server/
 
-RUN npm install
+RUN yarn install --frozen-lockfile
 
 COPY . .
 
-RUN rm -rf packages/client/dist && npm run build --workspace=packages/client
+RUN rm -rf packages/client/dist && \
+    rm -rf node_modules/.cache && \
+    rm -rf packages/client/node_modules/.cache && \
+    rm -rf node_modules/esbuild && \
+    yarn install --frozen-lockfile && \
+    cd node_modules/esbuild && npm run postinstall && cd ../.. && \
+    yarn lerna run build --scope=client
 FROM node:${NODE_VERSION}-slim AS production
 
 WORKDIR /app

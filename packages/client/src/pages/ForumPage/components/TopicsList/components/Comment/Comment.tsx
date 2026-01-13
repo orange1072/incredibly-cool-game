@@ -109,7 +109,7 @@ export const Comment: React.FC<ForumComment> = ({
       <span className={styles.avatar}>{avatar}</span>
       <div className={styles.main}>
         <div className={styles.header}>
-          <span>{(author = String(user?.login))}</span>
+          <span>{author}</span>
           <span className={styles.date}>{date}</span>
         </div>
         <p>{content}</p>

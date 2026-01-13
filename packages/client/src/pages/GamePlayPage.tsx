@@ -4,7 +4,16 @@ import withFullscreen from '../hocs/withFullscreen';
 import { XpBar } from '@/components/XpBar/XpBar';
 import '../App.scss';
 
-const GameCanvasWithFullscreen = withFullscreen(GameCanvas);
+const GameScreen = () => (
+  <>
+    <GameCanvas />
+    <div className="game-section__overlay">
+      <XpBar />
+    </div>
+  </>
+);
+
+const GameScreenWithFullscreen = withFullscreen(GameScreen);
 
 export const GamePlayPage = () => {
   return (
@@ -17,10 +26,7 @@ export const GamePlayPage = () => {
 
       <div className="app">
         <section className="game-section">
-          <GameCanvasWithFullscreen />
-          <div className="game-section__overlay">
-            <XpBar />
-          </div>
+          <GameScreenWithFullscreen />
         </section>
       </div>
     </>

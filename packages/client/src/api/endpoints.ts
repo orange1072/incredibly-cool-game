@@ -10,4 +10,6 @@ export const API_ENDPOINTS = {
     BASE: '/leaderboard',
     ALL: '/leaderboard/all',
   },
+  TOPICS: '/topics',
+  POSTS: '/posts',
 } as const;

@@ -25,7 +25,7 @@ services:
 
   server:
     container_name: prakticum-server
-    image: prackicum-server
+    image: prackticum-server
     build:
       context: .
       dockerfile: Dockerfile.server
@@ -47,15 +47,12 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
       NODE_ENV: ${NODE_ENV:-production}
       DOCKER_ENV: 'true'
+      CLIENT_ORIGINS: ${CLIENT_ORIGINS:-}
     depends_on:
       postgres:
         condition: service_healthy
     healthcheck:
-      test:
-        [
-          'CMD-SHELL',
-          'node -e "const http=require(\\"http\\");const port=process.env.SERVER_PORT||3001;const r=http.get(`http://localhost:${port}/health`,(res)=>{process.exit(res.statusCode===200?0:1)});r.on(\\"error\\",()=>process.exit(1));"',
-        ]
+      test: ['CMD-SHELL', 'node -e "const http=require(\"http\");const port=process.env.SERVER_PORT||3001;const url=\"http://localhost:\"+port+\"/health\";const r=http.get(url,(res)=>{process.exit(res.statusCode===200?0:1)});r.on(\"error\",()=>process.exit(1));"']
       interval: 10s
       timeout: 5s
       retries: 5
@@ -77,12 +74,11 @@ services:
       - .env
     # Единственный порт, открытый наружу - для доступа к приложению
     ports:
-      - '${CLIENT_PORT:-3000}:80'
+      - '${CLIENT_PORT:-3000}:${CLIENT_PORT:-3000}'
     environment:
       CLIENT_PORT: ${CLIENT_PORT:-3000}
-      PORT: ${PORT:-3002}
       SERVER_PORT: ${SERVER_PORT:-3001}
-      EXTERNAL_SERVER_URL: ${EXTERNAL_SERVER_URL:-http://localhost:3001}
+      EXTERNAL_SERVER_URL: ${EXTERNAL_SERVER_URL:-https://404-speed-not-found-zona-mf54.ya-praktikum.tech}
       INTERNAL_SERVER_URL: ${INTERNAL_SERVER_URL:-http://server:3001}
       NODE_ENV: ${NODE_ENV:-production}
     depends_on:

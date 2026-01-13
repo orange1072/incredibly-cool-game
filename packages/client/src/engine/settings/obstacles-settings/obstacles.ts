@@ -126,6 +126,13 @@ const OBSTACLE_PRESETS = {
     sprite: undefined,
     isBig: false,
   },
+  toxicPuddle: {
+    isBlocking: false,
+    speedReducing: 0,
+    damaging: 0,
+    sprite: undefined,
+    isBig: false,
+  },
 } as unknown as Record<string, ObstaclePreset>;
 
 export default OBSTACLE_PRESETS;

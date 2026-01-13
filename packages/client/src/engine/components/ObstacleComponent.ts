@@ -19,13 +19,25 @@ class ObstacleComponent implements IPureDataComponent, ObstacleComponentState {
   public damaging: number;
 
   constructor({ width, height, kind }: ObstacleComponentState) {
+    const fallbackPreset = {
+      isBlocking: false,
+      speedReducing: 0,
+      damaging: 0,
+      isBig: false,
+    };
     const preset = OBSTACLE_PRESETS[kind];
+
+    if (!preset) {
+      console.warn(`Obstacle preset not found for kind: ${kind}`);
+    }
+
+    const obstaclePreset = preset ?? fallbackPreset;
     this.width = width;
     this.height = height;
     this.kind = kind;
-    this.isBlocking = preset.isBlocking ?? false;
-    this.speedReducing = preset.speedReducing;
-    this.damaging = preset.damaging;
+    this.isBlocking = obstaclePreset.isBlocking ?? false;
+    this.speedReducing = obstaclePreset.speedReducing;
+    this.damaging = obstaclePreset.damaging;
   }
 }
 

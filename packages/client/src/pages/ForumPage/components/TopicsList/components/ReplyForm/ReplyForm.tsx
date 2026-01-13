@@ -15,7 +15,7 @@ export const ReplyForm = ({ topicId }: ReplyFormProps) => {
   const [createPost, { isLoading }] = useCreatePostMutation();
   const user = useSelector(selectUser);
 
-  const formSubmit = (e: FormEvent) => {
+  const formSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!commentText.trim()) return;
     createPost({

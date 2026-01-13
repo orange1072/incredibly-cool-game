@@ -34,7 +34,7 @@ export const useOAuth = () => {
       await oauthYandex({
         code,
         redirect_uri: REDIRECT_URI,
-      });
+      }).unwrap();
 
       const userData = await getUser().unwrap();
       dispatch(setUser(userData));

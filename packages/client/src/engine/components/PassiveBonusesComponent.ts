@@ -8,29 +8,50 @@ import {
 } from '../../types/engine.types';
 import type { PassiveBonusSnapshot } from '@/types/component.types';
 
-export const PASSIVE_MOVEMENT_SPEED_STEP = 40;
-export const PASSIVE_DAMAGE_STEP = 25;
+export const PASSIVE_MOVEMENT_SPEED_STEP = 10;
+export const PASSIVE_DAMAGE_STEP = 10;
 export const PASSIVE_ATTACK_SPEED_STEP = 0.1;
+export const PASSIVE_HEALTH_STEP = 50;
+export const PASSIVE_XP_BONUS_STEP = 0.1;
 export const MIN_ATTACK_COOLDOWN = 0.1;
-export const MAX_MOVEMENT_SPEED_BONUS = PASSIVE_MOVEMENT_SPEED_STEP * 30;
-export const MAX_DAMAGE_BONUS = PASSIVE_DAMAGE_STEP * 30;
-export const MAX_ATTACK_SPEED_BONUS = 3;
+export const MAX_MOVEMENT_SPEED_BONUS = PASSIVE_MOVEMENT_SPEED_STEP * 10;
+export const MAX_DAMAGE_BONUS = PASSIVE_DAMAGE_STEP * 10;
+export const MAX_ATTACK_SPEED_BONUS = 1;
+export const MAX_HEALTH_BONUS = PASSIVE_HEALTH_STEP * 10;
+export const MAX_XP_BONUS = PASSIVE_XP_BONUS_STEP * 10;
 
 export const PASSIVE_BONUS_OPTIONS: PassiveBonusOption[] = [
   {
     kind: 'movementSpeed',
-    label: 'movementSpeed',
-    description: 'Increase movement speed by 40 units per second',
+    label: 'Скорость передвижения',
+    description: `Increase movement speed by ${PASSIVE_MOVEMENT_SPEED_STEP} units per second`,
   },
   {
     kind: 'damage',
-    label: 'damage',
-    description: 'Increase projectile damage by 25 points',
+    label: 'Урон',
+    description: `Increase projectile damage by ${PASSIVE_DAMAGE_STEP} points`,
   },
   {
     kind: 'attackSpeed',
-    label: 'attackSpeed',
-    description: 'Reduce attack cooldown by roughly 10%',
+    label: 'Скорость атаки',
+    description: `Reduce attack cooldown by roughly ${
+      PASSIVE_ATTACK_SPEED_STEP * 100
+    }%`,
+  },
+  {
+    kind: 'maxHealth',
+    label: 'Здоровье',
+    description: `Increase max health by ${PASSIVE_HEALTH_STEP} (up to ${MAX_HEALTH_BONUS})`,
+  },
+  {
+    kind: 'fullHeal',
+    label: 'Полное лечение',
+    description: 'Instantly heal to full health (one-time)',
+  },
+  {
+    kind: 'xpGain',
+    label: 'Бонус опыта',
+    description: `Increase XP gain by ${PASSIVE_XP_BONUS_STEP * 100}%`,
   },
 ];
 
@@ -45,6 +66,9 @@ class PassiveBonusesComponent
   movementSpeedBonus: number;
   damageBonus: number;
   attackSpeedBonus: number;
+  healthBonus: number;
+  xpBonus: number;
+  healUsed: boolean;
   selectionsUsed: number;
 
   constructor({
@@ -54,6 +78,9 @@ class PassiveBonusesComponent
     movementSpeedBonus = 0,
     damageBonus = 0,
     attackSpeedBonus = 0,
+    healthBonus = 0,
+    xpBonus = 0,
+    healUsed = false,
     selectionsUsed = 0,
   }: PassiveBonusesComponentState) {
     this.baseMovementSpeed = Math.max(0, baseMovementSpeed);
@@ -68,6 +95,9 @@ class PassiveBonusesComponent
       0,
       Math.min(attackSpeedBonus, MAX_ATTACK_SPEED_BONUS)
     );
+    this.healthBonus = Math.max(0, Math.min(healthBonus, MAX_HEALTH_BONUS));
+    this.xpBonus = Math.max(0, Math.min(xpBonus, MAX_XP_BONUS));
+    this.healUsed = healUsed;
     this.selectionsUsed = Math.max(0, selectionsUsed);
   }
 
@@ -92,6 +122,24 @@ class PassiveBonusesComponent
           MAX_ATTACK_SPEED_BONUS,
           this.attackSpeedBonus + PASSIVE_ATTACK_SPEED_STEP
         );
+        break;
+      }
+      case 'maxHealth': {
+        this.healthBonus = Math.min(
+          MAX_HEALTH_BONUS,
+          this.healthBonus + PASSIVE_HEALTH_STEP
+        );
+        break;
+      }
+      case 'xpGain': {
+        this.xpBonus = Math.min(
+          MAX_XP_BONUS,
+          this.xpBonus + PASSIVE_XP_BONUS_STEP
+        );
+        break;
+      }
+      case 'fullHeal': {
+        this.healUsed = true;
         break;
       }
       default:
@@ -119,6 +167,14 @@ class PassiveBonusesComponent
     return Math.max(MIN_ATTACK_COOLDOWN, adjusted);
   }
 
+  getMaxHealthBonus(): number {
+    return this.healthBonus;
+  }
+
+  getXpMultiplier(): number {
+    return 1 + this.xpBonus;
+  }
+
   getSnapshot(): PassiveBonusSnapshot {
     return {
       baseMovementSpeed: this.baseMovementSpeed,
@@ -127,6 +183,9 @@ class PassiveBonusesComponent
       movementSpeedBonus: this.movementSpeedBonus,
       damageBonus: this.damageBonus,
       attackSpeedBonus: this.attackSpeedBonus,
+      healthBonus: this.healthBonus,
+      xpBonus: this.xpBonus,
+      healUsed: this.healUsed,
       selectionsUsed: this.selectionsUsed,
     };
   }

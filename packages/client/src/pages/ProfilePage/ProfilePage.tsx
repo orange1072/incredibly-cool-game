@@ -14,7 +14,7 @@ import {
   selectUserLoading,
   clearUser,
 } from '@/store/slices/userSlice';
-import { useLogoutMutation } from '@/slices/authApi';
+import { useLogoutMutation } from '@/api/authApi';
 import { useNavigate } from 'react-router-dom';
 import { LogOut } from 'lucide-react';
 

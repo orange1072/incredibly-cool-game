@@ -7,15 +7,18 @@ import {
   CheckCircle,
   Shield,
   Activity,
+  ArrowRight,
 } from 'lucide-react';
 import { Input } from '@/components/Input/Input';
 import { PixelButton } from '@/components/PixelButton';
 import styles from './Registration.module.scss';
 import { useNavigate } from 'react-router-dom';
 import { ParticleBackground } from '@/components/ParticleBackground';
-import { useGetUserMutation, useSignUpMutation } from '@/slices/authApi';
+import { useGetUserMutation, useSignUpMutation } from '@/api/authApi';
 import { useDispatch } from '@/store/store';
 import { setUser } from '@/store/slices/userSlice';
+import { useOAuth } from '@/hooks/useOAuth';
+import { useRedirectIfAuthenticated } from '@/hooks/useRedirectIfAuthenticated';
 
 type FormData = {
   first_name: string;
@@ -31,7 +34,9 @@ export const SignupPage = () => {
   const [signUp] = useSignUpMutation();
   const [getUser] = useGetUserMutation();
   const navigate = useNavigate();
+  const { handleOAuthLogin } = useOAuth();
   const dispatch = useDispatch();
+  useRedirectIfAuthenticated();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState<FormData>({
     first_name: '',
@@ -394,6 +399,26 @@ export const SignupPage = () => {
                 >
                   Already Registered? Sign In
                 </button>
+
+                <div className={styles.divider}>
+                  <div className={styles.line} />
+
+                  <span className={styles.or}>OR</span>
+
+                  <div className={styles.line} />
+                </div>
+
+                <PixelButton
+                  variant="secondary"
+                  size="md"
+                  icon={
+                    <ArrowRight className={`${styles.icon} ${styles.small}`} />
+                  }
+                  className={styles['full-width']}
+                  onClick={handleOAuthLogin}
+                >
+                  Access via Yandex
+                </PixelButton>
               </div>
             </div>
 

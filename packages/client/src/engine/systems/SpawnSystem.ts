@@ -23,10 +23,12 @@ import {
 import Entity from '../core/Entity';
 import { type RootState } from '@/store/store';
 import { setEnemyCount, setWave } from '@/store/slices/game';
+import CameraSystem from './CameraSystem';
 
 interface SpawnSystemOptions {
   eventBus: EventBus;
   store?: StoreLike<RootState>;
+  camera?: CameraSystem;
 }
 
 class SpawnSystem implements ISystem<SystemType> {
@@ -47,10 +49,12 @@ class SpawnSystem implements ISystem<SystemType> {
   private extraBatchTimer = 0;
   private readonly extraBatchInterval = DEFAULT_SPAWN_BURST_INTERVAL;
   private readonly extraBatchSize = DEFAULT_SPAWN_BURST_SIZE;
+  private readonly camera?: CameraSystem;
 
-  constructor({ eventBus, store }: SpawnSystemOptions) {
+  constructor({ eventBus, store, camera }: SpawnSystemOptions) {
     this.eventBus = eventBus;
     this.store = store;
+    this.camera = camera;
     this.eventBus.on('enemyKilled', this.handleEnemyKilledEvent);
   }
 
@@ -186,8 +190,7 @@ class SpawnSystem implements ISystem<SystemType> {
 
       for (let i = 0; i < batchCount; i += 1) {
         if (this.enemiesSpawnedThisWave >= this.waveTarget) break;
-        const spawnX = pos.x + (Math.random() - 0.5) * spawn.radius * 2;
-        const spawnY = pos.y + (Math.random() - 0.5) * spawn.radius * 2;
+        const { spawnX, spawnY } = this.getSpawnCoordinates(pos, spawn);
         const zombie = createZombie(spawnX, spawnY, this.waveNumber);
         world.addEntity(zombie);
         this.enemiesSpawnedThisWave += 1;
@@ -262,8 +265,7 @@ class SpawnSystem implements ISystem<SystemType> {
         continue;
       }
 
-      const spawnX = pos.x + (Math.random() - 0.5) * spawn.radius * 2;
-      const spawnY = pos.y + (Math.random() - 0.5) * spawn.radius * 2;
+      const { spawnX, spawnY } = this.getSpawnCoordinates(pos, spawn);
       const zombie = createZombie(spawnX, spawnY, this.waveNumber);
 
       world.addEntity(zombie);
@@ -286,6 +288,29 @@ class SpawnSystem implements ISystem<SystemType> {
     }
 
     return spawned;
+  }
+
+  private getSpawnCoordinates(
+    pos: PositionComponent,
+    spawn?: SpawnPointComponent
+  ) {
+    const view = this.camera?.getState();
+    if (!view) {
+      return {
+        spawnX: pos.x + (Math.random() - 0.5) * 2 * (spawn?.radius ?? 20),
+        spawnY: pos.y + (Math.random() - 0.5) * 2 * (spawn?.radius ?? 20),
+      };
+    }
+
+    const minX = view.x;
+    const maxX = view.x + view.visibleWidth;
+    const minY = view.y;
+    const maxY = view.y + view.visibleHeight;
+
+    const spawnX = minX + Math.random() * (maxX - minX);
+    const spawnY = minY + Math.random() * (maxY - minY);
+
+    return { spawnX, spawnY };
   }
 }
 

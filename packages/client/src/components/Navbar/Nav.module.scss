@@ -161,6 +161,29 @@
   font-family: $font-family-mono;
 }
 
+.cacheButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid $stalker-border;
+  background: $stalker-panel;
+  color: $stalker-text-dim;
+  text-decoration: none;
+  transition: all 0.2s;
+  cursor: pointer;
+  @include grunge-texture;
+
+  &:hover {
+    border-color: rgba(47, 184, 204, 0.5);
+    color: $stalker-text;
+  }
+
+  &:active {
+    background: rgba(47, 184, 204, 0.1);
+  }
+}
+
 @keyframes pulse {
   0%,
   100% {

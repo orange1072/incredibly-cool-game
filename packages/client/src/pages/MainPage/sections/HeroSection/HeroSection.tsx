@@ -50,7 +50,7 @@ export const HeroSection = memo<HeroSectionProps>(({ scrollY }) => {
             variant="primary"
             size="lg"
             icon={<Play />}
-            onClick={() => navigate('/signin')}
+            onClick={() => navigate('/game-menu')}
             className={styles.ctaButton}
           >
             Play Now

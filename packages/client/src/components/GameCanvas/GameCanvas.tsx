@@ -11,7 +11,9 @@ import styles from './GameCanvas.module.scss';
 import { type RootState, useDispatch, useStore } from '@/store/store';
 import { closeLevelRewards, getLevelRewards } from '@/store/slices/game';
 import type { PassiveBonusKind } from '@/types/component.types';
+
 import { GameOverPopup } from '../GameOverPopup/GameOverPopup';
+import { GamePauseOverlay } from '../GamePauseOverlay/GamePauseOverlay';
 
 export const GameCanvas = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -21,8 +23,10 @@ export const GameCanvas = () => {
   const store = useStore();
   const dispatch = useDispatch();
   const levelRewards = useSelector(getLevelRewards);
+
   const [gameKey, setGameKey] = useState(0);
   const [isGameOver, setIsGameOver] = useState(false);
+  const [showPauseInfo, setShowPauseInfo] = useState(false);
   const logger = useMemo(() => new Logger('GameCanvas', 'info'), []);
 
   const resizeCanvas = useCallback(() => {
@@ -45,7 +49,6 @@ export const GameCanvas = () => {
     setIsGameOver(true);
   }, [dispatch, logger]);
 
-  // Сохраняем ссылку на обработчик события для корректной очистки
   const playerKilledHandlerRef = useRef<(() => void) | null>(null);
 
   const handleCleanupEngine = useCallback(() => {
@@ -61,6 +64,7 @@ export const GameCanvas = () => {
     engineRef.current = null;
     dispatch(closeLevelRewards());
     setIsGameOver(false);
+    setShowPauseInfo(false);
   }, [dispatch]);
 
   const handleGameStart = useCallback(() => {
@@ -151,12 +155,32 @@ export const GameCanvas = () => {
     );
     if (levelRewards.visible) {
       engineRef.current?.pause();
+      setShowPauseInfo(false);
       return;
     }
     if (!isGameOver) {
       engineRef.current?.resume();
     }
   }, [levelRewards.visible, isGameOver]);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== 'Enter') return;
+      if (levelRewards.visible || isGameOver) return;
+      setShowPauseInfo((prev) => !prev);
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [levelRewards.visible, isGameOver]);
+
+  useEffect(() => {
+    if (isGameOver || levelRewards.visible) {
+      setShowPauseInfo(false);
+    }
+  }, [isGameOver, levelRewards.visible]);
 
   const shouldShowRewards =
     levelRewards.visible && levelRewards.options.length > 0;
@@ -172,6 +196,8 @@ export const GameCanvas = () => {
           onClose={handleCloseOverlay}
         />
       )}
+
+      <GamePauseOverlay visible={showPauseInfo} />
 
       {isGameOver && <GameOverPopup onRestart={handleRestart} />}
     </div>

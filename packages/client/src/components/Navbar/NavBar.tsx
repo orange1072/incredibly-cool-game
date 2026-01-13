@@ -1,5 +1,13 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Radiation, User, Trophy, Radio, Activity } from 'lucide-react';
+import {
+  Radiation,
+  User,
+  Trophy,
+  Radio,
+  Activity,
+  RefreshCw,
+} from 'lucide-react';
+import { clearCacheAndUpdate } from '@/utils/clearCacheAndUpdate';
 import styles from './Nav.module.scss';
 
 export const NavBar = () => {
@@ -56,6 +64,14 @@ export const NavBar = () => {
                 </Link>
               );
             })}
+            <button
+              onClick={clearCacheAndUpdate}
+              className={styles.cacheButton}
+              title="Clear cache"
+            >
+              <RefreshCw className={styles.navIcon} />
+              <span className={styles.navLabel}>CACHE</span>
+            </button>
           </nav>
         </div>
       </div>

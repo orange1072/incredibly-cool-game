@@ -17,7 +17,7 @@
   }
 }
 
-.topicButton {
+.topicSection {
   border: none;
   color: inherit;
   background-color: inherit;
@@ -113,4 +113,115 @@
 .commentsSection {
   border-top: 2px solid $stalker-border;
   padding-top: 20px;
+}
+
+.reactionsRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.reactionList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.reactionButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid $stalker-border;
+  background: rgba(255, 255, 255, 0.04);
+  color: $stalker-text;
+  padding: 6px 10px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+    transform: translateY(-1px);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+}
+
+.reactionCount {
+  font-family: $font-family-mono;
+}
+
+.reactionAdd {
+  border: 1px dashed $stalker-border;
+  background: transparent;
+  color: $stalker-text;
+  padding: 6px 10px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-color: lighten($stalker-border, 8%);
+  }
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: progress;
+  }
+}
+
+.reactionsPickerWrapper {
+  position: relative;
+}
+
+.reactionsPicker {
+  position: absolute;
+  top: 110%;
+  left: 0;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  padding: 10px;
+  background-color: $stalker-panel;
+  border: 1px solid $stalker-border;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  z-index: 1;
+}
+
+.reactionPickerEmoji {
+  font-size: $font-size-md;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.07);
+    transform: translateY(-1px);
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none;
+  }
+}
+
+.reactionsError {
+  color: #ff9b9b;
+  font-size: $font-size-xs;
+}
+
+.reactionsLoading {
+  color: $stalker-text-dim;
+  font-size: $font-size-xs;
 }

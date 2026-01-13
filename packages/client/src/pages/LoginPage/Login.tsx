@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Input } from '@/components/Input/Input';
 import styles from './Login.module.scss';
 import { ParticleBackground } from '@/components/ParticleBackground';
@@ -6,9 +6,11 @@ import { Logo } from '@/components/ui';
 import { PixelButton } from '@/components/PixelButton';
 import { ArrowRight, Radiation, User, Lock, AlertTriangle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useSignInMutation, useGetUserMutation } from '@/slices/authApi';
+import { useSignInMutation, useGetUserMutation } from '@/api/authApi';
 import { useDispatch } from '@/store/store';
 import { setUser } from '@/store/slices/userSlice';
+import { useOAuth } from '@/hooks/useOAuth';
+import { useRedirectIfAuthenticated } from '@/hooks/useRedirectIfAuthenticated';
 
 type Errors = Partial<Record<'username' | 'password', string>>;
 
@@ -17,11 +19,13 @@ export function SigninPage() {
   const [getUser] = useGetUserMutation();
 
   const dispatch = useDispatch();
+  const { handleOAuthLogin } = useOAuth();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState<Errors>({});
 
   const navigate = useNavigate();
+  useRedirectIfAuthenticated();
 
   const validate = useCallback(() => {
     const newErrors: Errors = {};
@@ -93,6 +97,19 @@ export function SigninPage() {
     [navigate]
   );
 
+  useEffect(() => {
+    const preloadUser = async () => {
+      try {
+        const user = await getUser().unwrap();
+        if (user) {
+          dispatch(setUser(user));
+        }
+      } catch (error) {
+        console.log('sign in preload error', error);
+      }
+    };
+    preloadUser();
+  }, [dispatch, getUser]);
   return (
     <main className={styles['login-page']}>
       <ParticleBackground particleCount={20} />
@@ -140,7 +157,6 @@ export function SigninPage() {
 
                 <span className={styles['status-text']}>System Online</span>
               </div>
-
               <form onSubmit={handleSubmit} className={styles['panel-inner']}>
                 <Input
                   type="text"
@@ -202,8 +218,19 @@ export function SigninPage() {
                 >
                   Anonymous Access
                 </PixelButton>
-              </form>
 
+                <PixelButton
+                  variant="secondary"
+                  size="md"
+                  icon={
+                    <ArrowRight className={`${styles.icon} ${styles.small}`} />
+                  }
+                  className={styles['full-width']}
+                  onClick={handleOAuthLogin}
+                >
+                  Access via Yandex
+                </PixelButton>
+              </form>
               <div className={styles['panel-actions']}>
                 <button
                   onClick={() => navigate('/signup')}
@@ -211,7 +238,6 @@ export function SigninPage() {
                 >
                   Register Stalker ID
                 </button>
-
                 <button className={`${styles.link} ${styles['muted-link']}`}>
                   <Radiation
                     className={`${styles.icon} ${styles.small} ${styles.pulse}`}

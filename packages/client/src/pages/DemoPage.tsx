@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet';
 import { GameCanvas } from '@/components/GameCanvas/GameCanvas';
-import withFullscreen from '../components/hoc/withFullscreen';
+import withFullscreen from '../hocs/withFullscreen';
 import { XpBar } from '@/components/XpBar/XpBar';
 import { ErrorBoundaryTestSection } from '@/components/ErrorBoundary';
 import '../App.scss';

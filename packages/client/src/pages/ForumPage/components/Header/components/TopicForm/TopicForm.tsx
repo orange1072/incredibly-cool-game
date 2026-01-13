@@ -1,20 +1,30 @@
-import { PixelButton } from '@/components/PixelButton'
-import styles from './TopicForm.module.scss'
-import { Plus, Send } from 'lucide-react'
-import { FormEvent, useReducer, useState } from 'react'
-import { Input } from '@/components/Input'
+import { PixelButton } from '@/components/PixelButton';
+import styles from './TopicForm.module.scss';
+import { Plus, Send } from 'lucide-react';
+import { FormEvent, useReducer, useState } from 'react';
+import { Input } from '@/components/Input';
+import { useSelector } from '@/store/store';
+import { selectUser } from '@/store/slices/userSlice';
+import { useCreateTopicMutation } from '@/api';
 
 export const TopicForm = () => {
-  const [isOpen, toggleOpen] = useReducer((open) => !open, false)
-  const [topicTitle, setTopicTitle] = useState('')
-  const [topicPreview, setTopicPreview] = useState('')
+  const [isOpen, toggleOpen] = useReducer((open) => !open, false);
+  const user = useSelector(selectUser);
+  const [topicTitle, setTopicTitle] = useState('');
+  const [topicPreview, setTopicPreview] = useState('');
+  const [createTopic, { isLoading }] = useCreateTopicMutation();
 
   const formSubmit = (e: FormEvent) => {
-    e.preventDefault()
-    setTopicTitle('')
-    setTopicPreview('')
-    toggleOpen()
-  }
+    createTopic({
+      title: topicTitle,
+      preview: topicPreview,
+      login: String(user?.login),
+    });
+    e.preventDefault();
+    setTopicTitle('');
+    setTopicPreview('');
+    toggleOpen();
+  };
 
   return (
     <>
@@ -48,7 +58,12 @@ export const TopicForm = () => {
                   onChange={(e) => setTopicPreview(e.target.value)}
                 />
               </div>
-              <PixelButton variant="primary" icon={<Send />}>
+              <PixelButton
+                variant="primary"
+                type="submit"
+                disabled={isLoading}
+                icon={<Send />}
+              >
                 Publish
               </PixelButton>
             </form>
@@ -56,5 +71,5 @@ export const TopicForm = () => {
         </div>
       )}
     </>
-  )
-}
+  );
+};

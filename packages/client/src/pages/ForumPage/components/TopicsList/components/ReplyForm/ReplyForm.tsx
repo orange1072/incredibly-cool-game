@@ -1,42 +1,33 @@
-import { PixelButton } from '@/components/PixelButton'
-import styles from './ReplyForm.module.scss'
-import { Send } from 'lucide-react'
-import { FormEvent, useState } from 'react'
-import { ForumComment } from '@/pages/ForumPage/types'
+import { PixelButton } from '@/components/PixelButton';
+import styles from './ReplyForm.module.scss';
+import { Send } from 'lucide-react';
+import { FormEvent, useState } from 'react';
+import { useCreatePostMutation } from '@/api';
+import { useSelector } from '@/store/store';
+import { selectUser } from '@/store/slices/userSlice';
 
 type ReplyFormProps = {
-  setComments: React.Dispatch<React.SetStateAction<ForumComment[]>>
-}
+  topicId: number;
+};
 
-export const ReplyForm = ({ setComments }: ReplyFormProps) => {
-  const [commentText, setCommentText] = useState<string>('')
+export const ReplyForm = ({ topicId }: ReplyFormProps) => {
+  const [commentText, setCommentText] = useState<string>('');
+  const [createPost, { isLoading }] = useCreatePostMutation();
+  const user = useSelector(selectUser);
 
   const formSubmit = (e: FormEvent) => {
-    e.preventDefault()
-    if (commentText) {
-      let now = new Date()
-      const options: Intl.DateTimeFormatOptions = {
-        year: 'numeric',
-        month: 'numeric',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false,
-      }
-      setComments((prevComments) => {
-        let newComments = [...prevComments]
-        newComments.push({
-          id: prevComments.length,
-          author: 'You',
-          date: now.toLocaleString('ru-RU', options),
-          text: commentText,
-          avatar: '☠',
-        })
-        return newComments
-      })
-      setCommentText('')
-    }
-  }
+    e.preventDefault();
+    if (!commentText.trim()) return;
+    createPost({
+      topicId: topicId,
+      body: {
+        content: commentText,
+        login: String(user?.login),
+        topic_id: topicId,
+      },
+    });
+    setCommentText('');
+  };
 
   return (
     <form onSubmit={formSubmit} className={styles.form}>
@@ -47,9 +38,15 @@ export const ReplyForm = ({ setComments }: ReplyFormProps) => {
         placeholder="Write a reply..."
         onChange={(e) => setCommentText(e.target.value)}
       />
-      <PixelButton type="submit" variant="primary" size="sm" icon={<Send />}>
+      <PixelButton
+        type="submit"
+        variant="primary"
+        disabled={isLoading}
+        size="sm"
+        icon={<Send />}
+      >
         Reply
       </PixelButton>
     </form>
-  )
-}
+  );
+};

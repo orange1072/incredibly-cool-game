@@ -9,8 +9,8 @@ const worldSettings: WorldSettings = {
     bg: 'rgba(34, 183, 153, 1)',
   },
   bounds: {
-    width: 2000,
-    height: 1200,
+    width: 6000,
+    height: 3000,
   },
 };
 

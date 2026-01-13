@@ -10,8 +10,22 @@ import ssrReducer from './slices/ssrSlice';
 import userReducer from './slices/userSlice';
 import authReducer from './slices/authSlice';
 import gameReducer from './slices/game';
-import { authAPI } from '@/slices/authApi';
-import { userApi } from '@/api';
+import { authAPI } from '@/api/authApi';
+import { emojiApi, postApi, topicApi, userApi } from '@/api';
+
+export const reducer = combineReducers({
+  ssr: ssrReducer,
+  user: userReducer,
+  auth: authReducer,
+  emojiApi: emojiApi.reducer,
+  postApi: postApi.reducer,
+  topicApi: topicApi.reducer,
+  userApi: userApi.reducer,
+  [authAPI.reducerPath]: authAPI.reducer,
+  game: gameReducer,
+});
+
+export type RootState = ReturnType<typeof reducer>;
 
 // Глобально декларируем в window наш ключик
 // и задаем ему тип такой же как у стейта в сторе
@@ -21,26 +35,53 @@ declare global {
   }
 }
 
-export const reducer = combineReducers({
-  ssr: ssrReducer,
-  user: userReducer,
-  auth: authReducer,
-  userApi: userApi.reducer,
-  [authAPI.reducerPath]: authAPI.reducer,
-  game: gameReducer,
-});
+// Общий store creator, который работает и на сервере, и на клиенте
+export const createStore = (preloadedState?: RootState) => {
+  return configureStore({
+    reducer,
+    preloadedState,
+    middleware: (getDefaultMiddleware) => {
+      // На сервере не используем middleware вообще - возвращаем пустой массив
+      if (typeof window === 'undefined') {
+        return [];
+      }
 
-export const store = configureStore({
-  reducer,
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware()
-      .concat(userApi.middleware)
-      .concat(authAPI.middleware),
-  preloadedState:
-    typeof window === 'undefined' ? undefined : window.APP_INITIAL_STATE,
-});
+      // На клиенте используем стандартный подход
+      const defaults = getDefaultMiddleware({
+        serializableCheck: false,
+        immutableCheck: false,
+      });
 
-export type RootState = ReturnType<typeof reducer>;
+      // Добавляем RTK Query middleware только если они функции
+      const allMiddlewares = Array.isArray(defaults) ? [...defaults] : [];
+
+      if (typeof userApi.middleware === 'function') {
+        allMiddlewares.push(userApi.middleware);
+      }
+      if (typeof emojiApi.middleware === 'function') {
+        allMiddlewares.push(emojiApi.middleware);
+      }
+      if (typeof postApi.middleware === 'function') {
+        allMiddlewares.push(postApi.middleware);
+      }
+      if (typeof topicApi.middleware === 'function') {
+        allMiddlewares.push(topicApi.middleware);
+      }
+      if (typeof authAPI.middleware === 'function') {
+        allMiddlewares.push(authAPI.middleware);
+      }
+
+      // Фильтруем только функции перед возвратом для безопасности
+      return allMiddlewares.filter((m) => typeof m === 'function');
+    },
+  });
+};
+
+// Клиентский store
+export const store = createStore(
+  typeof window === 'undefined' ? undefined : window.APP_INITIAL_STATE
+);
+
 export type AppDispatch = typeof store.dispatch;
 
 export const useDispatch: () => AppDispatch = useDispatchBase;

@@ -22,10 +22,7 @@ export const Footer = memo(() => {
             <button className={styles.footerIcon}>
               <Github />
             </button>
-            <button
-              onClick={() => navigate('/forum')}
-              className={styles.footerLink}
-            >
+            <button onClick={() => navigate('#')} className={styles.footerLink}>
               Community
             </button>
             <button className={styles.footerLink}>About</button>

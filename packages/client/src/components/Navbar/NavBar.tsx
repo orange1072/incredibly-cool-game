@@ -18,7 +18,6 @@ export const NavBar = () => {
     { id: '/game-menu', label: 'ZONE', icon: Radiation },
     { id: '/profile', label: 'PROFILE', icon: User },
     { id: '/leaderboard', label: 'LEADERBOARD', icon: Trophy },
-    { id: '/forum', label: 'FORUM', icon: Radio },
   ];
 
   return (

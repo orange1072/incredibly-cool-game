@@ -57,8 +57,6 @@ const initializeDatabase = async () => {
   }
 }
 
-// check authorization for forum routes
-
 app.use('/api', checkAuth)
 
 // API routes

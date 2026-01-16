@@ -1,29 +1,28 @@
-import { useGetLeaderboardQuery } from '@/api';
 import styles from './Table.module.scss';
+import supabase from '@/utils/supabase';
+import { useEffect, useState } from 'react';
 
 export const Table = () => {
-  const {
-    data: leaderboard = [],
-    isLoading,
-    error,
-  } = useGetLeaderboardQuery({ cursor: 0, limit: 10 });
+  const [leaderboard, setLeaderboard] = useState([]);
 
-  const formatTime = (seconds?: number) => {
-    if (!seconds) return 'N/A';
-    const minutes = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${minutes}:${secs.toString().padStart(2, '0')}`;
-  };
+  useEffect(() => {
+    async function getLeaderboard(limit = 10) {
+      const { data, error } = await supabase
+        .from('game_records')
+        .select()
+        .order('score', { ascending: false })
+        .limit(limit);
 
-  const formatDate = (dateString?: string) => {
-    if (!dateString) return 'N/A';
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    });
-  };
+      if (error) {
+        console.error('Error fetching leaderboard:', error);
+        return [];
+      }
+      console.log('records', data);
+      setLeaderboard(data);
+      return data;
+    }
+    getLeaderboard();
+  }, []);
 
   const rankIcons = (rank: number) => {
     switch (rank) {
@@ -50,46 +49,31 @@ export const Table = () => {
     }
   };
 
-  if (isLoading) {
-    return <div className={styles.message}>Loading leaderboard...</div>;
-  }
-
-  if (error) {
-    const errorMessage =
-      'error' in error
-        ? error.error
-        : 'data' in error
-        ? JSON.stringify(error.data)
-        : 'message' in error
-        ? error.message
-        : 'Failed to load leaderboard';
-
-    return <div className={styles.error}>Error: {errorMessage}</div>;
-  }
-
+  const formatDate = (date: number) => {
+    const hours = date / 60 / 60;
+    return hours.toFixed(1);
+  };
   return (
     <table className={styles.main}>
       <thead>
         <tr>
           <th scope={'row'}>RANK</th>
           <th scope={'row'}>STALKER</th>
-          <th scope={'row'}>ELIMINATED</th>
           <th scope={'row'}>SCORE</th>
           <th scope={'row'}>LEVEL</th>
           <th scope={'row'}>TIME</th>
         </tr>
       </thead>
       <tbody>
-        {leaderboard.map((player) => (
-          <tr key={`${player.rank}-${player.username}`}>
+        {leaderboard.map((player, index) => (
+          <tr key={`${player.game_data.username}-${player.game_data.score}`}>
             <td scope={'row'}>
-              {rankIcons(player.rank || 0)}#{player.rank}
+              {rankIcons(index + 1 || 0)}#{index + 1}
             </td>
-            <td scope={'row'}>{player.username}</td>
-            <td scope={'row'}>{formatTime(player.timeAlive)}</td>
+            <td scope={'row'}>{player.game_data.username}</td>
             <td scope={'row'}>{player.score}</td>
             <td scope={'row'}>{player.level}</td>
-            <td scope={'row'}>{formatDate(player.time)}</td>
+            <td scope={'row'}>{`${formatDate(player.time_played)} h`}</td>
           </tr>
         ))}
       </tbody>

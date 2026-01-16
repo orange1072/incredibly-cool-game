@@ -116,7 +116,7 @@ export const GameOverPage = ({
                 size="md"
                 icon={<Share2 className={styles.buttonIconSmall} />}
                 className={styles.shareButton}
-                onClick={() => navigate('/forum')}
+                onClick={() => navigate('#')}
               >
                 Share on Communication Channel
               </PixelButton>

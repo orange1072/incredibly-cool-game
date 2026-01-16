@@ -1,7 +1,6 @@
 import ProtectedRoute from './layouts/ProtectedRoute';
 import RootRoute from './layouts/RootRoute';
 import { Error500Page } from './pages/Error500Page';
-import { ForumPage } from './pages/ForumPage';
 import { GameMenuPage } from './pages/GameMenuPage';
 import { GameOverPage } from './pages/GameOverPage';
 import { GamePlayPage } from './pages/GamePlayPage';
@@ -43,7 +42,6 @@ export const routes = [
           { path: '/game-over', Component: GameOverPage },
           { path: '/profile', Component: ProfilePage },
           { path: '/leaderboard', Component: LeaderboardPage },
-          { path: '/forum', Component: ForumPage },
         ],
       },
     ],

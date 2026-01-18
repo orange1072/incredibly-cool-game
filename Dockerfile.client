@@ -15,7 +15,7 @@ COPY . .
 RUN rm -rf packages/client/dist && \
     rm -rf node_modules/.cache && \
     rm -rf packages/client/node_modules/.cache && \
-    yarn lerna run build --scope=client
+    yarn lerna run build --scope=client --verbose
 FROM node:${NODE_VERSION}-slim AS production
 
 WORKDIR /app

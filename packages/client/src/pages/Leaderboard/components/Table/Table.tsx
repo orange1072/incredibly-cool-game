@@ -1,11 +1,47 @@
 import styles from './Table.module.scss';
-import { useGetLeaderboardQuery } from '@/api';
-import { LeaderboardItem } from '@/types/leaderboard';
+import supabase from '@/utils/supabase';
+import { useEffect, useState } from 'react';
+
+interface LeaderboardPlayer {
+  game_data: {
+    username: string;
+    score: number;
+  };
+  score: number;
+  level: number;
+  time_played: number;
+}
 
 export const Table = () => {
-  const { data: leaderboard = [], isLoading } = useGetLeaderboardQuery({
-    limit: 10,
-  });
+  const [leaderboard, setLeaderboard] = useState<LeaderboardPlayer[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function getLeaderboard(limit = 10) {
+      try {
+        setIsLoading(true);
+        const { data, error } = await supabase
+          .from('game_records')
+          .select()
+          .order('score', { ascending: false })
+          .limit(limit);
+
+        if (error) {
+          console.error('Error fetching leaderboard:', error);
+          return [];
+        }
+        console.log('records', data);
+        setLeaderboard(data || []);
+        return data;
+      } catch (error) {
+        console.error('Error fetching leaderboard:', error);
+        return [];
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    getLeaderboard();
+  }, []);
 
   const rankIcons = (rank: number) => {
     switch (rank) {
@@ -53,17 +89,17 @@ export const Table = () => {
             <td colSpan={5}>Loading...</td>
           </tr>
         ) : (
-          leaderboard.map((player: LeaderboardItem, index: number) => (
-            <tr key={`${player.username}-${player.score}-${index}`}>
+          leaderboard.map((player: LeaderboardPlayer, index: number) => (
+            <tr
+              key={`${player.game_data.username}-${player.game_data.score}-${index}`}
+            >
               <td scope={'row'}>
                 {rankIcons(index + 1 || 0)}#{index + 1}
               </td>
-              <td scope={'row'}>{player.username}</td>
+              <td scope={'row'}>{player.game_data.username}</td>
               <td scope={'row'}>{player.score}</td>
               <td scope={'row'}>{player.level}</td>
-              <td scope={'row'}>
-                {player.timeAlive ? `${formatDate(player.timeAlive)} h` : '-'}
-              </td>
+              <td scope={'row'}>{`${formatDate(player.time_played)} h`}</td>
             </tr>
           ))
         )}

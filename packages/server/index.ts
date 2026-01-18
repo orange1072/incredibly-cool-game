@@ -53,7 +53,10 @@ const initializeDatabase = async () => {
     await runMigrations()
   } catch (error) {
     console.error('Failed to run migrations:', error)
-    process.exit(1)
+    // Don't exit in production if migrations fail - let it continue
+    if (process.env.NODE_ENV !== 'production') {
+      process.exit(1)
+    }
   }
 }
 

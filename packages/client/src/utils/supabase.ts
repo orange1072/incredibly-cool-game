@@ -12,7 +12,7 @@ const getEnvVar = (key: string): string | undefined => {
     if (value) return value;
   }
   // Then try runtime-injected env from SSR HTML (browser)
-  const appEnv = (globalThis as any)?.APP_ENV as Record<string, string | undefined> | undefined;
+  const appEnv = globalThis.APP_ENV as Record<string, string | undefined> | undefined;
   const injected = appEnv?.[key];
   if (injected) return injected;
   // Fallback to process.env (runtime, works in Node.js SSR)

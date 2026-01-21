@@ -11,6 +11,7 @@ interface ImportMeta {
 
 // Declaration for @supabase/supabase-js to suppress TypeScript errors when module is not found locally
 declare module '@supabase/supabase-js' {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   export function createClient(url: string, key: string): any;
 }
 

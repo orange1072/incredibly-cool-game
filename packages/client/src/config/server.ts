@@ -5,7 +5,6 @@
 
 // Эти переменные определяются через Vite `define` в `vite.config.ts` (см. `src/client.d.ts`).
 declare const __INTERNAL_SERVER_URL__: string;
-declare const __EXTERNAL_SERVER_URL__: string;
 
 export const SERVER_HOST = (() => {
   if (typeof window === 'undefined') {

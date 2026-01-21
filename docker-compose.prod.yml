@@ -69,6 +69,8 @@ services:
       args:
         CLIENT_PORT: ${CLIENT_PORT:-3000}
         NODE_VERSION: ${NODE_VERSION:-20}
+        VITE_SUPABASE_URL: ${VITE_SUPABASE_URL}
+        VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY: ${VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY}
     restart: always
     env_file:
       - .env
@@ -78,9 +80,14 @@ services:
     environment:
       CLIENT_PORT: ${CLIENT_PORT:-3000}
       SERVER_PORT: ${SERVER_PORT:-3001}
-      EXTERNAL_SERVER_URL: ${EXTERNAL_SERVER_URL:-https://404-speed-not-found-zona-mf54.ya-praktikum.tech}
+      EXTERNAL_SERVER_URL: ${EXTERNAL_SERVER_URL:-https://zombie-shooter.online}
       INTERNAL_SERVER_URL: ${INTERNAL_SERVER_URL:-http://server:3001}
       NODE_ENV: ${NODE_ENV:-production}
+      # Supabase переменные для SSR
+      SUPABASE_URL: ${SUPABASE_URL:-${VITE_SUPABASE_URL}}
+      SUPABASE_PUBLISHABLE_DEFAULT_KEY: ${SUPABASE_PUBLISHABLE_DEFAULT_KEY:-${VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY}}
+      VITE_SUPABASE_URL: ${VITE_SUPABASE_URL}
+      VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY: ${VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY}
     depends_on:
       server:
         condition: service_healthy

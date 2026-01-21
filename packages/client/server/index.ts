@@ -10,6 +10,7 @@ import serialize from 'serialize-javascript';
 import cookieParser from 'cookie-parser';
 import { fileURLToPath, pathToFileURL } from 'url';
 import { dirname } from 'path';
+import { Readable } from 'stream';
 
 const port = process.env.CLIENT_PORT || 3000;
 // @ts-ignore
@@ -39,6 +40,85 @@ async function createServer() {
   const app = express();
 
   app.use(cookieParser());
+
+  // Proxy API calls from browser (same-origin) to internal server container.
+  // This avoids calling `:3001` directly from the browser (which may be закрыт наружу).
+  const internalServerUrl =
+    process.env.INTERNAL_SERVER_URL || 'http://server:3001';
+  app.use(['/api', '/ya-api'], async (req, res, next) => {
+    try {
+      const targetUrl = new URL(req.originalUrl, internalServerUrl).toString();
+
+      // Forward almost all headers (drop hop-by-hop + host)
+      const headers = new Headers();
+      for (const [key, value] of Object.entries(req.headers)) {
+        if (!value) continue;
+        if (key.toLowerCase() === 'host') continue;
+        if (Array.isArray(value)) {
+          for (const v of value) headers.append(key, v);
+        } else {
+          headers.set(key, value);
+        }
+      }
+
+      const init: any = {
+        method: req.method,
+        headers,
+        redirect: 'manual',
+      };
+
+      if (req.method !== 'GET' && req.method !== 'HEAD') {
+        // Node fetch needs duplex when body is a stream
+        init.body = req;
+        init.duplex = 'half';
+      }
+
+      const upstream = await fetch(targetUrl, init);
+
+      res.status(upstream.status);
+      // Forward headers (special-case Set-Cookie because it must not be collapsed into a single comma-separated value)
+      const setCookie =
+        // Node 20+ fetch Headers may support getSetCookie()
+        typeof (upstream.headers as any).getSetCookie === 'function'
+          ? ((upstream.headers as any).getSetCookie() as string[])
+          : [];
+
+      upstream.headers.forEach((v, k) => {
+        const lk = k.toLowerCase();
+        // Drop hop-by-hop headers
+        if (
+          [
+            'connection',
+            'keep-alive',
+            'proxy-authenticate',
+            'proxy-authorization',
+            'te',
+            'trailer',
+            'transfer-encoding',
+            'upgrade',
+          ].includes(lk)
+        ) {
+          return;
+        }
+        // We'll set Set-Cookie separately (see below)
+        if (lk === 'set-cookie') return;
+
+        res.setHeader(k, v);
+      });
+
+      if (setCookie.length > 0) {
+        res.setHeader('set-cookie', setCookie);
+      }
+
+      if (upstream.body) {
+        Readable.fromWeb(upstream.body as any).pipe(res);
+      } else {
+        res.end();
+      }
+    } catch (e) {
+      next(e);
+    }
+  });
   let vite: ViteDevServer | undefined;
   if (isDev) {
     vite = await createViteServer({
@@ -110,6 +190,20 @@ async function createServer() {
         styleTags,
       } = await render(req);
 
+      // Runtime env для браузера (Vite env вшивается на build-time, но нам нужен стабильный источник в prod/SSR)
+      // Берём сначала VITE_* (если есть), иначе fallback на переменные без префикса.
+      const clientEnv = {
+        VITE_SUPABASE_URL:
+          process.env.VITE_SUPABASE_URL ||
+          process.env.SUPABASE_URL ||
+          undefined,
+        VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY:
+          process.env.VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY ||
+          process.env.SUPABASE_PUBLISHABLE_DEFAULT_KEY ||
+          process.env.SUPABASE_ANON_KEY ||
+          undefined,
+      };
+
       // В dev режиме Vite уже обработал HTML через transformIndexHtml и добавил стили
       // В production index.html уже содержит ссылки на CSS
       // Просто удаляем комментарий, так как стили уже в HTML
@@ -122,9 +216,10 @@ async function createServer() {
         .replace(`<!--ssr-outlet-->`, appHtml)
         .replace(
           `<!--ssr-initial-state-->`,
-          `<script>window.APP_INITIAL_STATE = ${serialize(initialState, {
-            isJSON: true,
-          })}</script>`
+          `<script>
+            window.APP_INITIAL_STATE = ${serialize(initialState, { isJSON: true })};
+            window.APP_ENV = ${serialize(clientEnv, { isJSON: true })};
+          </script>`
         );
 
       res.status(200).set({ 'Content-Type': 'text/html' }).end(html);

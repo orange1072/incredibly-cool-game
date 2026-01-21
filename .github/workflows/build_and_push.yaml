@@ -24,6 +24,15 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Read env values from env.example
+        id: env
+        run: |
+          # Извлекаем значения из env.example (учитывая, что могут быть пробелы после =)
+          export $(grep -v '^#' env.example | grep -E '^VITE_SUPABASE_URL=' | xargs)
+          export $(grep -v '^#' env.example | grep -E '^VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY=' | xargs)
+          echo "VITE_SUPABASE_URL=$VITE_SUPABASE_URL" >> $GITHUB_ENV
+          echo "VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY=$VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY" >> $GITHUB_ENV
+
       - name: Build and push client image
         uses: docker/build-push-action@v2
         with:
@@ -31,6 +40,9 @@ jobs:
           file: Dockerfile.client
           push: true
           tags: ghcr.io/${{ env.OWNER_LC }}/${{ github.event.repository.name }}/client:${{ github.sha }}
+          build-args: |
+            VITE_SUPABASE_URL=${{ env.VITE_SUPABASE_URL }}
+            VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY=${{ env.VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY }}
 
       - name: Build and push server image
         uses: docker/build-push-action@v2

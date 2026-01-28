@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import { store } from './store/store';
 import './index.scss';
 import { AuthProvider } from '@/providers/AuthProvider/AuthProvider';
+import { MobileInputProvider } from '@/providers/MobileInputProvider/MobileInputProvider';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { routes } from './routes';
 import { ErrorBoundary } from './components/ErrorBoundary';
@@ -16,7 +17,9 @@ ReactDOM.hydrateRoot(
   <Provider store={store}>
     <AuthProvider>
       <ErrorBoundary>
-        <RouterProvider router={router} />
+        <MobileInputProvider>
+          <RouterProvider router={router} />
+        </MobileInputProvider>
       </ErrorBoundary>
     </AuthProvider>
   </Provider>

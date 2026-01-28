@@ -1,7 +1,7 @@
 pre-commit:
   parallel: true
   commands:
-    lint:
-      run: yarn lint
-    prettier:
-      run: yarn format
+    client:
+      run: yarn workspace client lint-staged
+    server:
+      run: yarn workspace server lint-staged

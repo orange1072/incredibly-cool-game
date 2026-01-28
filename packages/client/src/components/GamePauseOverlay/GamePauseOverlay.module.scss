@@ -12,7 +12,11 @@
 
 .pausePanel {
   width: min(520px, 100%);
-  background: linear-gradient(180deg, rgba(14, 20, 35, 0.95), rgba(8, 10, 20, 0.98));
+  background: linear-gradient(
+    180deg,
+    rgba(14, 20, 35, 0.95),
+    rgba(8, 10, 20, 0.98)
+  );
   border: 1px solid rgba(94, 234, 212, 0.35);
   border-radius: 18px;
   padding: 1.5rem;

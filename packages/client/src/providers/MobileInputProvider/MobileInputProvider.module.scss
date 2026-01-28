@@ -22,7 +22,13 @@
   border: 1px solid var(--stalker-border, rgba(47, 184, 204, 0.2));
   background: linear-gradient(160deg, #1a1e1c 0%, #121614 100%);
   color: var(--foreground, #a8b5a8);
-  font-family: var(--font-family-base, 'Consolas', 'Monaco', 'Lucida Console', monospace);
+  font-family: var(
+    --font-family-base,
+    'Consolas',
+    'Monaco',
+    'Lucida Console',
+    monospace
+  );
   font-size: 0.95rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -59,7 +65,13 @@
   border: 1px solid var(--stalker-border, rgba(47, 184, 204, 0.2));
   background: linear-gradient(160deg, #151a17 0%, #0f1412 100%);
   color: var(--stalker-cyan, #2fb8cc);
-  font-family: var(--font-family-headings, 'Courier New', 'Monaco', 'Lucida Console', monospace);
+  font-family: var(
+    --font-family-headings,
+    'Courier New',
+    'Monaco',
+    'Lucida Console',
+    monospace
+  );
   font-size: 1.1rem;
   box-shadow: 0 0 14px rgba(77, 212, 232, 0.22);
 }
@@ -90,7 +102,11 @@
 .center {
   grid-area: center;
   opacity: 0.3;
-  background: radial-gradient(circle, rgba(47, 184, 204, 0.12) 0%, transparent 70%);
+  background: radial-gradient(
+    circle,
+    rgba(47, 184, 204, 0.12) 0%,
+    transparent 70%
+  );
   border-radius: 16px;
   border: 1px dashed rgba(47, 184, 204, 0.2);
 }

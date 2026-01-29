@@ -19,6 +19,7 @@ import { useDispatch } from '@/store/store';
 import { setUser } from '@/store/slices/userSlice';
 import { useOAuth } from '@/hooks/useOAuth';
 import { useRedirectIfAuthenticated } from '@/hooks/useRedirectIfAuthenticated';
+import { ROUTE_PATHS } from '@/routes';
 
 type FormData = {
   first_name: string;
@@ -135,7 +136,7 @@ export const SignupPage = () => {
           const user = await getUser().unwrap();
           if (user) {
             dispatch(setUser(user));
-            navigate('/game-menu');
+            navigate(ROUTE_PATHS.gameMenu);
           }
         } catch (error: any) {
           console.error('Registration failed:', error);
@@ -394,7 +395,7 @@ export const SignupPage = () => {
 
               <div className={styles['footer-link']}>
                 <button
-                  onClick={() => navigate('/signin')}
+                  onClick={() => navigate(ROUTE_PATHS.signin)}
                   className={styles['sign-in-link']}
                 >
                   Already Registered? Sign In

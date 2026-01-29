@@ -1,4 +1,3 @@
-import { useNavigate } from 'react-router-dom';
 import { useScrollY } from '@/hooks/useScrollY';
 import { ParticleBackground } from '@/components/ParticleBackground/ParticleBackground';
 import { HeroSection } from '@/pages/MainPage/sections/HeroSection';
@@ -11,7 +10,6 @@ import { Footer } from '@/pages/MainPage/sections/Footer';
 import styles from './MainPage.module.scss';
 
 export const MainPage = () => {
-  const navigate = useNavigate();
   const scrollY = useScrollY();
 
   return (

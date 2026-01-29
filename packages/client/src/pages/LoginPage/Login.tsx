@@ -92,9 +92,21 @@ export function SigninPage() {
     (e?: React.MouseEvent) => {
       e?.preventDefault();
       setErrors({});
+      dispatch(
+        setUser({
+          id: 0,
+          first_name: 'Guest',
+          second_name: '',
+          display_name: 'Guest',
+          phone: '',
+          login: 'guest',
+          avatar: '',
+          email: '',
+        })
+      );
       navigate('/game-menu');
     },
-    [navigate]
+    [dispatch, navigate]
   );
 
   useEffect(() => {

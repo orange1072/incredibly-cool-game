@@ -8,7 +8,17 @@
     "dev": "cross-env NODE_ENV=development nodemon index.ts",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "test": "jest ."
+    "test": "jest .",
+    "lint-staged": "lint-staged"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{css,scss,json,md}": [
+      "prettier --write"
+    ]
   },
   "engines": {
     "node": ">=18"
@@ -39,6 +49,7 @@
     "babel-jest": "^29.0.1",
     "eslint": "^8.23.0",
     "jest": "^28",
+    "lint-staged": "^16.2.3",
     "nodemon": "^2.0.19",
     "prettier": "^2.7.1",
     "ts-jest": "^28.0.8",

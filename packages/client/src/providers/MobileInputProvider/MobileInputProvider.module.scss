@@ -1,0 +1,91 @@
+.mobileControls {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+}
+
+.topBar {
+  position: fixed;
+  top: 12px;
+  left: 70%;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.pauseButton {
+  pointer-events: auto;
+  padding: 10px 18px;
+  border-radius: 12px;
+  border: 1px solid var(--stalker-border, rgba(47, 184, 204, 0.2));
+  background: linear-gradient(160deg, #1a1e1c 0%, #121614 100%);
+  color: var(--foreground, #a8b5a8);
+  font-family: var(
+    --font-family-base,
+    'Consolas',
+    'Monaco',
+    'Lucida Console',
+    monospace
+  );
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  box-shadow: 0 0 18px rgba(77, 212, 232, 0.25);
+}
+
+.pauseButton:active,
+.pauseButton.isActive {
+  box-shadow: 0 0 22px rgba(77, 212, 232, 0.5);
+  border-color: rgba(77, 212, 232, 0.6);
+}
+
+.bottomRight {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  pointer-events: none;
+}
+
+.joystick {
+  pointer-events: none;
+}
+
+.joystickBase {
+  pointer-events: auto;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  border: 1px solid var(--stalker-border, rgba(47, 184, 204, 0.3));
+  background: radial-gradient(
+    circle,
+    rgba(47, 184, 204, 0.12) 0%,
+    rgba(15, 20, 18, 0.95) 65%,
+    rgba(9, 12, 11, 0.98) 100%
+  );
+  box-shadow: 0 0 24px rgba(77, 212, 232, 0.2);
+  position: relative;
+  touch-action: none;
+}
+
+.joystickKnob {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 64px;
+  height: 64px;
+  margin-left: -32px;
+  margin-top: -32px;
+  border-radius: 50%;
+  border: 1px solid rgba(77, 212, 232, 0.5);
+  background: linear-gradient(160deg, #1a211e 0%, #0f1512 100%);
+  box-shadow: 0 0 18px rgba(77, 212, 232, 0.3);
+  transition: transform 0.04s ease-out;
+}
+
+@media (min-width: 769px) {
+  .mobileControls {
+    display: none;
+  }
+}

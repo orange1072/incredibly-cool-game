@@ -9,6 +9,7 @@ import {
   WarningBadge,
   ScrollIndicator,
 } from '@/components/ui';
+import { ROUTE_PATHS } from '@/routes';
 
 import styles from './HeroSection.module.scss';
 
@@ -50,7 +51,7 @@ export const HeroSection = memo<HeroSectionProps>(({ scrollY }) => {
             variant="primary"
             size="lg"
             icon={<Play />}
-            onClick={() => navigate('/game-menu')}
+            onClick={() => navigate(ROUTE_PATHS.gameMenu)}
             className={styles.ctaButton}
           >
             Play Now
@@ -59,7 +60,7 @@ export const HeroSection = memo<HeroSectionProps>(({ scrollY }) => {
             variant="secondary"
             size="lg"
             icon={<Users />}
-            onClick={() => navigate('/signup')}
+            onClick={() => navigate(ROUTE_PATHS.signup)}
             className={styles.ctaButton}
           >
             Join Expedition

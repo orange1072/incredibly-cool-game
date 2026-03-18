@@ -55,7 +55,11 @@
 
 .levelUpPanel {
   width: min(460px, 100%);
-  background: linear-gradient(160deg, rgba(12, 16, 28, 0.95), rgba(8, 10, 20, 0.98));
+  background: linear-gradient(
+    160deg,
+    rgba(12, 16, 28, 0.95),
+    rgba(8, 10, 20, 0.98)
+  );
   border: 1px solid rgba(82, 255, 221, 0.4);
   border-radius: 18px;
   padding: 1.75rem;

@@ -5,6 +5,7 @@ import { PixelButton } from '@/components/PixelButton';
 import { ParticleBackground } from '@/components/ParticleBackground';
 import { Input } from '@/components/Input';
 import { AnimatedPanel } from '@/components/AnimatedPanel';
+import { ROUTE_PATHS } from '@/routes';
 
 import sharedStyles from '@/styles/errorPage.module.scss';
 import styles from './Error404Page.module.scss';
@@ -39,17 +40,17 @@ export function Error404Page() {
   const handleZombieClick = () => {
     setClicked(true);
     timeoutRef.current = setTimeout(() => {
-      navigate('/');
+      navigate(ROUTE_PATHS.root);
       timeoutRef.current = null;
     }, 1000);
   };
 
   const handleReturnToBase = () => {
-    navigate('/');
+    navigate(ROUTE_PATHS.root);
   };
 
   const handleEnterZone = () => {
-    navigate('/game-menu');
+    navigate(ROUTE_PATHS.gameMenu);
   };
 
   return (

@@ -1,15 +1,15 @@
-import { ReactNode } from 'react'
-import styles from './PixelButton.module.scss'
+import { ReactNode } from 'react';
+import styles from './PixelButton.module.scss';
 
 interface PixelButtonProps {
-  children: ReactNode
-  onClick?: () => void
-  variant?: 'primary' | 'danger' | 'success' | 'secondary'
-  size?: 'sm' | 'md' | 'lg'
-  icon?: ReactNode
-  className?: string
-  disabled?: boolean
-  type?: 'button' | 'submit' | 'reset'
+  children: ReactNode;
+  onClick?: () => void;
+  variant?: 'primary' | 'danger' | 'success' | 'secondary';
+  size?: 'sm' | 'md' | 'lg';
+  icon?: ReactNode;
+  className?: string;
+  disabled?: boolean;
+  type?: 'button' | 'submit' | 'reset';
 }
 
 export function PixelButton({
@@ -25,30 +25,30 @@ export function PixelButton({
   const getVariantClass = () => {
     switch (variant) {
       case 'primary':
-        return styles.primary
+        return styles.primary;
       case 'danger':
-        return styles.danger
+        return styles.danger;
       case 'success':
-        return styles.success
+        return styles.success;
       case 'secondary':
-        return styles.secondary
+        return styles.secondary;
       default:
-        return styles.primary
+        return styles.primary;
     }
-  }
+  };
 
   const getSizeClass = () => {
     switch (size) {
       case 'sm':
-        return styles.small
+        return styles.small;
       case 'md':
-        return styles.medium
+        return styles.medium;
       case 'lg':
-        return styles.large
+        return styles.large;
       default:
-        return styles.medium
+        return styles.medium;
     }
-  }
+  };
 
   return (
     <button
@@ -68,5 +68,5 @@ export function PixelButton({
       {/* Hover glow line */}
       <div className={styles.hoverGlow} />
     </button>
-  )
+  );
 }

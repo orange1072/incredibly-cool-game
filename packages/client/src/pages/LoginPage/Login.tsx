@@ -11,6 +11,7 @@ import { useDispatch } from '@/store/store';
 import { setUser } from '@/store/slices/userSlice';
 import { useOAuth } from '@/hooks/useOAuth';
 import { useRedirectIfAuthenticated } from '@/hooks/useRedirectIfAuthenticated';
+import { ROUTE_PATHS } from '@/routes';
 
 type Errors = Partial<Record<'username' | 'password', string>>;
 
@@ -64,7 +65,7 @@ export function SigninPage() {
         const user = await getUser().unwrap();
         if (user) {
           dispatch(setUser(user));
-          navigate('/game-menu');
+          navigate(ROUTE_PATHS.gameMenu);
         }
       } catch (err: any) {
         console.error('Login failed:', err);
@@ -92,9 +93,21 @@ export function SigninPage() {
     (e?: React.MouseEvent) => {
       e?.preventDefault();
       setErrors({});
-      navigate('/game-menu');
+      dispatch(
+        setUser({
+          id: 0,
+          first_name: 'Guest',
+          second_name: '',
+          display_name: 'Guest',
+          phone: '',
+          login: 'guest',
+          avatar: '',
+          email: '',
+        })
+      );
+      navigate(ROUTE_PATHS.gameMenu);
     },
-    [navigate]
+    [dispatch, navigate]
   );
 
   useEffect(() => {
@@ -233,7 +246,7 @@ export function SigninPage() {
               </form>
               <div className={styles['panel-actions']}>
                 <button
-                  onClick={() => navigate('/signup')}
+                  onClick={() => navigate(ROUTE_PATHS.signup)}
                   className={`${styles.link} ${styles['primary-link']}`}
                 >
                   Register Stalker ID

@@ -19,7 +19,7 @@
       font-family: $font-family-headings;
       font-size: $font-size-lg;
       font-weight: $font-weight-normal;
-      color:white;
+      color: white;
       text-transform: uppercase;
       letter-spacing: 1px;
     }
@@ -47,79 +47,78 @@
       margin-top: -2px;
     }
   }
-/* Планшеты */
-@media (max-width: 1024px) {
-  .brand_container {
-    width: 180px;
-    margin-left: auto;
-    margin-right: auto;
-    
-    .main .title {
-      font-size: 0.9rem;
+  /* Планшеты */
+  @media (max-width: 1024px) {
+    .brand_container {
+      width: 180px;
+      margin-left: auto;
+      margin-right: auto;
+
+      .main .title {
+        font-size: 0.9rem;
+      }
+
+      .subtitle sub {
+        font-size: 9px;
+      }
     }
-    
-    .subtitle sub {
-      font-size: 9px;
+  }
+
+  /* Мобильные устройства */
+  @media (max-width: 768px) {
+    .brand_container {
+      width: 160px;
+      margin-left: auto;
+      margin-right: auto;
+
+      .main {
+        gap: 8px;
+
+        .title {
+          font-size: 0.8rem;
+        }
+
+        .lightning {
+          right: -20px;
+          width: 20px;
+          height: 20px;
+        }
+      }
+
+      .subtitle sub {
+        font-size: 8px;
+        left: 8%;
+        letter-spacing: 0.4px;
+      }
+    }
+  }
+
+  /* Маленькие мобильные */
+  @media (max-width: 480px) {
+    .brand_container {
+      width: 140px;
+      margin-left: auto;
+      margin-right: auto;
+
+      .main {
+        gap: 6px;
+
+        .title {
+          font-size: 0.75rem;
+        }
+
+        .lightning {
+          right: -15px;
+          width: 16px;
+          height: 16px;
+        }
+      }
+
+      .subtitle sub {
+        font-size: 7px;
+        left: 6%;
+        letter-spacing: 0.3px;
+      }
     }
   }
 }
-
-/* Мобильные устройства */
-@media (max-width: 768px) {
-  .brand_container {
-    width: 160px;
-    margin-left: auto;
-    margin-right: auto;
-    
-    .main {
-      gap: 8px;
-      
-      .title {
-        font-size: 0.8rem;
-      }
-      
-      .lightning {
-        right: -20px;
-        width: 20px;
-        height: 20px;
-      }
-    }
-    
-    .subtitle sub {
-      font-size: 8px;
-      left: 8%;
-      letter-spacing: 0.4px;
-    }
-  }
-}
-
-/* Маленькие мобильные */
-@media (max-width: 480px) {
-  .brand_container {
-    width: 140px;
-    margin-left: auto;
-    margin-right: auto;
-    
-    .main {
-      gap: 6px;
-      
-      .title {
-        font-size: 0.75rem;
-      }
-      
-      .lightning {
-        right: -15px;
-        width: 16px;
-        height: 16px;
-      }
-    }
-    
-    .subtitle sub {
-      font-size: 7px;
-      left: 6%;
-      letter-spacing: 0.3px;
-    }
-  }
-}
-}
-

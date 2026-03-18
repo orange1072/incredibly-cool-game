@@ -10,6 +10,7 @@ import { GameStats, DEFAULT_STATS } from './types';
 import { VictoryHeader, DeathHeader } from './components';
 import { useSendLeaderboardResultMutation } from '@/api';
 import { selectUserDisplayName, selectUser } from '@/store/slices/userSlice';
+import { ROUTE_PATHS } from '@/routes';
 
 import styles from './GameOverPage.module.scss';
 
@@ -97,7 +98,7 @@ export const GameOverPage = ({
                 variant="primary"
                 size="lg"
                 icon={<RotateCcw className={styles.buttonIcon} />}
-                onClick={() => navigate('/game-play')}
+                onClick={() => navigate(ROUTE_PATHS.gamePlay)}
                 className={styles.retryButton}
               >
                 Retry Mission
@@ -106,7 +107,7 @@ export const GameOverPage = ({
                 variant="secondary"
                 size="lg"
                 icon={<Home className={styles.buttonIcon} />}
-                onClick={() => navigate('/game-menu')}
+                onClick={() => navigate(ROUTE_PATHS.gameMenu)}
                 className={styles.menuButton}
               >
                 Main Menu

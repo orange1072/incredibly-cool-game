@@ -8,6 +8,7 @@ import {
   RefreshCw,
 } from 'lucide-react';
 import { clearCacheAndUpdate } from '@/utils/clearCacheAndUpdate';
+import { ROUTE_PATHS } from '@/routes';
 import styles from './Nav.module.scss';
 
 export const NavBar = () => {
@@ -15,9 +16,9 @@ export const NavBar = () => {
   const currentPage = location.pathname;
 
   const navItems = [
-    { id: '/game-menu', label: 'ZONE', icon: Radiation },
-    { id: '/profile', label: 'PROFILE', icon: User },
-    { id: '/leaderboard', label: 'LEADERBOARD', icon: Trophy },
+    { id: ROUTE_PATHS.gameMenu, label: 'ZONE', icon: Radiation },
+    { id: ROUTE_PATHS.profile, label: 'PROFILE', icon: User },
+    { id: ROUTE_PATHS.leaderboard, label: 'LEADERBOARD', icon: Trophy },
   ];
 
   return (
@@ -26,7 +27,7 @@ export const NavBar = () => {
       <div className={styles.topLine} />
       <div className={styles.container}>
         <div className={styles.content}>
-          <Link to="/" className={styles.logo}>
+          <Link to={ROUTE_PATHS.root} className={styles.logo}>
             <div className={styles.logoIcon}>
               <div className={styles.logoGlow} />
               <Radiation className={styles.radiationIcon} />
@@ -46,9 +47,9 @@ export const NavBar = () => {
               const Icon = item.icon;
               const isActive =
                 currentPage === item.id ||
-                (item.id === '/game-menu' &&
-                  (currentPage === '/game-play' ||
-                    currentPage === '/game-menu'));
+                (item.id === ROUTE_PATHS.gameMenu &&
+                  (currentPage === ROUTE_PATHS.gamePlay ||
+                    currentPage === ROUTE_PATHS.gameMenu));
 
               return (
                 <Link

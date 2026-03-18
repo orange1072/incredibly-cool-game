@@ -1,1 +1,1 @@
-export { WarningBadge } from './WarningBadge'
+export { WarningBadge } from './WarningBadge';

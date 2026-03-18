@@ -1,1 +1,1 @@
-export { ScrollIndicator } from './ScrollIndicator';
+export { ScrollIndicator } from './ScrollIndicator'

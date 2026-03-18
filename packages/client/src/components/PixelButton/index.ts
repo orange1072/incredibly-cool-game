@@ -1,1 +1,1 @@
-export { PixelButton } from './PixelButton';
+export { PixelButton } from './PixelButton'

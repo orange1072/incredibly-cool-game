@@ -7,9 +7,6 @@ export const Table = () => {
 
   useEffect(() => {
     async function getLeaderboard(limit = 10) {
-      if (!supabase) {
-        return [];
-      }
       const { data, error } = await supabase
         .from('game_records')
         .select()

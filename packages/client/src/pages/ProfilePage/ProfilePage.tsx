@@ -17,7 +17,6 @@ import {
 import { useLogoutMutation } from '@/api/authApi';
 import { useNavigate } from 'react-router-dom';
 import { LogOut } from 'lucide-react';
-import { ROUTE_PATHS } from '@/routes';
 
 export const ProfilePage = () => {
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
@@ -43,12 +42,12 @@ export const ProfilePage = () => {
     try {
       await logout().unwrap();
       dispatch(clearUser());
-      navigate(ROUTE_PATHS.signin);
+      navigate('/signin');
     } catch (error) {
       console.error('Logout failed:', error);
       // Всё равно очищаем локальное состояние и редиректим
       dispatch(clearUser());
-      navigate(ROUTE_PATHS.signin);
+      navigate('/signin');
     }
   }, [logout, dispatch, navigate]);
 

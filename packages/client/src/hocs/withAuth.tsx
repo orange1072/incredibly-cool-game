@@ -2,7 +2,6 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
 import { selectUser } from '@/store/slices/userSlice';
-import { ROUTE_PATHS } from '@/routes';
 
 export const withAuth = <P extends Record<string, never>>(
   WrappedComponent: React.ComponentType<P>
@@ -11,7 +10,7 @@ export const withAuth = <P extends Record<string, never>>(
     const user = useSelector(selectUser);
 
     if (!user) {
-      return <Navigate to={ROUTE_PATHS.signin} replace />;
+      return <Navigate to="/signin" replace />;
     }
 
     return <WrappedComponent {...props} />;

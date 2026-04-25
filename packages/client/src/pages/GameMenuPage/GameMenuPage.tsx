@@ -4,7 +4,6 @@ import { Helmet } from 'react-helmet';
 import { Play } from 'lucide-react';
 import { PixelButton } from '@/components/PixelButton';
 import { LEVELS, CHARACTERS, GAME_CONFIG } from './constants';
-import { ROUTE_PATHS } from '@/routes';
 
 import styles from './GameMenuPage.module.scss';
 
@@ -31,7 +30,7 @@ export const GameMenuPage = () => {
         clearInterval(intervalRef.current);
         intervalRef.current = null;
       }
-      navigate(ROUTE_PATHS.gamePlay);
+      navigate('/game-play');
     }
   }, [countdown, navigate]);
 

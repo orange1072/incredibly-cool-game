@@ -1,7 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { Error404Page } from './Error404Page';
 import { BrowserRouter, useNavigate } from 'react-router-dom';
-import { ROUTE_PATHS } from '@/routes';
 
 const mockUseNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
@@ -28,6 +27,6 @@ describe('Error404Page', () => {
     );
     const btn = screen.getByRole('button', { name: /return/i });
     fireEvent.click(btn);
-    expect(mockNavigate).toHaveBeenCalledWith(ROUTE_PATHS.root);
+    expect(mockNavigate).toHaveBeenCalledWith('/');
   });
 });

@@ -1,13 +1,13 @@
-import { memo } from 'react';
-import styles from './Particle.module.scss';
+import { memo } from 'react'
+import styles from './Particle.module.scss'
 
-export type ParticleColor = 'cyan' | 'orange' | 'red';
+export type ParticleColor = 'cyan' | 'orange' | 'red'
 
 interface ParticleProps {
-  color: ParticleColor;
-  left: number;
-  top: number;
-  animationDelay: number;
+  color: ParticleColor
+  left: number
+  top: number
+  animationDelay: number
 }
 
 export const Particle = memo<ParticleProps>(
@@ -21,8 +21,8 @@ export const Particle = memo<ParticleProps>(
           animationDelay: `${animationDelay}s`,
         }}
       />
-    );
+    )
   }
-);
+)
 
-Particle.displayName = 'Particle';
+Particle.displayName = 'Particle'

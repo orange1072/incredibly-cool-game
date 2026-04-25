@@ -69,13 +69,9 @@
   position: relative;
   padding: 1.25rem;
   border-radius: 10px;
-  background: linear-gradient(
-    180deg,
-    rgba(20, 24, 22, 0.6),
-    rgba(10, 12, 10, 0.6)
-  );
-  border: 1px solid rgba(255, 255, 255, 0.03);
-  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.6);
+  background: linear-gradient(180deg, rgba(20,24,22,0.6), rgba(10,12,10,0.6));
+  border: 1px solid rgba(255,255,255,0.03);
+  box-shadow: 0 6px 30px rgba(0,0,0,0.6);
   backdrop-filter: blur(4px);
   overflow: hidden;
 }
@@ -90,12 +86,7 @@
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba($stalker-cyan, 0.9),
-    transparent
-  );
+  background: linear-gradient(90deg, transparent, rgba($stalker-cyan,0.9), transparent);
   opacity: 0.7;
 }
 
@@ -105,12 +96,7 @@
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba($stalker-orange, 0.95),
-    transparent
-  );
+  background: linear-gradient(90deg, transparent, rgba($stalker-orange,0.95), transparent);
   opacity: 0.5;
 }
 
@@ -138,8 +124,7 @@
 }
 
 .cyan-glow {
-  box-shadow: 0 0 12px rgba(47, 184, 204, 0.4),
-    0 0 30px rgba(47, 184, 204, 0.12);
+  box-shadow: 0 0 12px rgba(47,184,204,0.4), 0 0 30px rgba(47,184,204,0.12);
 }
 
 .pulse {
@@ -147,15 +132,9 @@
 }
 
 @keyframes pulse {
-  0% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.7;
-  }
-  100% {
-    opacity: 1;
-  }
+  0% { opacity: 1; }
+  50% { opacity: 0.7; }
+  100% { opacity: 1; }
 }
 
 .anomaly-pulse {
@@ -187,7 +166,7 @@
 .divider .line {
   flex: 1;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(45, 58, 46, 0.6));
+  background: linear-gradient(90deg, transparent, rgba(45,58,46,0.6));
 }
 
 .or {
@@ -249,15 +228,15 @@
   align-items: center;
   padding: 0.5rem 1rem;
   border-radius: 8px;
-  background: rgba(26, 30, 28, 0.5);
-  border: 1px solid rgba($stalker-orange, 0.18);
+  background: rgba(26,30,28,0.5);
+  border: 1px solid rgba($stalker-orange,0.18);
   color: $stalker-orange;
   font-size: 0.75rem;
   text-transform: uppercase;
 }
 
 .radiation-glow {
-  box-shadow: 0 0 18px rgba($stalker-orange, 0.12);
+  box-shadow: 0 0 18px rgba($stalker-orange,0.12);
 }
 
 .quote {
@@ -272,11 +251,5 @@
   }
 }
 
-.icon {
-  width: 18px;
-  height: 18px;
-}
-.icon.small {
-  width: 14px;
-  height: 14px;
-}
+.icon { width: 18px; height: 18px; }
+.icon.small { width: 14px; height: 14px; }

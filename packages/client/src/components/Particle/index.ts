@@ -1,2 +1,2 @@
-export { Particle } from './Particle';
-export type { ParticleColor } from './Particle';
+export { Particle } from './Particle'
+export type { ParticleColor } from './Particle'

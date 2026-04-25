@@ -1,23 +1,23 @@
 export interface Level {
-  id: number;
-  name: string;
-  difficulty: 'Easy' | 'Normal' | 'Hard';
-  zombies: number;
-  icon: string;
+  id: number
+  name: string
+  difficulty: 'Easy' | 'Normal' | 'Hard'
+  zombies: number
+  icon: string
 }
 
 export interface Character {
-  id: number;
-  name: string;
-  weapon: string;
-  health: number;
-  icon: string;
+  id: number
+  name: string
+  weapon: string
+  health: number
+  icon: string
 }
 
 export const GAME_CONFIG = {
   COUNTDOWN_DURATION: 3, // секунды
   PARTICLE_COUNT: 25,
-} as const;
+} as const
 
 // Доступные уровни игры
 export const LEVELS: Level[] = [
@@ -42,7 +42,7 @@ export const LEVELS: Level[] = [
     zombies: 50,
     icon: '💀',
   },
-];
+]
 
 // Доступные персонажи
 export const CHARACTERS: Character[] = [
@@ -67,4 +67,4 @@ export const CHARACTERS: Character[] = [
     health: 80,
     icon: '🎯',
   },
-];
+]

@@ -1,14 +1,14 @@
-import { memo } from 'react';
-import { Radiation } from 'lucide-react';
-import styles from './Logo.module.scss';
+import { memo } from 'react'
+import { Radiation } from 'lucide-react'
+import styles from './Logo.module.scss'
 
-export type LogoSize = 'sm' | 'md' | 'lg' | 'xl';
+export type LogoSize = 'sm' | 'md' | 'lg' | 'xl'
 
 interface LogoProps {
-  size?: LogoSize;
-  className?: string;
-  showGlow?: boolean;
-  animated?: boolean;
+  size?: LogoSize
+  className?: string
+  showGlow?: boolean
+  animated?: boolean
 }
 
 const sizeMap: Record<LogoSize, { icon: string; container: string }> = {
@@ -16,11 +16,11 @@ const sizeMap: Record<LogoSize, { icon: string; container: string }> = {
   md: { icon: styles.logoIconMd, container: styles.logoContainerMd },
   lg: { icon: styles.logoIconLg, container: styles.logoContainerLg },
   xl: { icon: styles.logoIconXl, container: styles.logoContainerXl },
-};
+}
 
 export const Logo = memo<LogoProps>(
   ({ size = 'lg', className = '', showGlow = true, animated = false }) => {
-    const sizeClasses = sizeMap[size];
+    const sizeClasses = sizeMap[size]
 
     return (
       <div
@@ -35,8 +35,8 @@ export const Logo = memo<LogoProps>(
           />
         </div>
       </div>
-    );
+    )
   }
-);
+)
 
-Logo.displayName = 'Logo';
+Logo.displayName = 'Logo'

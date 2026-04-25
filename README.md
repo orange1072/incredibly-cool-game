@@ -1,55 +1,57 @@
 ### Как запускать?
-
 Открываем только папку client
 Выполните команду yarn start ,клиент запущен
+
 
 1. Убедитесь что у вас установлен `node` (версия 18 или выше) и `docker`
 2. Выполните команду `yarn bootstrap` - это обязательный шаг, без него ничего работать не будет :)
 3. Выполните команду `yarn dev`
-4. Выполните команду `yarn dev --scope=client` чтобы запустить только клиент
-5. Выполните команду `yarn dev --scope=server` чтобы запустить только server
+3. Выполните команду `yarn dev --scope=client` чтобы запустить только клиент
+4. Выполните команду `yarn dev --scope=server` чтобы запустить только server
+
 
 ### Как добавить зависимости?
-
 В этом проекте используется `monorepo` на основе [`lerna`](https://github.com/lerna/lerna)
 
-Чтобы добавить зависимость для клиента
-`yarn lerna add {your_dep} --scope client`
+Чтобы добавить зависимость для клиента 
+```yarn lerna add {your_dep} --scope client```
 
 Для сервера
-`yarn lerna add {your_dep} --scope server`
+```yarn lerna add {your_dep} --scope server```
 
 И для клиента и для сервера
-`yarn lerna add {your_dep}`
+```yarn lerna add {your_dep}```
+
 
 Если вы хотите добавить dev зависимость, проделайте то же самое, но с флагом `dev`
-`yarn lerna add {your_dep} --dev --scope server`
+```yarn lerna add {your_dep} --dev --scope server```
+
 
 ### Тесты
 
 Для клиента используется [`react-testing-library`](https://testing-library.com/docs/react-testing-library/intro/)
 
-`yarn test`
+```yarn test```
 
 ### Линтинг
 
-`yarn lint`
+```yarn lint```
 
 ### Форматирование prettier
 
-`yarn format`
+```yarn format```
 
 ### Production build
 
-`yarn build`
+```yarn build```
 
 И чтобы посмотреть что получилось
+
 
 `yarn preview --scope client`
 `yarn preview --scope server`
 
 ## Хуки
-
 В проекте используется [lefthook](https://github.com/evilmartians/lefthook)
 Если очень-очень нужно пропустить проверки, используйте `--no-verify` (но не злоупотребляйте :)
 
@@ -58,7 +60,6 @@
 Откройте issue, я приду :)
 
 ## Автодеплой статики на vercel
-
 Зарегистрируйте аккаунт на [vercel](https://vercel.com/)
 Следуйте [инструкции](https://vitejs.dev/guide/static-deploy.html#vercel-for-git)
 В качестве `root directory` укажите `packages/client`
@@ -72,13 +73,11 @@
 Перед первым запуском необходимо настроить переменные окружения:
 
 1. Скопируйте файл `env.example` в `.env`:
-
    ```bash
    cp env.example .env
    ```
 
 2. Отредактируйте `.env` файл и укажите необходимые значения:
-
    - **Важно**: Все пароли, токены и секретные данные должны быть указаны в `.env` файле
    - Файл `.env` не должен попадать в репозиторий (уже добавлен в `.gitignore`)
    - В файле `env.example` находятся только тестовые данные для локальной разработки
@@ -88,26 +87,21 @@
 ### Запуск сервисов
 
 `docker compose up` - запустит три сервиса с правильными зависимостями:
-
 1. **postgres** - база данных PostgreSQL (запускается первым)
 2. **server** - ваш сервер (ожидает готовности postgres)
 3. **client** - клиентское приложение (ожидает готовности server)
 
 Сервисы настроены с использованием:
-
 - Healthchecks для контроля готовности сервисов
 - Правильные зависимости между сервисами (server ждёт postgres, client ждёт server)
 - Изолированная сеть для связи между контейнерами
 - Все секреты загружаются из `.env` файла
 
 Если вам понадобится только один сервис, просто уточните какой в команде:
-
 ```bash
 docker compose up {service_name}
 ```
-
 Например:
-
 ```bash
 docker compose up server
 ```

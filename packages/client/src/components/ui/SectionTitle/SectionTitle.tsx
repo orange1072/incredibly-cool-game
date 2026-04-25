@@ -1,9 +1,9 @@
-import { memo } from 'react';
-import styles from './SectionTitle.module.scss';
+import { memo } from 'react'
+import styles from './SectionTitle.module.scss'
 
 interface SectionTitleProps {
-  title: string;
-  className?: string;
+  title: string
+  className?: string
 }
 
 export const SectionTitle = memo<SectionTitleProps>(({ title, className }) => {
@@ -12,7 +12,7 @@ export const SectionTitle = memo<SectionTitleProps>(({ title, className }) => {
       <h2 className={styles.sectionTitleText}>{title}</h2>
       <div className={styles.sectionDivider} />
     </div>
-  );
-});
+  )
+})
 
-SectionTitle.displayName = 'SectionTitle';
+SectionTitle.displayName = 'SectionTitle'
